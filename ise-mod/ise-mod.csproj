@@ -7,8 +7,8 @@
         <ProjectGuid>{C9A01E61-7E48-40B8-A84A-F6EEB6121656}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>iseworld</RootNamespace>
-        <AssemblyName>ise_mod</AssemblyName>
+        <RootNamespace>ise-mod</RootNamespace>
+        <AssemblyName>ise-mod</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>

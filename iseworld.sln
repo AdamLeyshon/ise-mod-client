@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-core", "ise-core\ise-core.csproj", "{742BDF7F-1357-4A62-B52D-0BD32710E29C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise_mod", "ise_mod\ise_mod.csproj", "{C9A01E61-7E48-40B8-A84A-F6EEB6121656}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-mod", "ise-mod\ise-mod.csproj", "{C9A01E61-7E48-40B8-A84A-F6EEB6121656}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-cli", "ise-cli\ise-cli.csproj", "{EA4BF86C-790A-49E7-9B69-6A13464565E7}"
 EndProject
