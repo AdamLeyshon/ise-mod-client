@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-core", "ise-core\ise-core.csproj", "{742BDF7F-1357-4A62-B52D-0BD32710E29C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise_mod", "ise_mod\ise_mod.csproj", "{C9A01E61-7E48-40B8-A84A-F6EEB6121656}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-cli", "ise-cli\ise-cli.csproj", "{EA4BF86C-790A-49E7-9B69-6A13464565E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-core-tests", "ise-core-tests\ise-core-tests.csproj", "{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{742BDF7F-1357-4A62-B52D-0BD32710E29C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742BDF7F-1357-4A62-B52D-0BD32710E29C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742BDF7F-1357-4A62-B52D-0BD32710E29C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742BDF7F-1357-4A62-B52D-0BD32710E29C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA4BF86C-790A-49E7-9B69-6A13464565E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA4BF86C-790A-49E7-9B69-6A13464565E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA4BF86C-790A-49E7-9B69-6A13464565E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA4BF86C-790A-49E7-9B69-6A13464565E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
