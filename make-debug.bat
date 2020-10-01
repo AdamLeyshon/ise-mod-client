@@ -1,0 +1,1 @@
+powershell .\build.ps1 -ScriptArgs '-target="LocalPublish"','-configuration="Debug"'

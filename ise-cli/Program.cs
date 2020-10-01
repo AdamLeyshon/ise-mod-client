@@ -1,9 +1,12 @@
-﻿namespace ise_cli
+﻿using System;
+
+namespace ise_cli
 {
     internal class Program
     {
         public static void Main(string[] args)
         {
+
         }
     }
 }

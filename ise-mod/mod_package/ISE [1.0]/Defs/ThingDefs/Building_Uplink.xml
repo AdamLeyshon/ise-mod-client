@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ThingDef ParentName="BuildingBase">
+		<defName>ISEUplink</defName>
+		<label>ISE uplink satellite</label>
+		<thingClass>ise_mod.buildings.ISEUplink</thingClass>
+		<size>(2,2)</size>
+		<graphicData>
+		  <texPath>Things/Buildings/ISEUplink</texPath>
+		  <graphicClass>Graphic_Single</graphicClass>
+		  <drawSize>2</drawSize>
+		</graphicData>
+		<altitudeLayer>Building</altitudeLayer>
+		<passability>Impassable</passability>
+		<terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+		<statBases>
+		  <MaxHitPoints>75</MaxHitPoints>
+		  <WorkToBuild>800</WorkToBuild>
+		  <Flammability>0.5</Flammability>
+		  <Mass>5</Mass>
+		</statBases>
+		<description>Required for trading with ISE.</description>
+		<drawerType>MapMeshAndRealTime</drawerType>
+		<drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+		<fillPercent>0.5</fillPercent>
+		<costList>
+		  <Steel>100</Steel>
+		  <ComponentIndustrial>6</ComponentIndustrial>
+		</costList>
+		<comps>
+		  <li Class="CompProperties_Power">
+			<compClass>CompPowerTrader</compClass>
+			<basePowerConsumption>200</basePowerConsumption>
+			<shortCircuitInRain>false</shortCircuitInRain>
+		  </li>
+		  <li Class="CompProperties_Breakdownable"/>
+		</comps>
+		<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+		<designationCategory>Misc</designationCategory>
+		<rotatable>false</rotatable>
+		<researchPrerequisites>
+		  <li>MicroelectronicsBasics</li>
+		</researchPrerequisites>
+	</ThingDef>
+</Defs>

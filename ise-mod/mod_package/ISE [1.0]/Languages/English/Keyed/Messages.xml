@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+	<ISENeedBaseName>Base name has been set or Map not owned by Player</ISENeedBaseName>
+	<ISENeedUplink>You must construct the uplink before using the console.</ISENeedUplink>
+	<ISEUnavailable>InterStellar Express Unavailable</ISEUnavailable>
+	<ISEOrderArrived>Your InterStellar Express order has arrived!</ISEOrderArrived>
+	<ISEOrderFailed>Looks like some items burned up on re-entry, Please file a report.</ISEOrderFailed>
+	<ISEProcessingError>There was an error transmitting your order, Your items have been returned.</ISEProcessingError>
+	<ISENoOrderMetadata>We couldn't find the shipping manifest for your order. Please file a bug report</ISENoOrderMetadata>
+	<ISECantRefund>We had an issue refunding your goods, Please file a bug report</ISECantRefund>
+	<ISECantSubscribe>There was an error when subscribing, Your Silver was refunded.</ISECantSubscribe>
+	<ISECantGetMarketData>There was an error downloading the market data, Please try again later</ISECantGetMarketData>
+	<ISEThanksForOrder>Thanks for trading with InterStellar Express! We'll keep you updated on your order.</ISEThanksForOrder>
+	<ISEDialogSubscribeTitle>InterStellar Express Subscription</ISEDialogSubscribeTitle>
+	<ISEDialogSubscribe1>Resubscribe? This will cost</ISEDialogSubscribe1>
+	<ISEDialogSubscribe2>for</ISEDialogSubscribe2>
+	<ISESubscriptionDuration>1 Quadrum</ISESubscriptionDuration>
+	<ISEDialogCantAffordSubscriptionTitle>Not enough resources</ISEDialogCantAffordSubscriptionTitle>
+	<ISEDialogCantAffordSubscription1>Your InterStellar Express Subscription has ended</ISEDialogCantAffordSubscription1>
+	<ISEDialogCantAffordSubscription2>But you cannot afford to renew, The cost is:</ISEDialogCantAffordSubscription2>
+	<ISECurrency>Silver</ISECurrency>
+	<ISEGiveItAway>We can't pay you for goods worth less than 1 Silver, Continue anyway?</ISEGiveItAway>
+	<ISEBanned>You are banned from using InterStellar Express OR Steam is in offline mode!</ISEBanned>
+	<ISESendingThingList>Sending Supported Thing List</ISESendingThingList>
+	<ISESendingModList>Sending Supported Mods</ISESendingModList>
+	<ISEGetMarketData>Getting Market Data</ISEGetMarketData>
+	<ISEBadResponse>The server did not respond or gave an invalid response, It might be down or you might be out of date.\n\nPlease check the Discord, the Ludeon forum or the Steam Workshop for updates and news.</ISEBadResponse>
+	<ISEActivateOK>The server accepted the token.\n\nPlease don't use Developer mode or you could end up banned again!</ISEActivateOK>
+	<ISEActivateFail>The server did not accepted the token, Please check your token was correct.</ISEActivateFail>
+	<ISEServerMaintenanceMode>The server is in maintenance mode, Please try again later.</ISEServerMaintenanceMode>
+	<ISEOutOfDate>This mod version is out of date. You'll need to update before trading.</ISEOutOfDate>
+	<ISEActivateIncorrect>The token should be 8 characters long.</ISEActivateIncorrect>
+</LanguageData>
