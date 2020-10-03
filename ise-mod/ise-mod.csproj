@@ -40,22 +40,9 @@
           <HintPath>..\packages\LiteDB.5.0.9\lib\net45\LiteDB.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="MessagePack, Version=1.9.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be">
-          <HintPath>..\packages\MessagePack.1.9.11\lib\net47\MessagePack.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
         <Reference Include="mscorlib" />
         <Reference Include="RestSharp, Version=106.11.7.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
           <HintPath>..\packages\RestSharp.106.11.7\lib\net452\RestSharp.dll</HintPath>
-        </Reference>
-        <Reference Include="System.Runtime.Serialization" />
-        <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-          <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-          <Private>False</Private>
         </Reference>
         <Reference Include="System.Web" />
         <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -72,6 +59,10 @@
       <ProjectReference Include="..\ise-core\ise-core.csproj">
         <Project>{742bdf7f-1357-4a62-b52d-0bd32710e29c}</Project>
         <Name>ise-core</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\protobuf\csharp\src\Google.Protobuf\Google.Protobuf.csproj">
+        <Project>{6eef7b57-2fa0-4ce8-8e53-6f25b94bcbf9}</Project>
+        <Name>Google.Protobuf</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>

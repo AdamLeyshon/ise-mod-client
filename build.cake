@@ -60,7 +60,7 @@ Task("CopyDLLs")
   //CopyFile(mod_source_path + $"/bin/{configuration}/0Harmony.dll", mod_path+"/Assemblies/0Harmony.dll");
   CopyFile(mod_source_path +  $"/bin/{configuration}/RestSharp.dll", mod_path+"/Assemblies/1RestSharp.dll");
   CopyFile(mod_source_path +  $"/bin/{configuration}/LiteDB.dll", mod_path+"/Assemblies/1LiteDB.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/MessagePack.dll", mod_path+"/Assemblies/2MessagePack.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/Google.Protobuf.dll", mod_path+"/Assemblies/2Google.Protobuf.dll");
   //CopyFile(mod_source_path +  $"/bin/{configuration}/MiniSentrySDK.dll", mod_path+"/Assemblies/2MiniSentrySDK.dll");
   CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.dll", mod_path+"/Assemblies/98ise-core.dll");
   CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.dll", mod_path+"/Assemblies/99ise-mod.dll");
@@ -101,7 +101,7 @@ Task("Compile")
 	});
   MSBuild("./iseworld.sln", new MSBuildSettings {
     Verbosity = Verbosity.Normal,
-    ToolVersion = MSBuildToolVersion.VS2017,
+    ToolVersion = MSBuildToolVersion.Default,
     Configuration = configuration,
     PlatformTarget = PlatformTarget.MSIL,
   }.WithTarget("Build"));

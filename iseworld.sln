@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-cli", "ise-cli\ise-cli.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-core-tests", "ise-core-tests\ise-core-tests.csproj", "{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.Protobuf", "protobuf\csharp\src\Google.Protobuf\Google.Protobuf.csproj", "{6EEF7B57-2FA0-4CE8-8E53-6F25B94BCBF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EEF7B57-2FA0-4CE8-8E53-6F25B94BCBF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EEF7B57-2FA0-4CE8-8E53-6F25B94BCBF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EEF7B57-2FA0-4CE8-8E53-6F25B94BCBF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EEF7B57-2FA0-4CE8-8E53-6F25B94BCBF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
