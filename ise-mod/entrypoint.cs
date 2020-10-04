@@ -1,4 +1,4 @@
-﻿using Helloworld;
+﻿using Hello;
 using ise_core.db;
 using LiteDB;
 using RimWorld;
@@ -14,11 +14,11 @@ namespace ise
         {
             LoadOrCreateUserData();
 
-            var send = new HelloRequest() {Name = "Adam"};
+            var send = new HelloRequest() {ClientVersion = "1.0"};
             var client = ise_core.rest.Helpers.CreateRestClient();
             var reply = ise_core.rest.Helpers.SendAndReply<HelloReply, HelloRequest>(client, send, HelloReply.Parser,
                 "/api/v1/player/");
-            Log.Message($"Got message from server: {reply.Message}");
+            Log.Message($"Got message from server: {reply.ServerVersion}");
         }
 
         // Normally we'd put this in the state tracker.

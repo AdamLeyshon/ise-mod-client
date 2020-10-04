@@ -50,7 +50,8 @@ namespace ise_core.rest
                 }
                 else
                 {
-                    throw new Exception(task.Result.ErrorMessage);
+                    throw new Exception(
+                        $"{task.Result.ErrorMessage}, HTTP Code: {task.Result.StatusCode}, {task.Result.StatusDescription}");
                 }
             }
         }
