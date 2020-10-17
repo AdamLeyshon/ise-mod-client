@@ -1,5 +1,6 @@
 ﻿using Hello;
 using ise_core.db;
+using ise_core.system;
 using LiteDB;
 using RimWorld;
 using UnityEngine;
@@ -8,17 +9,19 @@ using Verse;
 namespace ise
 {
     [StaticConstructorOnStartup]
-    public class ISEBootStrap
+    public class IseBootStrap
     {
-        static ISEBootStrap()
+        static IseBootStrap()
         {
+           
+
             LoadOrCreateUserData();
 
-            var send = new HelloRequest() {ClientVersion = "1.0"};
-            var client = ise_core.rest.Helpers.CreateRestClient();
-            var reply = ise_core.rest.Helpers.SendAndReply<HelloReply, HelloRequest>(client, send, HelloReply.Parser,
-                "/api/v1/player/");
-            Log.Message($"Got message from server: {reply.ServerVersion}");
+            // var send = new HelloRequest() {ClientVersion = "1.0"};
+            // var client = ise_core.rest.Helpers.CreateRestClient();
+            // var reply = ise_core.rest.Helpers.SendAndReply<HelloReply, HelloRequest>(client, send, HelloReply.Parser,
+            //     "/api/v1/player/");
+            // Log.Message($"Got message from server: {reply.ServerVersion}");
         }
 
         // Normally we'd put this in the state tracker.

@@ -24,8 +24,8 @@ namespace Hello {
     static HelloReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtoZWxsby5wcm90bxIFaGVsbG8iJQoMSGVsbG9SZXF1ZXN0EhUKDWNsaWVu",
-            "dFZlcnNpb24YASABKAkiIwoKSGVsbG9SZXBseRIVCg1zZXJ2ZXJWZXJzaW9u",
+            "CgtoZWxsby5wcm90bxIFaGVsbG8iJQoMSGVsbG9SZXF1ZXN0EhUKDUNsaWVu",
+            "dFZlcnNpb24YASABKAkiIwoKSGVsbG9SZXBseRIVCg1TZXJ2ZXJWZXJzaW9u",
             "GAEgASgJMjwKB0dyZWV0ZXISMQoFSGVsbG8SEy5oZWxsby5IZWxsb1JlcXVl",
             "c3QaES5oZWxsby5IZWxsb1JlcGx5IgBiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
@@ -80,7 +80,7 @@ namespace Hello {
       return new HelloRequest(this);
     }
 
-    /// <summary>Field number for the "clientVersion" field.</summary>
+    /// <summary>Field number for the "ClientVersion" field.</summary>
     public const int ClientVersionFieldNumber = 1;
     private string clientVersion_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -255,7 +255,7 @@ namespace Hello {
       return new HelloReply(this);
     }
 
-    /// <summary>Field number for the "serverVersion" field.</summary>
+    /// <summary>Field number for the "ServerVersion" field.</summary>
     public const int ServerVersionFieldNumber = 1;
     private string serverVersion_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

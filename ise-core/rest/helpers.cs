@@ -83,17 +83,19 @@ namespace ise_core.rest
         public static byte[] CompressBuffer(byte[] input)
         {
             var buffer = new byte[4096];
-            using var outStream = new MemoryStream();
-            using (var gZipStream = new GZipStream(outStream, CompressionMode.Compress))
+            using (var outStream = new MemoryStream())
             {
-                using (var mStream = new MemoryStream(input))
+                using (var gZipStream = new GZipStream(outStream, CompressionMode.Compress))
                 {
-                    int read;
-                    while ((read = mStream.Read(buffer, 0, buffer.Length)) > 0) gZipStream.Write(buffer, 0, read);
+                    using (var mStream = new MemoryStream(input))
+                    {
+                        int read;
+                        while ((read = mStream.Read(buffer, 0, buffer.Length)) > 0) gZipStream.Write(buffer, 0, read);
+                    }
                 }
-            }
 
-            return outStream.ToArray();
+                return outStream.ToArray();
+            }
         }
     }
 }
