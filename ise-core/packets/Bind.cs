@@ -29,28 +29,26 @@ namespace Bind {
             "AiABKAkSLwoGUmVhc29uGAMgASgOMh8uYmluZC5CaW5kUmVwbHkuQmluZEVy",
             "cm9yUmVhc29uIlAKD0JpbmRFcnJvclJlYXNvbhIICgROb25lEAASCwoHVW5r",
             "bm93bhABEhIKDlN0ZWFtSWRJbnZhbGlkEAISEgoOU3RlYW1JZEJsb2NrZWQQ",
-            "AyJ5ChJDb25maXJtQmluZFJlcXVlc3QSNgoLTWVzc2FnZVR5cGUYASABKA4y",
-            "IS5iaW5kLkNvbmZpcm1CaW5kUmVxdWVzdC5CaW5kVHlwZSIrCghCaW5kVHlw",
-            "ZRIPCgtBY2NvdW50QmluZBAAEg4KCkNsaWVudEJpbmQQASK/AQoQQ29uZmly",
-            "bUJpbmRSZXBseRI0CgtNZXNzYWdlVHlwZRgBIAEoDjIfLmJpbmQuQ29uZmly",
-            "bUJpbmRSZXBseS5CaW5kVHlwZRIPCgdJc1ZhbGlkGAIgASgIEhQKDEJpbmRD",
-            "b21wbGV0ZRgDIAEoCBIUCgxDbGllbnRCaW5kSWQYBCABKAkSCwoDVFRMGAUg",
-            "ASgFIisKCEJpbmRUeXBlEg8KC0FjY291bnRCaW5kEAASDgoKQ2xpZW50Qmlu",
-            "ZBABIkAKF0NsaWVudEJpbmRWZXJpZnlSZXF1ZXN0EhQKDENsaWVudEJpbmRJ",
-            "ZBgBIAEoCRIPCgdTdGVhbUlkGAIgASgJIiYKFUNsaWVudEJpbmRWZXJpZnlS",
-            "ZXBseRINCgVWYWxpZBgBIAEoCDLLAQoMQ2xpZW50QmluZGVyEiwKBEJpbmQS",
-            "ES5iaW5kLkJpbmRSZXF1ZXN0Gg8uYmluZC5CaW5kUmVwbHkiABJBCgtDb25m",
-            "aXJtQmluZBIYLmJpbmQuQ29uZmlybUJpbmRSZXF1ZXN0GhYuYmluZC5Db25m",
-            "aXJtQmluZFJlcGx5IgASSgoKQmluZFZlcmlmeRIdLmJpbmQuQ2xpZW50Qmlu",
-            "ZFZlcmlmeVJlcXVlc3QaGy5iaW5kLkNsaWVudEJpbmRWZXJpZnlSZXBseSIA",
-            "YgZwcm90bzM="));
+            "AyJKChJDb25maXJtQmluZFJlcXVlc3QSJAoIQmluZFR5cGUYASABKA4yEi5i",
+            "aW5kLkJpbmRUeXBlRW51bRIOCgZCaW5kSWQYAiABKAkiggEKEENvbmZpcm1C",
+            "aW5kUmVwbHkSJAoIQmluZFR5cGUYASABKA4yEi5iaW5kLkJpbmRUeXBlRW51",
+            "bRIPCgdJc1ZhbGlkGAIgASgIEhQKDEJpbmRDb21wbGV0ZRgDIAEoCBIUCgxD",
+            "bGllbnRCaW5kSWQYBCABKAkSCwoDVFRMGAUgASgFIkAKF0NsaWVudEJpbmRW",
+            "ZXJpZnlSZXF1ZXN0EhQKDENsaWVudEJpbmRJZBgBIAEoCRIPCgdTdGVhbUlk",
+            "GAIgASgJIiYKFUNsaWVudEJpbmRWZXJpZnlSZXBseRINCgVWYWxpZBgBIAEo",
+            "CCovCgxCaW5kVHlwZUVudW0SDwoLQWNjb3VudEJpbmQQABIOCgpDbGllbnRC",
+            "aW5kEAEyywEKDENsaWVudEJpbmRlchIsCgRCaW5kEhEuYmluZC5CaW5kUmVx",
+            "dWVzdBoPLmJpbmQuQmluZFJlcGx5IgASQQoLQ29uZmlybUJpbmQSGC5iaW5k",
+            "LkNvbmZpcm1CaW5kUmVxdWVzdBoWLmJpbmQuQ29uZmlybUJpbmRSZXBseSIA",
+            "EkoKCkJpbmRWZXJpZnkSHS5iaW5kLkNsaWVudEJpbmRWZXJpZnlSZXF1ZXN0",
+            "GhsuYmluZC5DbGllbnRCaW5kVmVyaWZ5UmVwbHkiAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Bind.BindTypeEnum), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Bind.BindRequest), global::Bind.BindRequest.Parser, new[]{ "SteamId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Bind.BindReply), global::Bind.BindReply.Parser, new[]{ "Valid", "BindId", "Reason" }, null, new[]{ typeof(global::Bind.BindReply.Types.BindErrorReason) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Bind.ConfirmBindRequest), global::Bind.ConfirmBindRequest.Parser, new[]{ "MessageType" }, null, new[]{ typeof(global::Bind.ConfirmBindRequest.Types.BindType) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Bind.ConfirmBindReply), global::Bind.ConfirmBindReply.Parser, new[]{ "MessageType", "IsValid", "BindComplete", "ClientBindId", "TTL" }, null, new[]{ typeof(global::Bind.ConfirmBindReply.Types.BindType) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Bind.ConfirmBindRequest), global::Bind.ConfirmBindRequest.Parser, new[]{ "BindType", "BindId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Bind.ConfirmBindReply), global::Bind.ConfirmBindReply.Parser, new[]{ "BindType", "IsValid", "BindComplete", "ClientBindId", "TTL" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Bind.ClientBindVerifyRequest), global::Bind.ClientBindVerifyRequest.Parser, new[]{ "ClientBindId", "SteamId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Bind.ClientBindVerifyReply), global::Bind.ClientBindVerifyReply.Parser, new[]{ "Valid" }, null, null, null, null)
           }));
@@ -58,6 +56,14 @@ namespace Bind {
     #endregion
 
   }
+  #region Enums
+  public enum BindTypeEnum {
+    [pbr::OriginalName("AccountBind")] AccountBind = 0,
+    [pbr::OriginalName("ClientBind")] ClientBind = 1,
+  }
+
+  #endregion
+
   #region Messages
   public sealed partial class BindRequest : pb::IMessage<BindRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -523,7 +529,8 @@ namespace Bind {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ConfirmBindRequest(ConfirmBindRequest other) : this() {
-      messageType_ = other.messageType_;
+      bindType_ = other.bindType_;
+      bindId_ = other.bindId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -532,14 +539,25 @@ namespace Bind {
       return new ConfirmBindRequest(this);
     }
 
-    /// <summary>Field number for the "MessageType" field.</summary>
-    public const int MessageTypeFieldNumber = 1;
-    private global::Bind.ConfirmBindRequest.Types.BindType messageType_ = global::Bind.ConfirmBindRequest.Types.BindType.AccountBind;
+    /// <summary>Field number for the "BindType" field.</summary>
+    public const int BindTypeFieldNumber = 1;
+    private global::Bind.BindTypeEnum bindType_ = global::Bind.BindTypeEnum.AccountBind;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Bind.ConfirmBindRequest.Types.BindType MessageType {
-      get { return messageType_; }
+    public global::Bind.BindTypeEnum BindType {
+      get { return bindType_; }
       set {
-        messageType_ = value;
+        bindType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "BindId" field.</summary>
+    public const int BindIdFieldNumber = 2;
+    private string bindId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string BindId {
+      get { return bindId_; }
+      set {
+        bindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -556,14 +574,16 @@ namespace Bind {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (MessageType != other.MessageType) return false;
+      if (BindType != other.BindType) return false;
+      if (BindId != other.BindId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (MessageType != global::Bind.ConfirmBindRequest.Types.BindType.AccountBind) hash ^= MessageType.GetHashCode();
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) hash ^= BindType.GetHashCode();
+      if (BindId.Length != 0) hash ^= BindId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -580,9 +600,13 @@ namespace Bind {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (MessageType != global::Bind.ConfirmBindRequest.Types.BindType.AccountBind) {
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) MessageType);
+        output.WriteEnum((int) BindType);
+      }
+      if (BindId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(BindId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -593,9 +617,13 @@ namespace Bind {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (MessageType != global::Bind.ConfirmBindRequest.Types.BindType.AccountBind) {
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) MessageType);
+        output.WriteEnum((int) BindType);
+      }
+      if (BindId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(BindId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -606,8 +634,11 @@ namespace Bind {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (MessageType != global::Bind.ConfirmBindRequest.Types.BindType.AccountBind) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MessageType);
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) BindType);
+      }
+      if (BindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BindId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -620,8 +651,11 @@ namespace Bind {
       if (other == null) {
         return;
       }
-      if (other.MessageType != global::Bind.ConfirmBindRequest.Types.BindType.AccountBind) {
-        MessageType = other.MessageType;
+      if (other.BindType != global::Bind.BindTypeEnum.AccountBind) {
+        BindType = other.BindType;
+      }
+      if (other.BindId.Length != 0) {
+        BindId = other.BindId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -638,7 +672,11 @@ namespace Bind {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            MessageType = (global::Bind.ConfirmBindRequest.Types.BindType) input.ReadEnum();
+            BindType = (global::Bind.BindTypeEnum) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            BindId = input.ReadString();
             break;
           }
         }
@@ -656,7 +694,11 @@ namespace Bind {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            MessageType = (global::Bind.ConfirmBindRequest.Types.BindType) input.ReadEnum();
+            BindType = (global::Bind.BindTypeEnum) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            BindId = input.ReadString();
             break;
           }
         }
@@ -664,24 +706,12 @@ namespace Bind {
     }
     #endif
 
-    #region Nested types
-    /// <summary>Container for nested types declared in the ConfirmBindRequest message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static partial class Types {
-      public enum BindType {
-        [pbr::OriginalName("AccountBind")] AccountBind = 0,
-        [pbr::OriginalName("ClientBind")] ClientBind = 1,
-      }
-
-    }
-    #endregion
-
   }
 
   /// <summary>
   /// This message is used for two purposes
   /// 1. Answering a bind request with status data.
-  /// 2. Acknowledging a FinalBindId
+  /// 2. Acknowledging a Client Bind ID
   /// </summary>
   public sealed partial class ConfirmBindReply : pb::IMessage<ConfirmBindReply>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -712,7 +742,7 @@ namespace Bind {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ConfirmBindReply(ConfirmBindReply other) : this() {
-      messageType_ = other.messageType_;
+      bindType_ = other.bindType_;
       isValid_ = other.isValid_;
       bindComplete_ = other.bindComplete_;
       clientBindId_ = other.clientBindId_;
@@ -725,14 +755,14 @@ namespace Bind {
       return new ConfirmBindReply(this);
     }
 
-    /// <summary>Field number for the "MessageType" field.</summary>
-    public const int MessageTypeFieldNumber = 1;
-    private global::Bind.ConfirmBindReply.Types.BindType messageType_ = global::Bind.ConfirmBindReply.Types.BindType.AccountBind;
+    /// <summary>Field number for the "BindType" field.</summary>
+    public const int BindTypeFieldNumber = 1;
+    private global::Bind.BindTypeEnum bindType_ = global::Bind.BindTypeEnum.AccountBind;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Bind.ConfirmBindReply.Types.BindType MessageType {
-      get { return messageType_; }
+    public global::Bind.BindTypeEnum BindType {
+      get { return bindType_; }
       set {
-        messageType_ = value;
+        bindType_ = value;
       }
     }
 
@@ -809,7 +839,7 @@ namespace Bind {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (MessageType != other.MessageType) return false;
+      if (BindType != other.BindType) return false;
       if (IsValid != other.IsValid) return false;
       if (BindComplete != other.BindComplete) return false;
       if (ClientBindId != other.ClientBindId) return false;
@@ -820,7 +850,7 @@ namespace Bind {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (MessageType != global::Bind.ConfirmBindReply.Types.BindType.AccountBind) hash ^= MessageType.GetHashCode();
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) hash ^= BindType.GetHashCode();
       if (IsValid != false) hash ^= IsValid.GetHashCode();
       if (BindComplete != false) hash ^= BindComplete.GetHashCode();
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
@@ -841,9 +871,9 @@ namespace Bind {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (MessageType != global::Bind.ConfirmBindReply.Types.BindType.AccountBind) {
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) MessageType);
+        output.WriteEnum((int) BindType);
       }
       if (IsValid != false) {
         output.WriteRawTag(16);
@@ -870,9 +900,9 @@ namespace Bind {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (MessageType != global::Bind.ConfirmBindReply.Types.BindType.AccountBind) {
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) MessageType);
+        output.WriteEnum((int) BindType);
       }
       if (IsValid != false) {
         output.WriteRawTag(16);
@@ -899,8 +929,8 @@ namespace Bind {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (MessageType != global::Bind.ConfirmBindReply.Types.BindType.AccountBind) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MessageType);
+      if (BindType != global::Bind.BindTypeEnum.AccountBind) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) BindType);
       }
       if (IsValid != false) {
         size += 1 + 1;
@@ -925,8 +955,8 @@ namespace Bind {
       if (other == null) {
         return;
       }
-      if (other.MessageType != global::Bind.ConfirmBindReply.Types.BindType.AccountBind) {
-        MessageType = other.MessageType;
+      if (other.BindType != global::Bind.BindTypeEnum.AccountBind) {
+        BindType = other.BindType;
       }
       if (other.IsValid != false) {
         IsValid = other.IsValid;
@@ -955,7 +985,7 @@ namespace Bind {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            MessageType = (global::Bind.ConfirmBindReply.Types.BindType) input.ReadEnum();
+            BindType = (global::Bind.BindTypeEnum) input.ReadEnum();
             break;
           }
           case 16: {
@@ -989,7 +1019,7 @@ namespace Bind {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            MessageType = (global::Bind.ConfirmBindReply.Types.BindType) input.ReadEnum();
+            BindType = (global::Bind.BindTypeEnum) input.ReadEnum();
             break;
           }
           case 16: {
@@ -1012,18 +1042,6 @@ namespace Bind {
       }
     }
     #endif
-
-    #region Nested types
-    /// <summary>Container for nested types declared in the ConfirmBindReply message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static partial class Types {
-      public enum BindType {
-        [pbr::OriginalName("AccountBind")] AccountBind = 0,
-        [pbr::OriginalName("ClientBind")] ClientBind = 1,
-      }
-
-    }
-    #endregion
 
   }
 

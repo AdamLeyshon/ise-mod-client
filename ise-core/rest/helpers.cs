@@ -9,6 +9,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -23,7 +24,7 @@ namespace ise_core.rest
     {
         public static RestClient CreateRestClient()
         {
-            var client = new RestClient("http://127.0.0.1:8000")
+            var client = new RestClient("https://ise-local.thecodecache.net:443")
             {
                 AutomaticDecompression = true,
                 UserAgent = $"ISE/1.0",
@@ -31,16 +32,30 @@ namespace ise_core.rest
             return client;
         }
 
-        public static TR SendAndReply<TR, TS>(RestClient c, TS sendPacket,
-            MessageParser<TR> unpacker, String url)
+        public static TR SendAndReply<TS, TR>(
+            RestClient c,
+            TS sendPacket,
+            MessageParser<TR> parser,
+            string url,
+            Method method = Method.GET,
+            string clientId = null,
+            Dictionary<string, string> urlSegments = null
+        )
             where TS : IMessage<TS>, new()
             where TR : IMessage<TR>, new()
         {
-            var task = SendAndExpectReplyAsync<TS>(CreateRestClient(), sendPacket, url);
+            var task = SendAndExpectReplyAsync<TS>(
+                CreateRestClient(),
+                sendPacket,
+                url,
+                method,
+                clientId,
+                urlSegments
+            );
             task.Wait();
             if (task.Result.IsSuccessful)
             {
-                return unpacker.ParseFrom(task.Result.RawBytes);
+                return parser.ParseFrom(task.Result.RawBytes);
             }
             else
             {
@@ -56,7 +71,14 @@ namespace ise_core.rest
             }
         }
 
-        public static Task<IRestResponse> SendAndExpectReplyAsync<TS>(RestClient c, TS sendPacket, String url)
+        public static Task<IRestResponse> SendAndExpectReplyAsync<TS>(
+            RestClient c,
+            TS sendPacket,
+            string url,
+            Method method = Method.GET,
+            string clientId = null,
+            Dictionary<string, string> urlSegments = null
+        )
             where TS : IMessage<TS>
         {
             var client = CreateRestClient();
@@ -73,11 +95,22 @@ namespace ise_core.rest
             request.AddParameter("Accept", "application/protobuf", ParameterType.HttpHeader);
             request.AddParameter("Content-Type", "application/protobuf", ParameterType.HttpHeader);
 
+            if (clientId != null)
+                request.AddParameter("x-ise-client-id", clientId, ParameterType.HttpHeader);
+
+            if (urlSegments != null)
+            {
+                foreach (var kvp in urlSegments)
+                {
+                    request.AddParameter(kvp.Key, kvp.Value, ParameterType.UrlSegment);
+                }
+            }
+
             request.RequestFormat = DataFormat.None;
             request.AddDecompressionMethod(DecompressionMethods.GZip);
 
             // Make request.
-            return client.ExecutePostAsync(request);
+            return client.ExecuteAsync(request, method);
         }
 
         public static byte[] CompressBuffer(byte[] input)
