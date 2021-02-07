@@ -8,13 +8,9 @@
 
 #endregion
 
-using System;
-using Hello;
-using RestSharp;
-using Verse;
 using static ise.lib.Logging;
 
-namespace ise.lib.API
+namespace ise.lib.API.v1
 {
     public static class System
     {

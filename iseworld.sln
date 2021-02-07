@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-core-tests", "ise-core-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.Protobuf", "protobuf\csharp\src\Google.Protobuf\Google.Protobuf.csproj", "{6EEF7B57-2FA0-4CE8-8E53-6F25B94BCBF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-mod-proto-tests", "ise-mod-proto-tests\ise-mod-proto-tests.csproj", "{C9A01E61-7E48-40B8-A84A-F6EEB6121656}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

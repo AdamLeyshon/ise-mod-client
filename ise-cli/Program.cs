@@ -38,6 +38,12 @@ namespace ise_cli
                     case "colonycreate":
                         ColonyCreate();
                         break;
+                    case "colonyget":
+                        ColonyGet();
+                        break;
+                    case "colonyupdate":
+                        ColonyUpdate();
+                        break;
                     case "quit":
                         System.Environment.Exit(0);
                         break;
@@ -64,10 +70,9 @@ namespace ise_cli
                 Console.WriteLine(sendPacket.DumpToString());
                 Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-                var client = Helpers.CreateRestClient();
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                var replyPacket = Helpers.SendAndReply(client, sendPacket, parser,
+                var replyPacket = Helpers.SendAndParseReply(sendPacket, parser,
                     url, method, clientId, urlSegments);
                 stopWatch.Stop();
                 Console.WriteLine("");
@@ -86,6 +91,7 @@ namespace ise_cli
             }
         }
 
+
         private static void HelloRequest()
         {
             var send = new HelloRequest() {ClientVersion = Consts.CLIENT_VERSION};
@@ -93,7 +99,7 @@ namespace ise_cli
             {
                 RestWrapperSendAndReply(send, HelloReply.Parser, "/api/v1/system/hello", Method.POST);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }
@@ -120,7 +126,7 @@ namespace ise_cli
             {
                 RestWrapperSendAndReply(send, BindReply.Parser, "/api/v1/binder/bind", Method.POST);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }
@@ -152,7 +158,7 @@ namespace ise_cli
             {
                 RestWrapperSendAndReply(send, ConfirmBindReply.Parser, "/api/v1/binder/bind_confirm", Method.POST);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }
@@ -170,7 +176,7 @@ namespace ise_cli
             {
                 RestWrapperSendAndReply(send, ClientBindVerifyReply.Parser, "/api/v1/binder/bind_verify", Method.POST);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }
@@ -180,7 +186,7 @@ namespace ise_cli
             var bind = "0IFEmQt8MWmmoK38qn";
             var send = new ColonyCreateRequest
             {
-                ClientId = bind,
+                ClientBindId = bind,
                 Data = new ColonyData
                 {
                     Name = "Test",
@@ -197,7 +203,60 @@ namespace ise_cli
             {
                 RestWrapperSendAndReply(send, ColonyData.Parser, "/api/v1/colony/", Method.POST, bind);
             }
-            catch (Exception e)
+            catch (Exception)
+            {
+            }
+        }
+
+        private static void ColonyGet()
+        {
+            Console.Write("Enter Colony ID:");
+            var colonyId = Console.ReadLine();
+
+            Console.Write("Enter Client ID:");
+            var clientId = Console.ReadLine();
+
+            try
+            {
+                Helpers.SendAndParseReply(new ColonyGetRequest
+                    {
+                        ClientBindId = clientId,
+                        ColonyId = colonyId
+                    },
+                    ColonyData.Parser,
+                    $"/api/v1/colony/{colonyId}",
+                    Method.GET,
+                    clientId);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private static void ColonyUpdate()
+        {
+            var bind = "0IFEmQt8MWmmoK38qn";
+            var colonyId = "uGzqJpCeuLMpJ33gZwNC3pElQPJa29v2";
+            var send = new ColonyCreateRequest
+            {
+                ClientBindId = bind,
+                Data = new ColonyData
+                {
+                    ColonyId = colonyId,
+                    Name = "Test1",
+                    FactionName = "FactionTest",
+                    MapId = 100,
+                    Tick = 2222,
+                    UsedDevMode = false,
+                    GameVersion = "1.0.0",
+                }
+            };
+
+            try
+            {
+                RestWrapperSendAndReply(send, ColonyData.Parser, $"/api/v1/colony/{colonyId}", Method.PATCH, bind);
+            }
+            catch (Exception)
             {
             }
         }

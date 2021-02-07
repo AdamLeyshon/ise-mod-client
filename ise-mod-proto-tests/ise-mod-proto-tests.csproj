@@ -7,8 +7,8 @@
         <ProjectGuid>{C9A01E61-7E48-40B8-A84A-F6EEB6121656}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>ise-mod</RootNamespace>
-        <AssemblyName>ise-mod</AssemblyName>
+        <RootNamespace>ise-mod-proto-tests</RootNamespace>
+        <AssemblyName>ise-mod-proto-tests</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -52,12 +52,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="entrypoint.cs" />
-        <Compile Include="lib\api\v1\system.cs" />
-        <Compile Include="lib\logging.cs" />
-        <Compile Include="lib\mods.cs" />
-        <Compile Include="lib\tradables.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="StateTracker.cs" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ise-core\ise-core.csproj">

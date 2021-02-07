@@ -10,18 +10,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using RestSharp;
+using System.Threading;
 
 namespace ise_core.rest
 {
     public static class Helpers
     {
+        public static long GetUTCNow()
+        {
+            return (long) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+        }
+        
         public static RestClient CreateRestClient()
         {
             var client = new RestClient("https://ise-local.thecodecache.net:443")
@@ -32,8 +38,7 @@ namespace ise_core.rest
             return client;
         }
 
-        public static TR SendAndReply<TS, TR>(
-            RestClient c,
+        public static TR SendAndParseReply<TS, TR>(
             TS sendPacket,
             MessageParser<TR> parser,
             string url,
@@ -44,35 +49,75 @@ namespace ise_core.rest
             where TS : IMessage<TS>, new()
             where TR : IMessage<TR>, new()
         {
-            var task = SendAndExpectReplyAsync<TS>(
-                CreateRestClient(),
-                sendPacket,
-                url,
-                method,
-                clientId,
-                urlSegments
-            );
-            task.Wait();
-            if (task.Result.IsSuccessful)
-            {
-                return parser.ParseFrom(task.Result.RawBytes);
-            }
-            else
-            {
-                if (task.Exception != null)
-                {
-                    throw task.Exception;
-                }
-                else
-                {
-                    throw new Exception(
-                        $"{task.Result.ErrorMessage}, HTTP Code: {task.Result.StatusCode}, {task.Result.StatusDescription}");
-                }
-            }
+            var result = DoRequest(sendPacket, url, method, clientId, urlSegments);
+            Console.WriteLine($"ProtoBuf Message size was {result.RawBytes.LongLength} bytes");
+            return parser.ParseFrom(result.RawBytes);
         }
 
-        public static Task<IRestResponse> SendAndExpectReplyAsync<TS>(
-            RestClient c,
+        public static IRestResponse SendNoReply<TS>(
+            TS sendPacket,
+            string url,
+            Method method = Method.GET,
+            string clientId = null,
+            Dictionary<string, string> urlSegments = null
+        )
+            where TS : IMessage<TS>, new()
+        {
+            return DoRequest(sendPacket, url, method, clientId, urlSegments);
+        }
+
+        private static IRestResponse DoRequest<TS>(
+            TS sendPacket,
+            string url,
+            Method method,
+            string clientId,
+            Dictionary<string, string> urlSegments
+        ) where TS : IMessage<TS>, new()
+        {
+            Task<IRestResponse> task = null;
+            for (var tries = 0; tries < 3; tries++)
+            {
+                task = MakeRequestAsync(
+                    sendPacket,
+                    url,
+                    method,
+                    clientId,
+                    urlSegments
+                );
+                task.Wait();
+
+                if (task.Result.IsSuccessful)
+                {
+                    return task.Result;
+                }
+
+                var tryAgain = task.Result.Headers.Any(p => p.Name?.ToLower() == "retry-after");
+
+                // If we've reached max try count or server says does not ask to try again 
+                // Then exit immediately
+                if (!tryAgain) break;
+                if (tries < 2)
+                {
+                    Thread.Sleep(5 * 1000); // Sleep for 5 seconds
+                }
+            }
+
+            if (task == null)
+                throw new Exception(
+                    $"HTTP Client in Invalid State, task was null! wat do?");
+
+            // Throw the task exception if there was one
+            if (task.Exception != null)
+            {
+                throw task.Exception;
+            }
+
+            // Otherwise generate one from HTTP Response
+            throw new Exception(
+                $"{task.Result.ErrorMessage}, HTTP Code: {task.Result.StatusCode:D}, {task.Result.StatusDescription}");
+        }
+
+        public static Task<IRestResponse> MakeRequestAsync<TS>(
             TS sendPacket,
             string url,
             Method method = Method.GET,
@@ -83,15 +128,29 @@ namespace ise_core.rest
         {
             var client = CreateRestClient();
             var buf = sendPacket.ToByteArray();
-            var request = new RestRequest(url, Method.POST);
+            var request = new RestRequest(url);
 
             if (buf.LongLength > 256)
             {
+#if DEBUG
+                Console.WriteLine($"Uncompressed payload size {buf.LongLength}");
+#endif
                 request.AddParameter("Content-Encoding", "gzip", ParameterType.HttpHeader);
                 buf = CompressBuffer(buf);
+#if DEBUG
+                Console.WriteLine($"Compressed payload size {buf.LongLength}");
+#endif
             }
 
             request.AddParameter("", buf, ParameterType.RequestBody);
+
+            return ExecAsync(client, request, method, clientId, urlSegments);
+        }
+
+        public static Task<IRestResponse> ExecAsync(RestClient client, RestRequest request, Method method = Method.GET,
+            string clientId = null,
+            Dictionary<string, string> urlSegments = null)
+        {
             request.AddParameter("Accept", "application/protobuf", ParameterType.HttpHeader);
             request.AddParameter("Content-Type", "application/protobuf", ParameterType.HttpHeader);
 

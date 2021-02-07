@@ -24,29 +24,43 @@ namespace Colony {
     static ColonyReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgxjb2xvbnkucHJvdG8SBmNvbG9ueSLEAQoKQ29sb255RGF0YRIQCghDb2xv",
-            "bnlJZBgBIAEoCRIMCgROYW1lGAIgASgJEhMKC0ZhY3Rpb25OYW1lGAMgASgJ",
-            "Eg0KBU1hcElkGAkgASgFEgwKBFRpY2sYBCABKAUSEwoLVXNlZERldk1vZGUY",
-            "BSABKAgSEwoLR2FtZVZlcnNpb24YBiABKAkSJgoIUGxhdGZvcm0YByABKA4y",
-            "FC5jb2xvbnkuUGxhdGZvcm1FbnVtEhIKCkNyZWF0ZURhdGUYCCABKAMiSQoT",
-            "Q29sb255Q3JlYXRlUmVxdWVzdBIQCghDbGllbnRJZBgBIAEoCRIgCgRkYXRh",
-            "GAIgASgLMhIuY29sb255LkNvbG9ueURhdGEiSQoTQ29sb255VXBkYXRlUmVx",
-            "dWVzdBIQCghDbGllbnRJZBgBIAEoCRIgCgREYXRhGAIgASgLMhIuY29sb255",
-            "LkNvbG9ueURhdGEiNgoQQ29sb255R2V0UmVxdWVzdBIQCghDbGllbnRJZBgB",
-            "IAEoCRIQCghDb2xvbnlJZBgCIAEoCSo8CgxQbGF0Zm9ybUVudW0SCwoHVW5r",
-            "bm93bhAAEgsKB1dpbmRvd3MQARIJCgVMaW51eBACEgcKA01hYxADMsABCg1D",
-            "b2xvbnlTZXJ2aWNlEjsKBkNyZWF0ZRIbLmNvbG9ueS5Db2xvbnlDcmVhdGVS",
-            "ZXF1ZXN0GhIuY29sb255LkNvbG9ueURhdGEiABI7CgZVcGRhdGUSGy5jb2xv",
-            "bnkuQ29sb255VXBkYXRlUmVxdWVzdBoSLmNvbG9ueS5Db2xvbnlEYXRhIgAS",
-            "NQoDR2V0EhguY29sb255LkNvbG9ueUdldFJlcXVlc3QaEi5jb2xvbnkuQ29s",
-            "b255RGF0YSIAYgZwcm90bzM="));
+            "Cgxjb2xvbnkucHJvdG8SBmNvbG9ueRoOdHJhZGFibGUucHJvdG8i5AEKCkNv",
+            "bG9ueURhdGESEAoIQ29sb255SWQYASABKAkSDAoETmFtZRgCIAEoCRITCgtG",
+            "YWN0aW9uTmFtZRgDIAEoCRINCgVNYXBJZBgJIAEoBRIMCgRUaWNrGAQgASgF",
+            "EhMKC1VzZWREZXZNb2RlGAUgASgIEhMKC0dhbWVWZXJzaW9uGAYgASgJEiYK",
+            "CFBsYXRmb3JtGAcgASgOMhQuY29sb255LlBsYXRmb3JtRW51bRISCgpDcmVh",
+            "dGVEYXRlGAggASgDEgwKBFNlZWQYCiABKAkSEAoITG9jYXRpb24YCyABKAki",
+            "TQoTQ29sb255Q3JlYXRlUmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkS",
+            "IAoEZGF0YRgCIAEoCzISLmNvbG9ueS5Db2xvbnlEYXRhIk0KE0NvbG9ueVVw",
+            "ZGF0ZVJlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJEiAKBERhdGEYAyAB",
+            "KAsyEi5jb2xvbnkuQ29sb255RGF0YSI6ChBDb2xvbnlHZXRSZXF1ZXN0EhQK",
+            "DENsaWVudEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCSJPChRDb2xv",
+            "bnlNb2RzU2V0UmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29s",
+            "b255SWQYAiABKAkSDwoHTW9kTmFtZRgDIAMoCSIUChJDb2xvbnlNb2RzU2V0",
+            "UmVwbHkiagoYQ29sb255VHJhZGFibGVTZXRSZXF1ZXN0EhQKDENsaWVudEJp",
+            "bmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCRImCgRpdGVtGAMgAygLMhgu",
+            "dHJhZGFibGUuQ29sb255VHJhZGFibGUiGAoWQ29sb255VHJhZGFibGVTZXRS",
+            "ZXBseSo8CgxQbGF0Zm9ybUVudW0SCwoHVW5rbm93bhAAEgsKB1dpbmRvd3MQ",
+            "ARIJCgVMaW51eBACEgcKA01hYxADMtkCCg1Db2xvbnlTZXJ2aWNlEjsKBkNy",
+            "ZWF0ZRIbLmNvbG9ueS5Db2xvbnlDcmVhdGVSZXF1ZXN0GhIuY29sb255LkNv",
+            "bG9ueURhdGEiABI7CgZVcGRhdGUSGy5jb2xvbnkuQ29sb255VXBkYXRlUmVx",
+            "dWVzdBoSLmNvbG9ueS5Db2xvbnlEYXRhIgASNQoDR2V0EhguY29sb255LkNv",
+            "bG9ueUdldFJlcXVlc3QaEi5jb2xvbnkuQ29sb255RGF0YSIAEkQKBk1vZFNl",
+            "dBIcLmNvbG9ueS5Db2xvbnlNb2RzU2V0UmVxdWVzdBoaLmNvbG9ueS5Db2xv",
+            "bnlNb2RzU2V0UmVwbHkiABJRCgtUcmFkYWJsZVNldBIgLmNvbG9ueS5Db2xv",
+            "bnlUcmFkYWJsZVNldFJlcXVlc3QaHi5jb2xvbnkuQ29sb255VHJhZGFibGVT",
+            "ZXRSZXBseSIAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Tradable.TradableReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Colony.PlatformEnum), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyData), global::Colony.ColonyData.Parser, new[]{ "ColonyId", "Name", "FactionName", "MapId", "Tick", "UsedDevMode", "GameVersion", "Platform", "CreateDate" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyCreateRequest), global::Colony.ColonyCreateRequest.Parser, new[]{ "ClientId", "Data" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyUpdateRequest), global::Colony.ColonyUpdateRequest.Parser, new[]{ "ClientId", "Data" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyGetRequest), global::Colony.ColonyGetRequest.Parser, new[]{ "ClientId", "ColonyId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyData), global::Colony.ColonyData.Parser, new[]{ "ColonyId", "Name", "FactionName", "MapId", "Tick", "UsedDevMode", "GameVersion", "Platform", "CreateDate", "Seed", "Location" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyCreateRequest), global::Colony.ColonyCreateRequest.Parser, new[]{ "ClientBindId", "Data" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyUpdateRequest), global::Colony.ColonyUpdateRequest.Parser, new[]{ "ClientBindId", "Data" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyGetRequest), global::Colony.ColonyGetRequest.Parser, new[]{ "ClientBindId", "ColonyId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyModsSetRequest), global::Colony.ColonyModsSetRequest.Parser, new[]{ "ClientBindId", "ColonyId", "ModName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyModsSetReply), global::Colony.ColonyModsSetReply.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyTradableSetRequest), global::Colony.ColonyTradableSetRequest.Parser, new[]{ "ClientBindId", "ColonyId", "Item" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyTradableSetReply), global::Colony.ColonyTradableSetReply.Parser, null, null, null, null, null)
           }));
     }
     #endregion
@@ -101,6 +115,8 @@ namespace Colony {
       gameVersion_ = other.gameVersion_;
       platform_ = other.platform_;
       createDate_ = other.createDate_;
+      seed_ = other.seed_;
+      location_ = other.location_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -211,6 +227,34 @@ namespace Colony {
       }
     }
 
+    /// <summary>Field number for the "Seed" field.</summary>
+    public const int SeedFieldNumber = 10;
+    private string seed_ = "";
+    /// <summary>
+    /// The world seed
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Seed {
+      get { return seed_; }
+      set {
+        seed_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "Location" field.</summary>
+    public const int LocationFieldNumber = 11;
+    private string location_ = "";
+    /// <summary>
+    ///X,Y of colony on map
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Location {
+      get { return location_; }
+      set {
+        location_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ColonyData);
@@ -233,6 +277,8 @@ namespace Colony {
       if (GameVersion != other.GameVersion) return false;
       if (Platform != other.Platform) return false;
       if (CreateDate != other.CreateDate) return false;
+      if (Seed != other.Seed) return false;
+      if (Location != other.Location) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -248,6 +294,8 @@ namespace Colony {
       if (GameVersion.Length != 0) hash ^= GameVersion.GetHashCode();
       if (Platform != global::Colony.PlatformEnum.Unknown) hash ^= Platform.GetHashCode();
       if (CreateDate != 0L) hash ^= CreateDate.GetHashCode();
+      if (Seed.Length != 0) hash ^= Seed.GetHashCode();
+      if (Location.Length != 0) hash ^= Location.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -300,6 +348,14 @@ namespace Colony {
         output.WriteRawTag(72);
         output.WriteInt32(MapId);
       }
+      if (Seed.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(Seed);
+      }
+      if (Location.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(Location);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -345,6 +401,14 @@ namespace Colony {
         output.WriteRawTag(72);
         output.WriteInt32(MapId);
       }
+      if (Seed.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(Seed);
+      }
+      if (Location.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(Location);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -380,6 +444,12 @@ namespace Colony {
       }
       if (CreateDate != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(CreateDate);
+      }
+      if (Seed.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Seed);
+      }
+      if (Location.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Location);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -419,6 +489,12 @@ namespace Colony {
       if (other.CreateDate != 0L) {
         CreateDate = other.CreateDate;
       }
+      if (other.Seed.Length != 0) {
+        Seed = other.Seed;
+      }
+      if (other.Location.Length != 0) {
+        Location = other.Location;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -469,6 +545,14 @@ namespace Colony {
             MapId = input.ReadInt32();
             break;
           }
+          case 82: {
+            Seed = input.ReadString();
+            break;
+          }
+          case 90: {
+            Location = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -517,6 +601,14 @@ namespace Colony {
           }
           case 72: {
             MapId = input.ReadInt32();
+            break;
+          }
+          case 82: {
+            Seed = input.ReadString();
+            break;
+          }
+          case 90: {
+            Location = input.ReadString();
             break;
           }
         }
@@ -555,7 +647,7 @@ namespace Colony {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ColonyCreateRequest(ColonyCreateRequest other) : this() {
-      clientId_ = other.clientId_;
+      clientBindId_ = other.clientBindId_;
       data_ = other.data_ != null ? other.data_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -565,14 +657,14 @@ namespace Colony {
       return new ColonyCreateRequest(this);
     }
 
-    /// <summary>Field number for the "ClientId" field.</summary>
-    public const int ClientIdFieldNumber = 1;
-    private string clientId_ = "";
+    /// <summary>Field number for the "ClientBindId" field.</summary>
+    public const int ClientBindIdFieldNumber = 1;
+    private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string ClientId {
-      get { return clientId_; }
+    public string ClientBindId {
+      get { return clientBindId_; }
       set {
-        clientId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        clientBindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -604,7 +696,7 @@ namespace Colony {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ClientId != other.ClientId) return false;
+      if (ClientBindId != other.ClientBindId) return false;
       if (!object.Equals(Data, other.Data)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -612,7 +704,7 @@ namespace Colony {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ClientId.Length != 0) hash ^= ClientId.GetHashCode();
+      if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
       if (data_ != null) hash ^= Data.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -630,9 +722,9 @@ namespace Colony {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ClientId.Length != 0) {
+      if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(ClientId);
+        output.WriteString(ClientBindId);
       }
       if (data_ != null) {
         output.WriteRawTag(18);
@@ -647,9 +739,9 @@ namespace Colony {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ClientId.Length != 0) {
+      if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(ClientId);
+        output.WriteString(ClientBindId);
       }
       if (data_ != null) {
         output.WriteRawTag(18);
@@ -664,8 +756,8 @@ namespace Colony {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ClientId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientId);
+      if (ClientBindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientBindId);
       }
       if (data_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Data);
@@ -681,8 +773,8 @@ namespace Colony {
       if (other == null) {
         return;
       }
-      if (other.ClientId.Length != 0) {
-        ClientId = other.ClientId;
+      if (other.ClientBindId.Length != 0) {
+        ClientBindId = other.ClientBindId;
       }
       if (other.data_ != null) {
         if (data_ == null) {
@@ -705,7 +797,7 @@ namespace Colony {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            ClientId = input.ReadString();
+            ClientBindId = input.ReadString();
             break;
           }
           case 18: {
@@ -730,7 +822,7 @@ namespace Colony {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            ClientId = input.ReadString();
+            ClientBindId = input.ReadString();
             break;
           }
           case 18: {
@@ -776,7 +868,7 @@ namespace Colony {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ColonyUpdateRequest(ColonyUpdateRequest other) : this() {
-      clientId_ = other.clientId_;
+      clientBindId_ = other.clientBindId_;
       data_ = other.data_ != null ? other.data_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -786,19 +878,19 @@ namespace Colony {
       return new ColonyUpdateRequest(this);
     }
 
-    /// <summary>Field number for the "ClientId" field.</summary>
-    public const int ClientIdFieldNumber = 1;
-    private string clientId_ = "";
+    /// <summary>Field number for the "ClientBindId" field.</summary>
+    public const int ClientBindIdFieldNumber = 1;
+    private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string ClientId {
-      get { return clientId_; }
+    public string ClientBindId {
+      get { return clientBindId_; }
       set {
-        clientId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        clientBindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
     /// <summary>Field number for the "Data" field.</summary>
-    public const int DataFieldNumber = 2;
+    public const int DataFieldNumber = 3;
     private global::Colony.ColonyData data_;
     /// <summary>
     /// Certain fields from ColonyData will be ignored
@@ -825,7 +917,7 @@ namespace Colony {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ClientId != other.ClientId) return false;
+      if (ClientBindId != other.ClientBindId) return false;
       if (!object.Equals(Data, other.Data)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -833,7 +925,7 @@ namespace Colony {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ClientId.Length != 0) hash ^= ClientId.GetHashCode();
+      if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
       if (data_ != null) hash ^= Data.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -851,12 +943,12 @@ namespace Colony {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ClientId.Length != 0) {
+      if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(ClientId);
+        output.WriteString(ClientBindId);
       }
       if (data_ != null) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteMessage(Data);
       }
       if (_unknownFields != null) {
@@ -868,12 +960,12 @@ namespace Colony {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ClientId.Length != 0) {
+      if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(ClientId);
+        output.WriteString(ClientBindId);
       }
       if (data_ != null) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteMessage(Data);
       }
       if (_unknownFields != null) {
@@ -885,8 +977,8 @@ namespace Colony {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ClientId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientId);
+      if (ClientBindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientBindId);
       }
       if (data_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Data);
@@ -902,8 +994,8 @@ namespace Colony {
       if (other == null) {
         return;
       }
-      if (other.ClientId.Length != 0) {
-        ClientId = other.ClientId;
+      if (other.ClientBindId.Length != 0) {
+        ClientBindId = other.ClientBindId;
       }
       if (other.data_ != null) {
         if (data_ == null) {
@@ -926,10 +1018,10 @@ namespace Colony {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            ClientId = input.ReadString();
+            ClientBindId = input.ReadString();
             break;
           }
-          case 18: {
+          case 26: {
             if (data_ == null) {
               Data = new global::Colony.ColonyData();
             }
@@ -951,10 +1043,10 @@ namespace Colony {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            ClientId = input.ReadString();
+            ClientBindId = input.ReadString();
             break;
           }
-          case 18: {
+          case 26: {
             if (data_ == null) {
               Data = new global::Colony.ColonyData();
             }
@@ -997,7 +1089,7 @@ namespace Colony {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ColonyGetRequest(ColonyGetRequest other) : this() {
-      clientId_ = other.clientId_;
+      clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1007,14 +1099,14 @@ namespace Colony {
       return new ColonyGetRequest(this);
     }
 
-    /// <summary>Field number for the "ClientId" field.</summary>
-    public const int ClientIdFieldNumber = 1;
-    private string clientId_ = "";
+    /// <summary>Field number for the "ClientBindId" field.</summary>
+    public const int ClientBindIdFieldNumber = 1;
+    private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string ClientId {
-      get { return clientId_; }
+    public string ClientBindId {
+      get { return clientBindId_; }
       set {
-        clientId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        clientBindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1042,7 +1134,7 @@ namespace Colony {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ClientId != other.ClientId) return false;
+      if (ClientBindId != other.ClientBindId) return false;
       if (ColonyId != other.ColonyId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1050,7 +1142,7 @@ namespace Colony {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ClientId.Length != 0) hash ^= ClientId.GetHashCode();
+      if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
       if (ColonyId.Length != 0) hash ^= ColonyId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1068,9 +1160,9 @@ namespace Colony {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ClientId.Length != 0) {
+      if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(ClientId);
+        output.WriteString(ClientBindId);
       }
       if (ColonyId.Length != 0) {
         output.WriteRawTag(18);
@@ -1085,9 +1177,9 @@ namespace Colony {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ClientId.Length != 0) {
+      if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(ClientId);
+        output.WriteString(ClientBindId);
       }
       if (ColonyId.Length != 0) {
         output.WriteRawTag(18);
@@ -1102,8 +1194,8 @@ namespace Colony {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ClientId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientId);
+      if (ClientBindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientBindId);
       }
       if (ColonyId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ColonyId);
@@ -1119,8 +1211,8 @@ namespace Colony {
       if (other == null) {
         return;
       }
-      if (other.ClientId.Length != 0) {
-        ClientId = other.ClientId;
+      if (other.ClientBindId.Length != 0) {
+        ClientBindId = other.ClientBindId;
       }
       if (other.ColonyId.Length != 0) {
         ColonyId = other.ColonyId;
@@ -1140,7 +1232,7 @@ namespace Colony {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            ClientId = input.ReadString();
+            ClientBindId = input.ReadString();
             break;
           }
           case 18: {
@@ -1162,13 +1254,751 @@ namespace Colony {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            ClientId = input.ReadString();
+            ClientBindId = input.ReadString();
             break;
           }
           case 18: {
             ColonyId = input.ReadString();
             break;
           }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class ColonyModsSetRequest : pb::IMessage<ColonyModsSetRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ColonyModsSetRequest> _parser = new pb::MessageParser<ColonyModsSetRequest>(() => new ColonyModsSetRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ColonyModsSetRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Colony.ColonyReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyModsSetRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyModsSetRequest(ColonyModsSetRequest other) : this() {
+      clientBindId_ = other.clientBindId_;
+      colonyId_ = other.colonyId_;
+      modName_ = other.modName_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyModsSetRequest Clone() {
+      return new ColonyModsSetRequest(this);
+    }
+
+    /// <summary>Field number for the "ClientBindId" field.</summary>
+    public const int ClientBindIdFieldNumber = 1;
+    private string clientBindId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ClientBindId {
+      get { return clientBindId_; }
+      set {
+        clientBindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ColonyId" field.</summary>
+    public const int ColonyIdFieldNumber = 2;
+    private string colonyId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ColonyId {
+      get { return colonyId_; }
+      set {
+        colonyId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ModName" field.</summary>
+    public const int ModNameFieldNumber = 3;
+    private static readonly pb::FieldCodec<string> _repeated_modName_codec
+        = pb::FieldCodec.ForString(26);
+    private readonly pbc::RepeatedField<string> modName_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> ModName {
+      get { return modName_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ColonyModsSetRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ColonyModsSetRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ClientBindId != other.ClientBindId) return false;
+      if (ColonyId != other.ColonyId) return false;
+      if(!modName_.Equals(other.modName_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
+      if (ColonyId.Length != 0) hash ^= ColonyId.GetHashCode();
+      hash ^= modName_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (ClientBindId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ColonyId);
+      }
+      modName_.WriteTo(output, _repeated_modName_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (ClientBindId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ColonyId);
+      }
+      modName_.WriteTo(ref output, _repeated_modName_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ClientBindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ColonyId);
+      }
+      size += modName_.CalculateSize(_repeated_modName_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ColonyModsSetRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ClientBindId.Length != 0) {
+        ClientBindId = other.ClientBindId;
+      }
+      if (other.ColonyId.Length != 0) {
+        ColonyId = other.ColonyId;
+      }
+      modName_.Add(other.modName_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            ClientBindId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ColonyId = input.ReadString();
+            break;
+          }
+          case 26: {
+            modName_.AddEntriesFrom(input, _repeated_modName_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            ClientBindId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ColonyId = input.ReadString();
+            break;
+          }
+          case 26: {
+            modName_.AddEntriesFrom(ref input, _repeated_modName_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class ColonyModsSetReply : pb::IMessage<ColonyModsSetReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ColonyModsSetReply> _parser = new pb::MessageParser<ColonyModsSetReply>(() => new ColonyModsSetReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ColonyModsSetReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Colony.ColonyReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyModsSetReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyModsSetReply(ColonyModsSetReply other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyModsSetReply Clone() {
+      return new ColonyModsSetReply(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ColonyModsSetReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ColonyModsSetReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ColonyModsSetReply other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class ColonyTradableSetRequest : pb::IMessage<ColonyTradableSetRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ColonyTradableSetRequest> _parser = new pb::MessageParser<ColonyTradableSetRequest>(() => new ColonyTradableSetRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ColonyTradableSetRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Colony.ColonyReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyTradableSetRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyTradableSetRequest(ColonyTradableSetRequest other) : this() {
+      clientBindId_ = other.clientBindId_;
+      colonyId_ = other.colonyId_;
+      item_ = other.item_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyTradableSetRequest Clone() {
+      return new ColonyTradableSetRequest(this);
+    }
+
+    /// <summary>Field number for the "ClientBindId" field.</summary>
+    public const int ClientBindIdFieldNumber = 1;
+    private string clientBindId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ClientBindId {
+      get { return clientBindId_; }
+      set {
+        clientBindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ColonyId" field.</summary>
+    public const int ColonyIdFieldNumber = 2;
+    private string colonyId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ColonyId {
+      get { return colonyId_; }
+      set {
+        colonyId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "item" field.</summary>
+    public const int ItemFieldNumber = 3;
+    private static readonly pb::FieldCodec<global::Tradable.ColonyTradable> _repeated_item_codec
+        = pb::FieldCodec.ForMessage(26, global::Tradable.ColonyTradable.Parser);
+    private readonly pbc::RepeatedField<global::Tradable.ColonyTradable> item_ = new pbc::RepeatedField<global::Tradable.ColonyTradable>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Tradable.ColonyTradable> Item {
+      get { return item_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ColonyTradableSetRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ColonyTradableSetRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ClientBindId != other.ClientBindId) return false;
+      if (ColonyId != other.ColonyId) return false;
+      if(!item_.Equals(other.item_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
+      if (ColonyId.Length != 0) hash ^= ColonyId.GetHashCode();
+      hash ^= item_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (ClientBindId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ColonyId);
+      }
+      item_.WriteTo(output, _repeated_item_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (ClientBindId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ColonyId);
+      }
+      item_.WriteTo(ref output, _repeated_item_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ClientBindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ColonyId);
+      }
+      size += item_.CalculateSize(_repeated_item_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ColonyTradableSetRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ClientBindId.Length != 0) {
+        ClientBindId = other.ClientBindId;
+      }
+      if (other.ColonyId.Length != 0) {
+        ColonyId = other.ColonyId;
+      }
+      item_.Add(other.item_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            ClientBindId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ColonyId = input.ReadString();
+            break;
+          }
+          case 26: {
+            item_.AddEntriesFrom(input, _repeated_item_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            ClientBindId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ColonyId = input.ReadString();
+            break;
+          }
+          case 26: {
+            item_.AddEntriesFrom(ref input, _repeated_item_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class ColonyTradableSetReply : pb::IMessage<ColonyTradableSetReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ColonyTradableSetReply> _parser = new pb::MessageParser<ColonyTradableSetReply>(() => new ColonyTradableSetReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ColonyTradableSetReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Colony.ColonyReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyTradableSetReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyTradableSetReply(ColonyTradableSetReply other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ColonyTradableSetReply Clone() {
+      return new ColonyTradableSetReply(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ColonyTradableSetReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ColonyTradableSetReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ColonyTradableSetReply other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
         }
       }
     }
