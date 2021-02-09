@@ -33,6 +33,7 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="db\DBBindData.cs" />
         <Compile Include="db\DBUserData.cs" />
         <Compile Include="extend\lists.cs" />
         <Compile Include="packets\Bank.cs" />
@@ -43,7 +44,11 @@
         <Compile Include="packets\Order.cs" />
         <Compile Include="packets\Tradable.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="rest\api\v1\colony\data.cs" />
+        <Compile Include="rest\api\v1\bind\verify.cs" />
+        <Compile Include="rest\api\v1\colony.cs" />
+        <Compile Include="rest\api\v1\consts.cs" />
+        <Compile Include="rest\api\v1\inventory.cs" />
+        <Compile Include="rest\api\v1\order.cs" />
         <Compile Include="rest\api\v1\system.cs" />
         <Compile Include="rest\helpers.cs" />
         <Compile Include="system\consts.cs" />

@@ -10,52 +10,32 @@
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using Verse;
 
 namespace ise.lib
 {
     internal static class Logging
     {
-        internal static class LogWriter
+        private const string Prefix = "ISE @ ";
+
+        internal static void WriteErrorMessage(string message)
         {
-            #region Fields
+            var sf = new StackTrace().GetFrame(1);
+            WriteErrorMessage(message, sf);
+        }
 
-            private const string Prefix = "ISE @ ";
+        private static void WriteErrorMessage(string message, StackFrame sf)
+        {
+            Log.Error($"{Prefix}{DateTime.UtcNow} -> " +
+                      $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
+        }
 
-            #endregion
+        internal static void WriteMessage(string message, StackFrame sf = null)
+        {
+            if (sf == null) sf = new StackTrace().GetFrame(1);
 
-            #region Methods
-
-            internal static void WriteErrorMessage(string message)
-            {
-                var sf = new StackTrace().GetFrame(1);
-                WriteErrorMessage(message, sf);
-            }
-
-            private static void WriteErrorMessage(string message, StackFrame sf)
-            {
-                Log.Error($"{Prefix}{DateTime.UtcNow} -> " +
-                          $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
-            }
-
-            // internal static void DumpObjectToLog(object context)
-            // {
-            //     var sf = new StackTrace().GetFrame(1);
-            //     var sw = new StringWriter();
-            //     ObjectDumper.Write(context, 0, sw);
-            //     WriteMessage(sw.ToString(), sf);
-            // }
-
-            internal static void WriteMessage(string message, StackFrame sf = null)
-            {
-                if (sf == null) sf = new StackTrace().GetFrame(1);
-
-                Log.Message($"{Prefix}{DateTime.UtcNow} -> " +
-                            $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
-            }
-
-            #endregion
+            Log.Message($"{Prefix}{DateTime.UtcNow} -> " +
+                        $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
         }
     }
 }

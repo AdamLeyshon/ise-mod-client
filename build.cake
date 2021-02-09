@@ -153,4 +153,10 @@ Task("LocalPublish")
 	.IsDependentOn("CopyToLocal")
   .Does(() => {});
 
+
+Task("Publish")
+  .IsDependentOn("LocalPublish")
+  .IsDependentOn("SteamPublish")
+  .Does(() => {});
+
 RunTarget(target);

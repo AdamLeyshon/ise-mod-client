@@ -19,6 +19,8 @@ namespace ise.lib
 {
     internal static class Tradables
     {
+        #region Methods
+
         internal static IEnumerable<ColonyTradable> GetAllTradables()
         {
             var thingsToRequestFromMarket = new List<ColonyTradable>();
@@ -43,16 +45,16 @@ namespace ise.lib
                 {
                     if (thing.tradeability != Tradeability.None &&
                         thing.GetStatValueAbstract(StatDefOf.MarketValue) > 0.0 &&
-                        (thing.category == ThingCategory.Item || (thing.category == ThingCategory.Building &&
-                                                                  thing.Minifiable)))
+                        (thing.category == ThingCategory.Item || thing.category == ThingCategory.Building &&
+                            thing.Minifiable))
 
                         thingsToRequestFromMarket.AddRange(ComputeThingDef(thing, stuffCategories));
                 }
                 catch (Exception ex)
                 {
-                    Logging.LogWriter.WriteErrorMessage(
+                    Logging.WriteErrorMessage(
                         $"failed to process ThingDef {thing.defName} for trading, it won't be tradeable.");
-                    Logging.LogWriter.WriteErrorMessage(ex.Message);
+                    Logging.WriteErrorMessage(ex.Message);
                 }
 
             return thingsToRequestFromMarket;
@@ -65,7 +67,7 @@ namespace ise.lib
             foreach (var stuffThings in thing.stuffCategories.Select(category => stuffData[category]))
             {
                 foreach (var stuff in stuffThings)
-                    yield return new ColonyTradable()
+                    yield return new ColonyTradable
                     {
                         ThingDef = thing.defName,
                         Stuff = stuff.defName,
@@ -86,8 +88,7 @@ namespace ise.lib
                 {
                     var stuffThings = stuffData[category];
                     foreach (var stuff in stuffThings)
-                    {
-                        yield return new ColonyTradable()
+                        yield return new ColonyTradable
                         {
                             ThingDef = thing.defName,
                             Stuff = stuff.defName,
@@ -96,7 +97,6 @@ namespace ise.lib
                             BaseValue = thing.BaseMarketValue,
                             Weight = thing.BaseMass
                         };
-                    }
                 }
         }
 
@@ -105,7 +105,7 @@ namespace ise.lib
             for (var quality = 2; quality < 7; quality++)
             {
                 var qualityObject = (QualityCategory) quality;
-                yield return new ColonyTradable()
+                yield return new ColonyTradable
                 {
                     ThingDef = thing.defName,
                     Minified = thing.Minifiable,
@@ -122,22 +122,17 @@ namespace ise.lib
             var result = new List<ColonyTradable>();
 
             if (thing.MadeFromStuff)
-            {
                 // Item can be made from stuff, Does it have quality too?
                 result.AddRange(thing.HasComp(typeof(CompQuality))
                     ? ComputeItemsMadeFromStuffWithQuality(thing, stuffData) // Yes
                     : ComputeItemsMadeFromStuff(thing, stuffData)); // No
-            }
             else if (thing.HasComp(typeof(CompQuality)))
-            {
                 // Has quality but no stuff
                 result.AddRange(ComputeItemsWithQuality(thing));
-            }
             else
-            {
                 // Normal item, no quality or Stuff Type
                 result.Add(
-                    new ColonyTradable()
+                    new ColonyTradable
                     {
                         ThingDef = thing.defName,
                         Minified = thing.Minifiable,
@@ -145,9 +140,10 @@ namespace ise.lib
                         Weight = thing.BaseMass
                     }
                 );
-            }
 
             return result;
         }
+
+        #endregion
     }
 }
