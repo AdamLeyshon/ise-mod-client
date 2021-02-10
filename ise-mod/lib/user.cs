@@ -25,14 +25,14 @@ namespace ise.lib
             return SteamManager.Initialized ? SteamUser.GetSteamID().ToString() : null;
         }
 
-        internal static DBUserData LoadUserData()
+        internal static DBUser LoadUserData()
         {
             var steamId = GetUserSteamId();
 
             using (var db = new LiteDatabase(DBLocation))
             {
                 Logging.WriteMessage($"Loading from {db}");
-                var col = db.GetCollection<DBUserData>("user_data");
+                var col = db.GetCollection<DBUser>("user_data");
 
                 var userData = steamId.NullOrEmpty()
                     ? col.FindOne(data => data.IsSteamUser == false)
@@ -42,8 +42,8 @@ namespace ise.lib
                 {
                     Logging.WriteMessage($"Creating new user data");
                     userData = steamId.NullOrEmpty()
-                        ? new DBUserData() {UserId = Guid.NewGuid().ToString(), IsSteamUser = false}
-                        : new DBUserData() {UserId = steamId, IsSteamUser = true};
+                        ? new DBUser() {UserId = Guid.NewGuid().ToString(), IsSteamUser = false}
+                        : new DBUser() {UserId = steamId, IsSteamUser = true};
                     col.Insert(userData);
                 }
 
@@ -52,33 +52,33 @@ namespace ise.lib
             }
         }
 
-        internal static string LoadClientBind(string userId)
+        internal static string LoadBind<T>(string userId) where T : IBaseBind, new()
         {
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
             {
                 // Get the collection (or create, if doesn't exist)
-                var col = db.GetCollection<DBClientBindData>("client_bind");
+                var col = db.GetCollection<T>("bindings");
 
-                var clientBindData = col.FindOne(data => data.UserId == userId);
+                var clientBindData = col.FindOne(data => data.BindId == userId);
 
                 if (clientBindData == null) return string.Empty;
 
-                Logging.WriteMessage($"Loaded Bind ID: {clientBindData.ClientBindId}");
-                return clientBindData.ClientBindId;
+                Logging.WriteMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
+                return clientBindData.BindId;
             }
         }
 
-        internal static void SaveClientBind(string userId, string clientBindId)
+        internal static void SaveBind<T>(string userId, string bindId) where T : IBaseBind, new()
         {
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
             {
                 // Get the collection (or create, if doesn't exist)
-                var col = db.GetCollection<DBClientBindData>("client_bind");
+                var col = db.GetCollection<T>("bindings");
 
-                var clientBind = new DBClientBindData() {UserId = userId, ClientBindId = clientBindId};
-                col.Insert(clientBind);
+                var bind = new T() {UserId = userId, BindId = bindId};
+                col.Insert(bind);
             }
         }
     }

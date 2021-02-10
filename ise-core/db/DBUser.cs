@@ -8,7 +8,7 @@
 
 namespace ise_core.db
 {
-    public class DBUserData
+    public class DBUser
     {
         public string UserId { get; set; }
         public bool IsSteamUser { get; set; }

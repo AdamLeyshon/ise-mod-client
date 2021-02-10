@@ -3,7 +3,7 @@
   <ThingDef ParentName="BuildingBase">
     <defName>ISEConsole</defName>
     <label>ISE Console</label>
-    <thingClass>ise_mod.buildings.Building_Console</thingClass>
+    <thingClass>ise.buildings.ISEConsole</thingClass>
     <graphicData>
       <texPath>Things/Buildings/ISEConsole</texPath>
       <graphicClass>Graphic_Single</graphicClass>

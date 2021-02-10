@@ -48,9 +48,9 @@ Task("CopyDataFolders")
     Force = true
   });
   CopyDirectory(mod_source_path + "/About", mod_path+"/About");
-  //CopyDirectory(mod_source_path + "/Defs", mod_path+"/Defs");
-  //CopyDirectory(mod_source_path + "/Languages", mod_path+"/Languages");
-  //CopyDirectory(mod_source_path + "/Textures", mod_path+"/Textures");
+  CopyDirectory(mod_source_path + "/Defs", mod_path+"/Defs");
+  CopyDirectory(mod_source_path + "/Languages", mod_path+"/Languages");
+  CopyDirectory(mod_source_path + "/Textures", mod_path+"/Textures");
   CreateDirectory(mod_path+"/Assemblies");
 });
 

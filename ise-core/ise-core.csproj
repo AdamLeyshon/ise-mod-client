@@ -33,8 +33,11 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="db\DBBindData.cs" />
-        <Compile Include="db\DBUserData.cs" />
+        <Compile Include="db\IBaseBind.cs" />
+        <Compile Include="db\DBAccountBind.cs" />
+        <Compile Include="db\DBClientBind.cs" />
+        <Compile Include="db\DBColonyBind.cs" />
+        <Compile Include="db\DBUser.cs" />
         <Compile Include="extend\lists.cs" />
         <Compile Include="packets\Bank.cs" />
         <Compile Include="packets\Bind.cs" />

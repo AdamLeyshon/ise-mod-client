@@ -1,4 +1,5 @@
 ﻿using ise.lib;
+using ise_core.db;
 using Verse;
 using static ise.lib.User;
 
@@ -7,14 +8,13 @@ namespace ise
     [StaticConstructorOnStartup]
     public class IseBootStrap
     {
+        public static readonly DBUser User;
+        public static DBClientBind ClientBind;
+
         static IseBootStrap()
         {
-            var userData = LoadUserData();
-            var bindId = LoadClientBind(userData.UserId);
-            if (bindId.NullOrEmpty())
-            {
-                Logging.WriteMessage($"No client bind for: {userData.UserId}");
-            }
+            User = LoadUserData();
+
         }
     }
 }

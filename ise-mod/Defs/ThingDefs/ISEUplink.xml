@@ -3,7 +3,7 @@
 	<ThingDef ParentName="BuildingBase">
 		<defName>ISEUplink</defName>
 		<label>ISE uplink satellite</label>
-		<thingClass>ise_mod.buildings.ISEUplink</thingClass>
+		<thingClass>ise.buildings.ISEUplink</thingClass>
 		<size>(2,2)</size>
 		<graphicData>
 		  <texPath>Things/Buildings/ISEUplink</texPath>

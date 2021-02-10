@@ -42,6 +42,19 @@ namespace ise.lib.game
             return !m.Parent.Label.NullOrEmpty() && m.Parent.Faction.HasName;
         }
 
+        internal static bool MapIsSettlementOfPlayer(Map m)
+        {
+            return Find.WorldObjects.SettlementBases.Where(
+                    x => x.Faction == Faction.OfPlayer
+                )
+                .Any(fb => fb.HasMap && fb.Map == m);
+        }
+
+        internal static string GetUniqueMapID(Map m)
+        {
+            return Crypto.GetShaHash($"{m.Tile}{Current.CreatingWorld.info.seedString}");
+        }
+
         #endregion
     }
 }
