@@ -20,9 +20,14 @@ namespace ise.lib
 {
     internal static class User
     {
-        private static string GetUserSteamId()
+        internal static string GetUserSteamId()
         {
+#if DEBUG
+            // Pretend we're a steam user
+            return "[U:1:13457876]";
+#else
             return SteamManager.Initialized ? SteamUser.GetSteamID().ToString() : null;
+#endif
         }
 
         internal static DBUser LoadUserData()
@@ -52,7 +57,7 @@ namespace ise.lib
             }
         }
 
-        internal static string LoadBind<T>(string userId) where T : IBaseBind, new()
+        internal static string LoadBind<T>(string parentId) where T : IBaseBind, new()
         {
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
@@ -60,7 +65,7 @@ namespace ise.lib
                 // Get the collection (or create, if doesn't exist)
                 var col = db.GetCollection<T>("bindings");
 
-                var clientBindData = col.FindOne(data => data.BindId == userId);
+                var clientBindData = col.FindOne(data => data.ParentId == parentId);
 
                 if (clientBindData == null) return string.Empty;
 
@@ -69,7 +74,7 @@ namespace ise.lib
             }
         }
 
-        internal static void SaveBind<T>(string userId, string bindId) where T : IBaseBind, new()
+        internal static void SaveBind<T>(string parentId, string bindId) where T : IBaseBind, new()
         {
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
@@ -77,7 +82,7 @@ namespace ise.lib
                 // Get the collection (or create, if doesn't exist)
                 var col = db.GetCollection<T>("bindings");
 
-                var bind = new T() {UserId = userId, BindId = bindId};
+                var bind = new T {ParentId = parentId, BindId = bindId};
                 col.Insert(bind);
             }
         }

@@ -34,7 +34,6 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="db\IBaseBind.cs" />
-        <Compile Include="db\DBAccountBind.cs" />
         <Compile Include="db\DBClientBind.cs" />
         <Compile Include="db\DBColonyBind.cs" />
         <Compile Include="db\DBUser.cs" />

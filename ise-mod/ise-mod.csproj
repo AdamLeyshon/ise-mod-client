@@ -54,12 +54,20 @@
         </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\..\..\..\Games\RimWorld12\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\..\..\Games\RimWorld12\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="buildings\iseconsole.cs" />
         <Compile Include="buildings\iseuplink.cs" />
         <Compile Include="components\isegamecomponent.cs" />
+        <Compile Include="dialogs\bind_ui.cs" />
+        <Compile Include="dialogs\dialog.cs" />
+        <Compile Include="dialogs\trade_ui.cs" />
         <Compile Include="entrypoint.cs" />
         <Compile Include="jobs\jobdef.cs" />
         <Compile Include="jobs\job_shoponline.cs" />
@@ -68,6 +76,9 @@
         <Compile Include="lib\game\gameinfo.cs" />
         <Compile Include="lib\logging.cs" />
         <Compile Include="lib\mods.cs" />
+        <Compile Include="lib\tasks\bind_task.cs" />
+        <Compile Include="lib\tasks\colony_bind.cs" />
+        <Compile Include="lib\tasks\task.cs" />
         <Compile Include="lib\tradables.cs" />
         <Compile Include="lib\user.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

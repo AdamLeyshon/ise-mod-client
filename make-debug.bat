@@ -1,1 +1,1 @@
-powershell .\build.ps1 -ScriptArgs '-target="Publish"','-configuration="Debug"'
+dotnet cake --target="Publish" --configuration="Debug"

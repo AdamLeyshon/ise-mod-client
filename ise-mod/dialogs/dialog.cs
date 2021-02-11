@@ -1,16 +1,18 @@
 #region License
+
 // This file was created by TwistedSoul @ TheCodeCache.net
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-core, DBAccountBind.cs, Created 2021-02-10
+// ise-mod, dialog.cs, Created 2021-02-11
+
 #endregion
 
-namespace ise_core.db
+namespace ise.dialogs
 {
-    public class DBAccountBind : IBaseBind
+    public interface IDialog
     {
-        public string BindId { get; set; }
-        public string UserId { get; set; }
+        string DialogMessage { get; set; }
+        void CloseDialog();
     }
 }

@@ -3,9 +3,20 @@
   <name>InterStellar Express</name>
   <author>TwistedSoul / TheCodeCache.NET</author>
   <supportedVersions>
-        <li>1.2</li>
+    <li>1.2</li>
   </supportedVersions>
   <url>https://git.thecodecache.net/iseworld/isemod/wikis/home</url>
   <description>Build: @SHAHASH@ \n Anything you want, delivered anywhere in the universe in under 24 hours! \n\n Please read the Wiki for how to use it, just build the uplink, the console and a trade beacon!
   </description>
+  <modDependencies>
+    <li>
+      <packageId>UnlimitedHugs.HugsLib</packageId>
+      <displayName>HugsLib</displayName>
+      <downloadUrl>https://github.com/UnlimitedHugs/RimworldHugsLib/releases/latest</downloadUrl>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/818773962</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>UnlimitedHugs.HugsLib</li>
+  </loadAfter>
 </ModMetaData>

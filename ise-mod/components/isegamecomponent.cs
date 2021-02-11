@@ -8,6 +8,7 @@
 
 #endregion
 
+using System;
 using ise;
 using ise.lib;
 using ise_core.db;
@@ -17,13 +18,13 @@ using static ise.lib.game.GameInfo;
 
 namespace ise.components
 {
-    public class IseGameComponent : GameComponent
+    public class ISEGameComponent : GameComponent
     {
-        internal string AccountBind;
+        internal string ColonyBind;
         internal string ClientBind;
         private bool spawnToolUsed = false;
 
-        public IseGameComponent(Game game)
+        public ISEGameComponent(Game game)
         {
             Logging.WriteMessage($"Game Component installed");
         }
@@ -57,24 +58,25 @@ namespace ise.components
 
         private void LoadBinds()
         {
-            AccountBind = LoadBind<DBAccountBind>(IseBootStrap.User.UserId);
-            if (AccountBind.NullOrEmpty())
-            {
-                Logging.WriteMessage($"No Account bind for: {IseBootStrap.User.UserId}");
-                return;
-            }
-
-            Logging.WriteMessage($"Account bind {AccountBind}");
-
             ClientBind = LoadBind<DBClientBind>(IseBootStrap.User.UserId);
             if (ClientBind.NullOrEmpty())
             {
-                Logging.WriteMessage($"No Client bind for: {AccountBind}");
+                Logging.WriteMessage($"No Client bind for: {IseBootStrap.User.UserId}");
+                return;
+            }
+            
+            Logging.WriteMessage($"Client bind {ClientBind}");
+
+            ColonyBind = LoadBind<DBColonyBind>(ClientBind);
+            if (ColonyBind.NullOrEmpty())
+            {
+                Logging.WriteMessage($"No colony bind for: {ClientBind}");
                 return;
             }
 
+            Logging.WriteMessage($"Colony bind {ColonyBind}");
+
             // Do other stuff
-            Logging.WriteMessage($"Client bind {ClientBind}");
         }
 
         internal bool IsValidLocationForIse(Map m)
@@ -84,5 +86,10 @@ namespace ise.components
             Logging.WriteMessage($"Map ID of caller is {mapID}");
             return GetColonyFaction().HasName && m.Parent.HasName && MapIsSettlementOfPlayer(m);
         }
+
+        /// <summary>
+        /// Set if the bind has already been verified since game start.
+        /// </summary>
+        public bool BindVerified { get; set; }
     }
 }

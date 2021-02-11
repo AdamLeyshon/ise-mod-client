@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ise.components;
+using ise.dialogs;
 using ise.jobs;
 using RimWorld;
 using Verse;
@@ -24,8 +26,8 @@ namespace ise.buildings
         private CompPowerTrader powerComp;
 
         public bool CanShopOnlineNow =>
-            Spawned && 
-            ISEUplink.HasUplink(Map) && 
+            Spawned &&
+            ISEUplink.HasUplink(Map) &&
             !Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) &&
             powerComp.PowerOn;
 
@@ -50,7 +52,7 @@ namespace ise.buildings
 
         private FloatMenuOption GetFailureReason(Pawn myPawn)
         {
-            if(!ISEUplink.HasUplink(Map))
+            if (!ISEUplink.HasUplink(Map))
                 return new FloatMenuOption("ISENeedUplink".Translate(), (Action) null);
             if (!myPawn.CanReach((LocalTargetInfo) (Thing) this, PathEndMode.InteractionCell, Danger.Some))
                 return new FloatMenuOption("CannotUseNoPath".Translate(), (Action) null);
@@ -71,8 +73,15 @@ namespace ise.buildings
 
         public void ShopOnline(Pawn user)
         {
-            
+            var gc = Current.Game.GetComponent<ISEGameComponent>();
+            if (!gc.BindVerified)
+            {
+                Find.WindowStack.Add(new BindUI(user, BindUI.BindUIType.Client));
+            }
+            else
+            {
+                // Load shop window
+            }
         }
-        
     }
 }

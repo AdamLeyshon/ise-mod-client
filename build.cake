@@ -1,8 +1,8 @@
-#addin nuget:?package=SharpZipLib
-#addin nuget:?package=Cake.Compression
-#addin "Cake.Incubator"
-#tool "nuget:?package=GitVersion.CommandLine"
-#addin "Cake.FileHelpers"
+#addin nuget:?package=SharpZipLib&version=1.3.1
+#addin nuget:?package=Cake.Compression&version=0.2.4
+#addin Cake.Incubator&version=5.1.0
+#tool nuget:?package=GitVersion.CommandLine&version=5.3.7
+#addin Cake.FileHelpers&version=3.3.0
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -116,27 +116,33 @@ Task("Make")
 
 Task("MakeZIP")
 .Does(() => {
-  Zip(mod_base_path, $"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip");
+  var zip_name = $"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip";
+  Zip(mod_base_path, zip_name);
+  Information($"ZIP Name is: {zip_name}");
 });
 
 Task("CopyToSteam")
 .Does(() => {
-	CreateDirectory($"{steam_folder}/{modname} [{version}]");
-	DeleteDirectory($"{steam_folder}/{modname} [{version}]", new DeleteDirectorySettings {
+  var dir_name = $"{steam_folder}/{modname} [{version}]";
+	CreateDirectory(dir_name);
+	DeleteDirectory(dir_name, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
   ZipUncompress($"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip", steam_folder);
+  Information($"ZIP Unpacked in: {dir_name}");
 });
 
 Task("CopyToLocal")
 .Does(() => {
-	CreateDirectory($"{local_game_folder}/{modname} [{version}]");
-	DeleteDirectory($"{local_game_folder}/{modname} [{version}]", new DeleteDirectorySettings {
+  var dir_name = $"{local_game_folder}/{modname} [{version}]";
+	CreateDirectory(dir_name);
+	DeleteDirectory(dir_name, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
   ZipUncompress($"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip", local_game_folder);
+  Information($"ZIP Unpacked in: {dir_name}");
 });
 
 

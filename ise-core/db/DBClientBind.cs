@@ -11,6 +11,6 @@ namespace ise_core.db
     public class DBClientBind : IBaseBind
     {
         public string BindId { get; set; }
-        public string UserId { get; set; }
+        public string ParentId { get; set; }
     }
 }
