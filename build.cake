@@ -16,7 +16,7 @@ var mod_base_path = "./mod_package";
 var mod_path = $"./{mod_base_path}/{modname} [{version}]";
 var git_hash = "";
 var asm_version = "";
-var steam_folder = @"D:\Games\Steam\steamapps\common\RimWorld\Mods";
+var steam_folder = @"E:\Games\Steam\steamapps\common\RimWorld\Mods";
 var local_game_folder = @"F:\Games\RimWorld12\Mods";
 
 ///////////////////////////////////////////////////////////////////////////////

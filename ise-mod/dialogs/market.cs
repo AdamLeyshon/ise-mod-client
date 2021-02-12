@@ -11,9 +11,9 @@ using Verse;
 
 namespace ise.dialogs
 {
-    public class TradeUI : Window
+    public class DialogTradeUI : Window
     {
-        public TradeUI(Pawn userPawn)
+        public DialogTradeUI(Pawn userPawn)
         {
             forcePause = true;
             absorbInputAroundWindow = true;

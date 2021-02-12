@@ -9,7 +9,7 @@ using Verse;
 
 namespace ise.lib
 {
-    internal static class consts
+    internal static class Consts
     {
         internal static readonly string DBLocation = GenFilePaths.ConfigFolderPath + "/ISEData.db";
     }

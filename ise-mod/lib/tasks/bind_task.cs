@@ -94,6 +94,7 @@ namespace ise.lib.tasks
                     break;
                 case State.Done:
                     Dialog.DialogMessage = "Account OK";
+                    Done = true;
                     break;
                 case State.Error:
                     Dialog.CloseDialog();

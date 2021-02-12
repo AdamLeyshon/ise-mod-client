@@ -14,7 +14,7 @@ using LiteDB;
 using Steamworks;
 using Verse;
 using Verse.Steam;
-using static ise.lib.consts;
+using static ise.lib.Consts;
 
 namespace ise.lib
 {

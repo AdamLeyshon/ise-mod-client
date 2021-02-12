@@ -8,11 +8,14 @@
 
 #endregion
 
+using Verse;
+
 namespace ise.dialogs
 {
     public interface IDialog
     {
         string DialogMessage { get; set; }
+        Pawn pawn { get; set; }
         void CloseDialog();
     }
 }

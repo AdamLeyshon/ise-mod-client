@@ -15,6 +15,9 @@ namespace ise.lib.tasks
     public interface IDialogTask
     {
         IDialog Dialog { get; set; }
+
+        bool Done { get; set; }
+
         void Update();
     }
 
@@ -24,6 +27,8 @@ namespace ise.lib.tasks
         {
             Dialog = dialog;
         }
+
+        public bool Done { get; set; }
 
         public IDialog Dialog { get; set; }
 

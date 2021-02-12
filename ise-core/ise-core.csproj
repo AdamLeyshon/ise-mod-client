@@ -33,6 +33,8 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="db\DBCachedTradable.cs" />
+        <Compile Include="db\DBInventory.cs" />
         <Compile Include="db\IBaseBind.cs" />
         <Compile Include="db\DBClientBind.cs" />
         <Compile Include="db\DBColonyBind.cs" />

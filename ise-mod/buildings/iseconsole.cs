@@ -74,14 +74,9 @@ namespace ise.buildings
         public void ShopOnline(Pawn user)
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
-            if (!gc.BindVerified)
-            {
-                Find.WindowStack.Add(new BindUI(user, BindUI.BindUIType.Client));
-            }
-            else
-            {
-                // Load shop window
-            }
+            Find.WindowStack.Add(gc.BindVerified
+                ? new DialogBind(user, DialogBind.BindUIType.Colony)
+                : new DialogBind(user, DialogBind.BindUIType.Client));
         }
     }
 }

@@ -8,8 +8,11 @@
 
 #endregion
 
+using System;
 using System.Linq;
+using Colony;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace ise.lib.game
@@ -18,6 +21,27 @@ namespace ise.lib.game
     {
         #region Methods
 
+        internal static PlatformEnum GetGamePlatform()
+        {
+            var platformString = Application.platform.ToString();
+            PlatformEnum platform;
+            if (platformString.Contains("Windows"))
+            {
+                platform = PlatformEnum.Windows;
+            }
+            else if (platformString.Contains("Linux"))
+                platform = PlatformEnum.Linux;
+            else if (platformString.Contains("OSX"))
+            {
+                platform = PlatformEnum.Mac;
+            }
+            else
+            {
+                platform = PlatformEnum.Unknown;
+            }
+            return platform;
+        }
+        
         internal static Faction GetColonyFaction()
         {
             return Find.FactionManager.AllFactions.FirstOrDefault(f => f.IsPlayer);
