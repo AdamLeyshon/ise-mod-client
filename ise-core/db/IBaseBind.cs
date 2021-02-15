@@ -10,7 +10,11 @@ namespace ise_core.db
 {
     public interface IBaseBind
     {
-        string BindId { get; set; }   
+        #region Properties
+
+        string BindId { get; set; }
         string ParentId { get; set; }
+
+        #endregion
     }
 }

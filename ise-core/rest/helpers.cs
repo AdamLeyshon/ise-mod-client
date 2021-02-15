@@ -24,6 +24,8 @@ namespace ise_core.rest
 {
     public static class Helpers
     {
+        #region Methods
+
         public static long GetUTCNow()
         {
             return (long) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
@@ -263,5 +265,7 @@ namespace ise_core.rest
                 return outStream.ToArray();
             }
         }
+
+        #endregion
     }
 }

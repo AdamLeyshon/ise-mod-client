@@ -9,6 +9,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory;
@@ -17,10 +18,12 @@ using ise.dialogs;
 using ise_core.db;
 using LiteDB;
 using RestSharp;
+using RimWorld;
 using Verse;
 using static ise_core.rest.Helpers;
 using static ise.lib.Consts;
 using static ise_core.rest.api.v1.consts;
+using static ise.lib.Tradables;
 
 namespace ise.lib.tasks
 {
@@ -30,17 +33,26 @@ namespace ise.lib.tasks
         {
             Start,
             Request,
-            Caching,
+            MarketCaching,
+            ColonyCaching,
             Done,
             Error,
         }
 
         private State state;
         private Task task;
+        private List<Thing> colonyThings;
+        private readonly Pawn pawn;
 
-        public MarketDownloadDialogTask(IDialog dialog) : base(dialog)
+        public MarketDownloadDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
         {
+            pawn = userPawn;
             state = State.Start;
+
+            if (pawn == null)
+            {
+                Logging.WriteErrorMessage("Pawn is NULL!");
+            }
         }
 
         public override void Update()
@@ -65,14 +77,23 @@ namespace ise.lib.tasks
                     }
 
                     break;
-                case State.Caching:
+                case State.MarketCaching:
                     Dialog.DialogMessage = "Building Cache";
+                    if (task != null && task.IsCompleted)
+                    {
+                        GatherColonyInventory();
+                    }
+
+                    break;
+                case State.ColonyCaching:
+                    Dialog.DialogMessage = "Getting colony inventory";
                     if (task != null && task.IsCompleted)
                     {
                         state = State.Done;
                     }
 
                     break;
+
                 case State.Done:
                     Dialog.DialogMessage = "Market OK";
                     Done = true;
@@ -89,6 +110,12 @@ namespace ise.lib.tasks
         {
             state = State.Error;
             Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
+            if (task.Exception?.InnerExceptions != null)
+                foreach (var innerException in task.Exception.InnerExceptions)
+                {
+                    Logging.WriteErrorMessage($"Inner exception in task {innerException}");
+                }
+
             task = null;
         }
 
@@ -103,8 +130,8 @@ namespace ise.lib.tasks
 
             if (inventory != null && inventory.InventoryPromiseExpires > GetUTCNow())
             {
-                // Jump straight to done, cache is still valid
-                state = State.Done;
+                // No need to download, promise is still valid
+                GatherColonyInventory();
             }
             else
             {
@@ -128,26 +155,36 @@ namespace ise.lib.tasks
             Logging.WriteMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
             task = new Task(delegate
             {
-                Logging.WriteMessage($"Building cache of {reply.Items.Count}");
+                Logging.WriteMessage($"Building cache of {reply.Items.Count} market items");
+
+                var thingDefs = DefDatabase<ThingDef>.AllDefsListForReading;
+
                 // Open database (or create if doesn't exist)
                 using (var db = new LiteDatabase(DBLocation))
                 {
-                    var tradableCache = db.GetCollection<DBCachedTradable>();
-                    tradableCache.DeleteAll();
-                    tradableCache.InsertBulk(
+                    var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
+                    marketCache.DeleteAll();
+                    marketCache.InsertBulk(
                         reply.Items.Select(
                             tradable => new DBCachedTradable
                             {
                                 ItemCode = tradable.ItemCode,
                                 ThingDef = tradable.ThingDef,
-                                Quantity = tradable.Quality,
-                                Quality = tradable.Quantity,
+                                AvailableQuantity = tradable.Quantity,
+                                HitPoints = 100,
+                                Quality = tradable.Quality,
                                 Stuff = tradable.Stuff,
                                 Weight = tradable.Weight,
                                 WeBuyAt = tradable.WeBuyAt,
                                 WeSellAt = tradable.WeSellAt,
-                                Minified = tradable.Minified
+                                Minified = tradable.Minified,
+                                TranslatedName = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).LabelCap,
+                                TranslatedStuff = tradable.Stuff.NullOrEmpty()
+                                    ? ""
+                                    : (string) DefDatabase<ThingDef>.GetNamed(tradable.Stuff).LabelCap,
+                                Category = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).FirstThingCategory.defName
                             }));
+                    marketCache.EnsureIndex(mc => mc.ThingDef);
                     var inventoryCache = db.GetCollection<DBInventory>();
                     inventoryCache.DeleteAll();
                     inventoryCache.Insert(new DBInventory
@@ -157,69 +194,162 @@ namespace ise.lib.tasks
                         CollectionChargePerKG = reply.CollectionChargePerKG,
                         DeliveryChargePerKG = reply.DeliveryChargePerKG, AccountBalance = reply.AccountBalance
                     });
-                    Logging.WriteMessage($"Caching done");
+                    Logging.WriteMessage($"Done caching market items");
                 }
             });
             task.Start();
 
             // Go to next step
-            state = State.Caching;
+            state = State.MarketCaching;
         }
 
-        // private void ProcessConfirmBindReply(ConfirmBindReply reply)
-        // {
-        //     if (reply.IsValid)
-        //     {
-        //         if (reply.BindComplete)
-        //         {
-        //             switch (reply.BindType)
-        //             {
-        //                 case BindTypeEnum.AccountBind:
-        //
-        //
-        //                     Logging.WriteMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
-        //
-        //                     // Now confirm the Client Bind ID
-        //                     state = State.Caching;
-        //                     var request = new ConfirmBindRequest()
-        //                         {BindId = reply.ClientBindId, BindType = BindTypeEnum.ClientBind};
-        //                     task = SendAndParseReplyAsync(
-        //                         request,
-        //                         ConfirmBindReply.Parser,
-        //                         $"{URLPrefix}binder/bind_confirm",
-        //                         Method.POST
-        //                     );
-        //                     task.Start();
-        //                     return;
-        //                 case BindTypeEnum.ClientBind:
-        //                     Logging.WriteMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
-        //                     var gc = Current.Game.GetComponent<ISEGameComponent>();
-        //                     gc.ClientBind = reply.ClientBindId;
-        //                     SaveBind<DBClientBind>(IseBootStrap.User.UserId, reply.ClientBindId);
-        //                     StartBindVerify();
-        //                     return;
-        //                 default:
-        //                     throw new ArgumentOutOfRangeException();
-        //             }
-        //         }
-        //
-        //         // Check if there's enough time left to go around again
-        //         if (reply.TTL > 10)
-        //         {
-        //             // Sleep for 10 seconds;
-        //             task = new Task(delegate { Thread.Sleep(10 * 1000); });
-        //             state = State.WaitConfirm;
-        //             Dialog.DialogMessage = $"Waiting for confirmation (About {reply.TTL}s left)";
-        //             task.Start();
-        //             return;
-        //         }
-        //     }
-        //
-        //     // Bind invalid, go back to start
-        //     bindId = "";
-        //     Logging.WriteMessage("Bind expired or was invalid, Requesting new bind");
-        //     task = null;
-        //     state = State.Start;
-        // }
+        private void GatherColonyInventory()
+        {
+            task = new Task(delegate
+            {
+                Logging.WriteMessage("Building colony item cache");
+#if MARKET_DEBUG
+                Logging.WriteMessage("Getting list of all items in range of beacons");
+                Logging.WriteMessage($"on map for {pawn.Name}");
+#endif
+                colonyThings = AllColonyThingsForTrade(pawn.Map);
+
+                // Open database (or create if doesn't exist)
+                using (var db = new LiteDatabase(DBLocation))
+                {
+                    var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
+                    var colonyCache = db.GetCollection<DBCachedTradable>("colony_cache");
+
+                    // Clear colony cache
+#if MARKET_DEBUG
+                    Logging.WriteMessage("Cleared colony cache");
+#endif
+                    colonyCache.DeleteAll();
+                    colonyCache.EnsureIndex(cc => cc.ThingDef);
+
+                    // For each downloaded market item
+                    foreach (var thingGroup in colonyThings.GroupBy(ci => ci.def.defName))
+                    {
+#if MARKET_DEBUG
+                        Logging.WriteMessage($"Working on group {thingGroup.Key}");
+#endif
+                        foreach (var ci in thingGroup.OrderByDescending(ci => ci.HitPoints))
+                        {
+                            var unpackedThing = ci.GetInnerIfMinified();
+
+                            var qualityCategory = unpackedThing.TryGetComp<CompQuality>()?.Quality;
+                            var stuff = unpackedThing.Stuff?.defName;
+
+                            if (qualityCategory != null && (int) qualityCategory < 2)
+                            {
+#if MARKET_DEBUG
+                                Logging.WriteMessage(
+                                    $"Item {unpackedThing.ThingID} was less than Normal quality, Skipped");
+#endif
+                                continue;
+                            }
+
+                            // Check if the item has quality, set to 0 if not.
+                            var intQuality = (qualityCategory == null ? 0 : (int) qualityCategory);
+
+#if MARKET_DEBUG
+                            Logging.WriteMessage(
+                                $"Searching market for {unpackedThing.def.defName}, " +
+                                $"Quality: {intQuality}, " +
+                                $"Stuff: {stuff} ");
+#endif
+
+                            // Get all matching colony items
+                            var matchMarketCacheItem = marketCache.FindOne(cacheItem =>
+                                cacheItem.ThingDef == unpackedThing.def.defName &&
+                                cacheItem.Stuff == stuff &&
+                                cacheItem.Quality == intQuality
+                            );
+
+                            if (matchMarketCacheItem == null)
+                            {
+#if MARKET_DEBUG
+                                Logging.WriteMessage($"Did not find a Market entry! How?");
+#endif
+                                if (!(ci is MinifiedThing))
+                                {
+                                    // If not minified skip this ThingDef group, else go to next minified item
+                                    break;
+                                }
+
+                                continue;
+                            }
+
+                            // Calculate percentage of HP remaining
+                            var itemHitPointsAsPercentage = 100;
+#if MARKET_DEBUG
+                            Logging.WriteMessage(
+                                $"Item Stack HP {unpackedThing.HitPoints}/{unpackedThing.MaxHitPoints}, " +
+                                $"Size: {unpackedThing.stackCount}");
+#endif
+                            // -1 is no damage, Ludeon, why? why not just HitPoints=MaxHitPoints?
+                            if (unpackedThing.HitPoints != -1)
+                            {
+                                // The brackets here are not redundant no matter what Rider/ReSharper suggests
+                                // Removing the casts/brackets causes incorrect percentage computation.
+                                itemHitPointsAsPercentage =
+                                    (int) Math.Floor(((float) unpackedThing.HitPoints /
+                                                      (float) unpackedThing.MaxHitPoints) * 100f);
+                            }
+#if MARKET_DEBUG
+                            Logging.WriteMessage($"Item Stack HP {itemHitPointsAsPercentage}%");
+#endif
+                            // Below this threshold, we don't  want the remaining items in this groups
+                            // Break now to save iteration.
+                            if (itemHitPointsAsPercentage < 15)
+                            {
+#if MARKET_DEBUG
+                                Logging.WriteMessage($"Item has low HP, skipping.");
+#endif
+                                if (!(ci is MinifiedThing))
+                                {
+                                    // If not minified skip this ThingDef group, else go to next minified item
+                                    break;
+                                }
+
+                                continue;
+                            }
+
+                            var matchColonyCacheItem = colonyCache.FindOne(cacheItem =>
+                                unpackedThing.def.defName == cacheItem.ThingDef &&
+                                stuff == cacheItem.Stuff &&
+                                // Check if the item has quality, set to 0 if not.
+                                (qualityCategory == null ? 0 : (int) qualityCategory) == cacheItem.Quality &&
+                                itemHitPointsAsPercentage == cacheItem.HitPoints
+                            ) ?? new DBCachedTradable()
+                            {
+                                ItemCode = matchMarketCacheItem.ItemCode,
+                                ThingDef = matchMarketCacheItem.ThingDef,
+                                AvailableQuantity = 0,
+                                HitPoints = itemHitPointsAsPercentage,
+                                Quality = matchMarketCacheItem.Quality,
+                                Stuff = matchMarketCacheItem.Stuff,
+                                Weight = matchMarketCacheItem.Weight,
+                                WeBuyAt = matchMarketCacheItem.WeBuyAt * (itemHitPointsAsPercentage / 100f),
+                                WeSellAt = matchMarketCacheItem.WeSellAt * (itemHitPointsAsPercentage / 100f),
+                                Minified = matchMarketCacheItem.Minified,
+                                Category = matchMarketCacheItem.Category,
+                                TranslatedName = matchMarketCacheItem.TranslatedName,
+                                TranslatedStuff = matchMarketCacheItem.TranslatedStuff
+                            };
+
+                            matchColonyCacheItem.AvailableQuantity += unpackedThing.stackCount;
+                            colonyCache.Upsert(matchColonyCacheItem);
+                        }
+                    }
+
+                    Logging.WriteMessage($"Done caching colony items");
+                }
+            });
+            task.Start();
+
+            // Go to next step
+            state = State.ColonyCaching;
+        }
     }
 }

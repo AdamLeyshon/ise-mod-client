@@ -60,6 +60,9 @@
           <HintPath>..\..\..\..\..\Games\RimWorld12\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\..\..\Games\RimWorld12\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="buildings\iseconsole.cs" />

@@ -10,7 +10,11 @@ namespace ise_core.db
 {
     public class DBUser
     {
+        #region Properties
+
         public string UserId { get; set; }
         public bool IsSteamUser { get; set; }
+
+        #endregion
     }
 }

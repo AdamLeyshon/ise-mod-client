@@ -10,6 +10,8 @@ namespace ise_core.db
 {
     public class DBInventory
     {
+        #region Properties
+
         // Server Promise
         public string InventoryPromiseId { get; set; }
 
@@ -24,5 +26,7 @@ namespace ise_core.db
 
         // Amount of cash in their account already.
         public long AccountBalance { get; set; }
+
+        #endregion
     }
 }

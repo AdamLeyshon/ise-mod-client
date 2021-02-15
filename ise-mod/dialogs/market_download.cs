@@ -25,8 +25,8 @@ namespace ise.dialogs
             Logging.WriteMessage("Opening Market Download Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
-            task = new MarketDownloadDialogTask(this);
             pawn = userPawn;
+            task = new MarketDownloadDialogTask(this, pawn);
         }
 
         public override Vector2 InitialSize =>
@@ -42,11 +42,11 @@ namespace ise.dialogs
                 textWidth.x, textWidth.y);
             Widgets.Label(label, DialogMessage);
 
-            if (task.Done)
-            {
-                // Open market window
-                // CloseDialog();
-            }
+            if (!task.Done) return;
+
+            // Open market window
+            Find.WindowStack.Add(new DialogTradeUI(pawn));
+            CloseDialog();
         }
 
         public string DialogMessage { get; set; }

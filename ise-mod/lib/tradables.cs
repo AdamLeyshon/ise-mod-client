@@ -144,6 +144,82 @@ namespace ise.lib
             return result;
         }
 
+        internal static List<Thing> AllColonyThingsForTrade(Map map)
+        {
+            var allColonyThingsForTrade = new List<Thing>();
+            foreach (var beacon in Building_OrbitalTradeBeacon.AllPowered(map))
+            {
+                Logging.WriteMessage($"Found trade beacon @ {beacon.Position.ToString()}");
+                foreach (var tradeableCell in beacon.TradeableCells)
+                {
+                    var thingList = tradeableCell.GetThingList(map);
+                    for (var i = 0; i < thingList.Count; i++)
+                    {
+                        var thing = thingList[i];
+                        if (!CanThisItemBeSold(thing)) continue;
+#if MARKET_DEBUG
+                        Logging.WriteMessage($"{thing.ThingID} can be sold");
+#endif
+                        allColonyThingsForTrade.Add(thing);
+                    }
+                }
+            }
+
+            return allColonyThingsForTrade;
+        }
+
+        internal static bool CanThisItemBeSold(Thing t)
+        {
+            // Make sure it's an item or building and that it can be minified etc.
+            if (t.def.category == ThingCategory.Building && !(t is MinifiedThing))
+                return false;
+
+            // If it is minified, unpack it to find out what it really is
+            t = t.GetInnerIfMinified();
+
+            if (!CanThisThingDefBeSold(t.def))
+            {
+                return false;
+            }
+
+            // Not desiccated
+            if (t.IsNotFresh())
+            {
+                return false;
+            }
+
+            // Don't allow trading dead man clothing
+            if (t is Apparel apparel && apparel.WornByCorpse)
+            {
+                return false;
+            }
+
+            // Can't sell BioCoded
+            return !EquipmentUtility.IsBiocoded(t);
+        }
+
+        private static bool CanThisThingDefBeSold(ThingDef def)
+        {
+            if (!def.tradeability.PlayerCanSell())
+            {
+                return false;
+            }
+
+            if (def.GetStatValueAbstract(StatDefOf.MarketValue) <= 0f)
+            {
+                return false;
+            }
+
+            if (def.category != ThingCategory.Item &&
+                def.category != ThingCategory.Building
+            )
+            {
+                return false;
+            }
+
+            return def.category != ThingCategory.Building || def.Minifiable;
+        }
+
         #endregion
     }
 }

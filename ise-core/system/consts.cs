@@ -12,6 +12,10 @@ namespace ise_core.system
 {
     public static class Consts
     {
+        #region Fields
+
         public const string CLIENT_VERSION = "1.9.0";
+
+        #endregion
     }
 }

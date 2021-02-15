@@ -14,6 +14,8 @@ namespace ise_core.extend
 {
     public static class IEnumHelpers
     {
+        #region Methods
+
         public static T Random<T>(this IEnumerable<T> enumerable)
         {
             if (enumerable == null)
@@ -27,5 +29,7 @@ namespace ise_core.extend
             var list = enumerable as IList<T> ?? enumerable.ToList(); 
             return list.Count == 0 ? default(T) : list[r.Next(0, list.Count)];
         }
+
+        #endregion
     }
 }

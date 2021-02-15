@@ -12,6 +12,8 @@ namespace ise_core.db
 {
     public class DBCachedTradable
     {
+        #region Properties
+
         /*
         message Tradable {
         string ThingDef = 1;
@@ -25,15 +27,53 @@ namespace ise_core.db
         string Stuff = 40;
         float Weight = 45;
         */
+        public int Id { get; set; }
+
         public string ThingDef { get; set; }
         public string ItemCode { get; set; }
         public int Quality { get; set; }
-        public int Quantity { get; set; }
+
+        /// <summary>
+        ///  How many we have in total to trade
+        /// </summary>
+        public int AvailableQuantity { get; set; }
+
+        /// <summary>
+        /// How many we want to trade
+        /// </summary>
+        public int TradedQuantity { get; set; }
+
         public bool Minified { get; set; }
         public float BaseValue { get; set; }
+
+        /// <summary>
+        /// The price the colony will get for selling
+        /// </summary>
         public float WeBuyAt { get; set; }
+
+        /// <summary>
+        /// The price the colony will for for buying
+        /// </summary>
         public float WeSellAt { get; set; }
+
+        /// <summary>
+        /// If made of stuff, This is the ThingDef
+        /// </summary>
         public string Stuff { get; set; }
+
         public float Weight { get; set; }
+
+        // Percentage of HP remaining, floored to int
+        public int HitPoints { get; set; }
+
+        public string TranslatedName { get; set; }
+        public string TranslatedStuff { get; set; }
+        public string Category { get; set; }
+
+        // This is used by Unity to store the text
+        // While they edit the Quantity box
+        public string UnityTextBuffer { get; set; }
+
+        #endregion
     }
 }
