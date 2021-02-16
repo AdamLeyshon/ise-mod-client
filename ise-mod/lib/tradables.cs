@@ -150,9 +150,9 @@ namespace ise.lib
             foreach (var beacon in Building_OrbitalTradeBeacon.AllPowered(map))
             {
                 Logging.WriteMessage($"Found trade beacon @ {beacon.Position.ToString()}");
-                foreach (var tradeableCell in beacon.TradeableCells)
+                foreach (var beaconCell in beacon.TradeableCells)
                 {
-                    var thingList = tradeableCell.GetThingList(map);
+                    var thingList = beaconCell.GetThingList(map);
                     for (var i = 0; i < thingList.Count; i++)
                     {
                         var thing = thingList[i];
