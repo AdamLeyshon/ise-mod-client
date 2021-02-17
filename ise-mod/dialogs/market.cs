@@ -29,73 +29,78 @@ namespace ise.dialogs
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        private static readonly float uiTradeButtonWidth = 30f;
+        private static float uiTradeButtonWidth = 30f;
+
+#if DEBUG
+        [TweakValue("ISETradeUI", 5f, 200f)]
+#endif
+        private static float uiActionButtonHeight = 50f;
+
+#if DEBUG
+        [TweakValue("ISETradeUI", 5f, 200f)]
+#endif
+        private static float uiActionButtonWidth = 100f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        private static readonly float uiTradeButtonPadding = 10f;
+        private static float uiTradeButtonPadding = 10f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        private static readonly float labelStatsWidth = 150f;
+        private static float labelStatsWidth = 150f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f)]
 #endif
-        private static readonly float gridMargin = 16f;
+        private static float gridMargin = 16f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f)]
 #endif
-        private static readonly float gridRowHeight = 30f;
+        private static float gridRowHeight = 30f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        private static readonly float gridRowMargin = 40f;
+        private static float gridRowMargin = 40f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        private static readonly float gridRowQuantityWidth = 75f;
+        private static float gridRowQuantityWidth = 75f;
 
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 300f)]
 #endif
-        private static readonly float gridRowPriceWidth = 100f;
+        private static float gridRowPriceWidth = 100f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 300f)]
 #endif
-        private static readonly float gridRowQualityWidth = 100f;
+        private static float gridRowQualityWidth = 100f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 1000f)]
 #endif
-        private static readonly float gridRowStuffWidth = 300;
+        private static float gridRowStuffWidth = 300;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 1000f)]
 #endif
-        private static readonly float gridRowNameWidth = 300;
+        private static float gridRowNameWidth = 300;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f)]
 #endif
-        private static readonly float gridRowStart = 6f;
-
-#if DEBUG
-        [TweakValue("ISETradeUI", 1, 1000)]
-#endif
-        private static int gridRowQty = 50;
+        private static float gridRowStart = 6f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f)]
 #endif
-        private static readonly float uiControlPadding = 6f;
+        private static float uiControlPadding = 6f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 30f)]
@@ -105,23 +110,33 @@ namespace ise.dialogs
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        private static readonly float uiControlHeight = 25f;
+        private static float uiControlHeight = 25f;
 
         private static readonly ThingCategoryDef DefaultCategory = ThingCategoryDef.Named("ResourcesRaw");
         private readonly LiteDatabase db;
-        private ILiteCollection<DBCachedTradable> collection;
-        private List<DBCachedTradable> dataCache;
+
         private bool dataSourceDirty = true;
         private ThingCategoryDef filterCategory = DefaultCategory;
         private string filterText = "";
         private List<string> qualityTranslationCache;
         private Vector2 scrollPosition = Vector2.zero;
-        private TradeView uiTradeMode = TradeView.Sell;
-        private TradeView uiWantedTradeMode = TradeView.Buy;
-        private BasketStats stats = new BasketStats();
-        private DBInventory promise;
+        private TradeView uiTradeMode = TradeView.Buy;
+        private BasketStats stats;
+        private readonly DBInventory promise;
+        private ItemCache cache;
+        private bool basketItemsOnly;
+        private bool ownedItemsOnly;
 
         #endregion
+
+        private struct ItemCache
+        {
+            public ILiteCollection<DBCachedTradable> Colony;
+            public ILiteCollection<DBCachedTradable> Market;
+            public ILiteCollection<DBCachedTradable> ColonyBasket;
+            public ILiteCollection<DBCachedTradable> MarketBasket;
+            public List<DBCachedTradable> CurrentItems;
+        }
 
         private struct BasketStats
         {
@@ -144,15 +159,28 @@ namespace ise.dialogs
             forcePause = true;
             //absorbInputAroundWindow = true;
             db = new LiteDatabase(DBLocation);
+            SetupData();
             promise = db.GetCollection<DBInventory>().FindAll().First();
             BuildQualityTranslationCache();
+        }
+
+        private void SetupData()
+        {
+            cache = new ItemCache()
+            {
+                Colony = db.GetCollection<DBCachedTradable>("colony_cache"),
+                Market = db.GetCollection<DBCachedTradable>("market_cache"),
+                ColonyBasket = db.GetCollection<DBCachedTradable>("colony_basket"),
+                MarketBasket = db.GetCollection<DBCachedTradable>("market_basket"),
+                CurrentItems = null
+            };
         }
 
         #endregion
 
         #region Properties
 
-        public override Vector2 InitialSize => new Vector2(1500f, UI.screenHeight - 200f);
+        public override Vector2 InitialSize => new Vector2(1500f, UI.screenHeight - 50f);
 
         #endregion
 
@@ -183,34 +211,49 @@ namespace ise.dialogs
 
             Logging.WriteMessage("Updating data source");
 
-            if (uiWantedTradeMode != uiTradeMode)
+            ILiteCollection<DBCachedTradable> collection;
+
+            switch (uiTradeMode)
             {
-                uiTradeMode = uiWantedTradeMode;
-
-                switch (uiTradeMode)
-                {
-                    case TradeView.Buy:
-                        collection = db.GetCollection<DBCachedTradable>("market_cache");
-                        break;
-                    case TradeView.Sell:
-                        collection = db.GetCollection<DBCachedTradable>("colony_cache");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                RecalculateStats();
+                case TradeView.Buy:
+                    collection = cache.Market;
+                    break;
+                case TradeView.Sell:
+                    collection = cache.Colony;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
+            RecalculateStats();
+
+            // Category filter
             var filteredThingDefs = filterCategory.DescendantThingDefs.Select(x => x.defName).ToList();
             var items = collection.Find(x => filteredThingDefs.Contains(x.ThingDef));
 
+            // Basket only filter
+            if (basketItemsOnly)
+            {
+                var basketItems = (
+                    uiTradeMode == TradeView.Buy ? cache.MarketBasket : cache.ColonyBasket
+                ).FindAll().Select(x => x.ItemCode);
+                items = items.Where(x => basketItems.Contains(x.ItemCode));
+            }
+
+            // Owned only filter
+            if (ownedItemsOnly && uiTradeMode == TradeView.Buy)
+            {
+                var colonyItems = cache.Colony.FindAll().Select(x => x.ItemCode);
+                items = items.Where(x => colonyItems.Contains(x.ItemCode));
+            }
+
+            // Text filter
             if (!filterText.NullOrEmpty())
                 items = items.Where(x => x.TranslatedName
                     .ToLowerInvariant()
                     .Contains(filterText.ToLowerInvariant()));
 
-            dataCache = items
+            cache.CurrentItems = items
                 .OrderBy(x => x.TranslatedName)
                 .ThenBy(x => x.TranslatedStuff)
                 .ThenByDescending(x => x.Quality)
@@ -238,11 +281,18 @@ namespace ise.dialogs
             targetArea = new Rect(0f, targetArea.y + addY, inRect.width, uiControlHeight);
             DrawGridHeaders(targetArea);
 
+            // Anchor to bottom
+            var actionButtons = new Rect(0f, inRect.height - uiControlVerticalSpacing - uiActionButtonHeight,
+                inRect.width, uiActionButtonHeight);
+            DrawConfirmCancel(actionButtons);
+
+            // Find top of action buttons, subtract spacing, then find distance to top of grid and subtract that
+            var remaining = actionButtons.y - (uiControlVerticalSpacing * 2) - (targetArea.y + addY);
+
             // Grid takes up the remaining space
-            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, inRect.height - targetArea.y - addY);
+            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, remaining);
             DrawTradeGrid(targetArea);
         }
-
 
         private void DrawStatLabels(Rect outerFrame)
         {
@@ -307,6 +357,18 @@ namespace ise.dialogs
             rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
             Widgets.Label(rectLabel, "Price (Buy)");
 
+            // Bank
+            width -= rectLabel.width + uiControlPadding;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            Widgets.Label(rectLabel, "Bank Balance");
+
+            // Mode
+            width -= rectLabel.width + uiControlPadding;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            Widgets.Label(rectLabel, "Trading Mode");
+
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
@@ -327,7 +389,21 @@ namespace ise.dialogs
             width -= labelStatsWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
             var rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
-            Widgets.Label(rectLabel, $"{stats.CostTotal}");
+            string costText;
+            if (stats.CostTotal > 0)
+            {
+                costText = $"Cost: {stats.CostTotal}";
+            }
+            else if (stats.CostTotal < 0)
+            {
+                costText = $"Gain: {Math.Abs(stats.CostTotal)}";
+            }
+            else
+            {
+                costText = "Equal: 0.00";
+            }
+
+            Widgets.Label(rectLabel, costText);
 
             // ---------------------------
             // Delivery Costs
@@ -374,10 +450,23 @@ namespace ise.dialogs
             rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
             Widgets.Label(rectLabel, $"{stats.CostBuy}");
 
+            // Price
+            width -= rectLabel.width + uiControlPadding;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            Widgets.Label(rectLabel, $"{promise.AccountBalance}");
+
+            // Mode
+            width -= rectLabel.width + uiControlPadding * 2;
+            Text.Font = GameFont.Medium;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            Widgets.Label(rectLabel, uiTradeMode == TradeView.Buy ? "BUY" : "SELL");
+            Text.Font = GameFont.Small;
+
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
-
 
         private void DrawModeTabs(Rect inRect)
         {
@@ -391,10 +480,11 @@ namespace ise.dialogs
             var buttonRect = new Rect(uiControlPadding, 0, buttonWidth, 25f);
             if (Widgets.ButtonText(buttonRect, "Buy"))
             {
+#if MARKET_DEBUG
                 Logging.WriteMessage("Changing to Buy mode");
-                uiWantedTradeMode = TradeView.Buy;
+#endif
+                uiTradeMode = TradeView.Buy;
                 if (filterCategory.defName == "Root") filterCategory = DefaultCategory;
-
                 dataSourceDirty = true;
             }
 
@@ -402,9 +492,92 @@ namespace ise.dialogs
             buttonRect = new Rect(uiControlPadding * 2 + buttonWidth, 0, buttonWidth, 25f);
             if (Widgets.ButtonText(buttonRect, "Sell"))
             {
+#if MARKET_DEBUG
                 Logging.WriteMessage("Changing to Sell mode");
-                uiWantedTradeMode = TradeView.Sell;
+#endif
+                uiTradeMode = TradeView.Sell;
                 dataSourceDirty = true;
+            }
+
+            GenUI.ResetLabelAlign();
+            GUI.EndGroup();
+        }
+
+        private void DrawConfirmCancel(Rect inRect)
+        {
+            var width = inRect.width;
+            
+            GUI.BeginGroup(inRect);
+            Text.Anchor = TextAnchor.MiddleCenter;
+
+            // Confirm button
+            width -= uiControlPadding + uiActionButtonWidth;
+            var buttonRect = new Rect(width, 0, uiActionButtonWidth, inRect.height);
+            if (Widgets.ButtonText(buttonRect, "Confirm"))
+            {
+                string text;
+                if (stats.CostTotal > 0)
+                {
+                    if (promise.AccountBalance > 0)
+                    {
+                        if (promise.AccountBalance > stats.CostTotal)
+                        {
+                            var remaining = Math.Round(
+                                promise.AccountBalance - stats.CostTotal,
+                                2,
+                                MidpointRounding.ToEven
+                            );
+                            text = "We will withdraw the full amount from your account,\r\n" +
+                                   $"Your account balance will be {remaining}\r\n" +
+                                   $"The total cost is: {stats.CostTotal}";
+                        }
+                        else
+                        {
+                            var remaining = Math.Round(
+                                stats.CostTotal - promise.AccountBalance,
+                                2,
+                                MidpointRounding.ToEven
+                            );
+                            text = "There are insufficient funds in your account,\r\n" +
+                                   $"We will withdraw {promise.AccountBalance} of the " +
+                                   $"total {stats.CostTotal} from your account" +
+                                   $"\r\nThe remaining balance due is: {remaining}";
+                        }
+                    }
+                    else
+                    {
+                        text = $"The total balance is due is: {stats.CostTotal}";
+                    }
+                }
+                else if (stats.CostTotal < 0)
+                {
+                    var credit = Math.Abs(stats.CostTotal);
+                    text = $"Your account will be credited with: {Math.Abs(stats.CostTotal)}\r\n" +
+                           $"Your new balance will be approximately: {promise.AccountBalance + credit}";
+                }
+                else
+                {
+                    text = $"Thank you for trading with ISE,\r\n" +
+                           $"We hope to hear from you again.";
+                }
+
+                Find.WindowStack.Add(new Dialog_MessageBox(
+                    text,
+                    "Agree, Place Order",
+                    delegate { Logging.WriteMessage("CONFIRMED"); },
+                    "Decline",
+                    null,
+                    "Terms and Conditions", false,
+                    delegate { Logging.WriteMessage("CONFIRMED"); }
+                ));
+            }
+
+            // Cancel Button
+            width -= uiControlPadding + uiActionButtonWidth;
+            buttonRect = new Rect(width, 0, uiActionButtonWidth, inRect.height);
+            if (Widgets.ButtonText(buttonRect, "Cancel"))
+            {
+                Close();
             }
 
             GenUI.ResetLabelAlign();
@@ -424,15 +597,40 @@ namespace ise.dialogs
                 // Open category filter drop-down 
                 OpenFilterChangeFloatMenu();
 
-            nextControlY += uiControlPadding + rectCategoryFilter.width;
+            // Basket filter checkbox
+            nextControlY += uiControlPadding * 2 + rectCategoryFilter.width;
+            var rectBasketCheckbox = new Rect(nextControlY, 0f, 125f, outerFrame.height);
+            var oldValue = basketItemsOnly;
+            Widgets.CheckboxLabeled(rectBasketCheckbox, "Basket only", ref basketItemsOnly);
+            if (oldValue != basketItemsOnly)
+            {
+                dataSourceDirty = true;
+            }
+
+            var lastControlWidth = rectBasketCheckbox.width;
+            if (uiTradeMode == TradeView.Buy)
+            {
+                // Owned items filter checkbox
+                nextControlY += uiControlPadding * 2 + lastControlWidth;
+                var rectOnlyOwnedCheckbox = new Rect(nextControlY, 0f, 125f, outerFrame.height);
+                oldValue = ownedItemsOnly;
+                Widgets.CheckboxLabeled(rectOnlyOwnedCheckbox, "Owned only", ref ownedItemsOnly);
+                if (oldValue != ownedItemsOnly)
+                {
+                    dataSourceDirty = true;
+                }
+
+                lastControlWidth = rectOnlyOwnedCheckbox.width;
+            }
 
             // Filter Box Label
+            nextControlY += uiControlPadding * 2 + lastControlWidth;
             var rectFilterLabel = new Rect(nextControlY, 0f, 100f, outerFrame.height);
             Widgets.Label(rectFilterLabel, "Filter by Name: ");
 
-            nextControlY += uiControlPadding + rectFilterLabel.width;
 
             // Filter Box, takes up rest of space
+            nextControlY += uiControlPadding + rectFilterLabel.width;
             var filterRect = new Rect(
                 nextControlY,
                 0,
@@ -477,14 +675,14 @@ namespace ise.dialogs
             width -= uiTradeButtonPadding + uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
             var rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
-            Widgets.Label(rectTradeButton, "Mx");
+            Widgets.Label(rectTradeButton, "Max");
 
 
             // Step UP
             width -= uiTradeButtonPadding + uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
             rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
-            Widgets.Label(rectTradeButton, "Up");
+            Widgets.Label(rectTradeButton, "Inc");
 
             // TEXT BOX
             width -= uiTradeButtonPadding + uiTradeButtonWidth * 3;
@@ -496,13 +694,13 @@ namespace ise.dialogs
             width -= uiTradeButtonPadding + uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
             rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
-            Widgets.Label(rectTradeButton, "Dn");
+            Widgets.Label(rectTradeButton, "Dec");
 
             // MIN
             width -= uiTradeButtonPadding + uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
             rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
-            Widgets.Label(rectTradeButton, "Mn");
+            Widgets.Label(rectTradeButton, "Min");
 
             // Price Label
             width -= gridRowPriceWidth + gridRowMargin;
@@ -538,12 +736,11 @@ namespace ise.dialogs
             GUI.EndGroup();
         }
 
-
         private void DrawTradeGrid(Rect outerFrame)
         {
             Text.Font = GameFont.Small;
 
-            var gridRowCount = dataCache.Count;
+            var gridRowCount = cache.CurrentItems.Count;
 
             // This is the buffer that the rows are rendered in, anything outside of the viewport above is hidden
             var gridVirtualBuffer = new Rect(0f, 0f, outerFrame.width - gridMargin, gridRowHeight * gridRowCount);
@@ -554,7 +751,7 @@ namespace ise.dialogs
             var gridBottom = scrollPosition.y - 30f;
             var gridTop = scrollPosition.y + outerFrame.height;
             var rowNumber = 0;
-            foreach (var cachedTradable in dataCache)
+            foreach (var cachedTradable in cache.CurrentItems)
             {
                 if (gridRowYPos > gridBottom && gridRowYPos < gridTop)
                 {
@@ -600,8 +797,6 @@ namespace ise.dialogs
             if (Widgets.ButtonText(rectTradeButton, ">>"))
             {
                 TradeMaxMinButtonEvent(false, false, rowData);
-                collection.Upsert(rowData);
-                RecalculateStats();
             }
 
             // Step UP
@@ -611,8 +806,6 @@ namespace ise.dialogs
             if (Widgets.ButtonText(rectTradeButton, ">"))
             {
                 TradeMaxMinButtonEvent(false, true, rowData);
-                collection.Upsert(rowData);
-                RecalculateStats();
             }
 
             // TEXT BOX
@@ -625,9 +818,7 @@ namespace ise.dialogs
             if (qty != rowData.TradedQuantity)
             {
                 // Save changes to quantity
-                ClampTradeAmount(rowData, qty);
-                collection.Upsert(rowData);
-                RecalculateStats();
+                SetTradeAmount(rowData, qty);
             }
 
             // Step DOWN
@@ -637,8 +828,6 @@ namespace ise.dialogs
             if (Widgets.ButtonText(rectTradeButton, "<"))
             {
                 TradeMaxMinButtonEvent(true, true, rowData);
-                collection.Upsert(rowData);
-                RecalculateStats();
             }
 
             // MIN
@@ -648,8 +837,6 @@ namespace ise.dialogs
             if (Widgets.ButtonText(rectTradeButton, "<<"))
             {
                 TradeMaxMinButtonEvent(true, false, rowData);
-                collection.Upsert(rowData);
-                RecalculateStats();
             }
 
             // Price
@@ -691,7 +878,7 @@ namespace ise.dialogs
             GUI.EndGroup();
         }
 
-        private static void TradeMaxMinButtonEvent(bool decrease, bool step, DBCachedTradable tradable)
+        private void TradeMaxMinButtonEvent(bool decrease, bool step, DBCachedTradable tradable)
         {
             int qty;
             if (decrease)
@@ -703,12 +890,26 @@ namespace ise.dialogs
                     ? tradable.TradedQuantity + 5
                     : tradable.AvailableQuantity;
 
-            ClampTradeAmount(tradable, qty);
+            SetTradeAmount(tradable, qty);
         }
 
-        private static void ClampTradeAmount(DBCachedTradable tradable, int quantity)
+        private void SetTradeAmount(DBCachedTradable tradable, int quantity)
         {
             tradable.TradedQuantity = Mathf.Clamp(quantity, 0, tradable.AvailableQuantity);
+
+            var basket = uiTradeMode == TradeView.Buy ? cache.MarketBasket : cache.ColonyBasket;
+
+            if (tradable.TradedQuantity == 0)
+            {
+                basket.Delete(tradable.ItemCode);
+            }
+            else
+            {
+                basket.Upsert(tradable);
+            }
+
+            (uiTradeMode == TradeView.Buy ? cache.Market : cache.Colony).Upsert(tradable);
+            RecalculateStats();
         }
 
         private void OpenFilterChangeFloatMenu()
@@ -781,11 +982,10 @@ namespace ise.dialogs
 
         private void RecalculateStats()
         {
+            var collection = uiTradeMode == TradeView.Buy ? cache.MarketBasket : cache.ColonyBasket;
             var weight = collection.FindAll()
-                .Where(x => x.TradedQuantity > 0)
                 .Sum(x => x.Weight * x.TradedQuantity);
             var cost = collection.FindAll()
-                .Where(x => x.TradedQuantity > 0)
                 .Sum(x =>
                     (uiTradeMode == TradeView.Buy ? x.WeSellAt : x.WeBuyAt)
                     * x.TradedQuantity

@@ -30,7 +30,7 @@ namespace Inventory {
             "AygLMhIudHJhZGFibGUuVHJhZGFibGUSGgoSSW52ZW50b3J5UHJvbWlzZUlk",
             "GAIgASgJEh8KF0ludmVudG9yeVByb21pc2VFeHBpcmVzGAMgASgDEh0KFUNv",
             "bGxlY3Rpb25DaGFyZ2VQZXJLRxgEIAEoBRIbChNEZWxpdmVyeUNoYXJnZVBl",
-            "cktHGAUgASgFEhYKDkFjY291bnRCYWxhbmNlGAYgASgDMlMKEEludmVudG9y",
+            "cktHGAUgASgFEhYKDkFjY291bnRCYWxhbmNlGAYgASgFMlMKEEludmVudG9y",
             "eVNlcnZpY2USPwoDR2V0EhsuaW52ZW50b3J5LkludmVudG9yeVJlcXVlc3Qa",
             "GS5pbnZlbnRvcnkuSW52ZW50b3J5UmVwbHkiAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
@@ -369,12 +369,12 @@ namespace Inventory {
 
     /// <summary>Field number for the "AccountBalance" field.</summary>
     public const int AccountBalanceFieldNumber = 6;
-    private long accountBalance_;
+    private int accountBalance_;
     /// <summary>
     /// Amount of cash in their account already.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public long AccountBalance {
+    public int AccountBalance {
       get { return accountBalance_; }
       set {
         accountBalance_ = value;
@@ -411,7 +411,7 @@ namespace Inventory {
       if (InventoryPromiseExpires != 0L) hash ^= InventoryPromiseExpires.GetHashCode();
       if (CollectionChargePerKG != 0) hash ^= CollectionChargePerKG.GetHashCode();
       if (DeliveryChargePerKG != 0) hash ^= DeliveryChargePerKG.GetHashCode();
-      if (AccountBalance != 0L) hash ^= AccountBalance.GetHashCode();
+      if (AccountBalance != 0) hash ^= AccountBalance.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -445,9 +445,9 @@ namespace Inventory {
         output.WriteRawTag(40);
         output.WriteInt32(DeliveryChargePerKG);
       }
-      if (AccountBalance != 0L) {
+      if (AccountBalance != 0) {
         output.WriteRawTag(48);
-        output.WriteInt64(AccountBalance);
+        output.WriteInt32(AccountBalance);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -475,9 +475,9 @@ namespace Inventory {
         output.WriteRawTag(40);
         output.WriteInt32(DeliveryChargePerKG);
       }
-      if (AccountBalance != 0L) {
+      if (AccountBalance != 0) {
         output.WriteRawTag(48);
-        output.WriteInt64(AccountBalance);
+        output.WriteInt32(AccountBalance);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -501,8 +501,8 @@ namespace Inventory {
       if (DeliveryChargePerKG != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(DeliveryChargePerKG);
       }
-      if (AccountBalance != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(AccountBalance);
+      if (AccountBalance != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(AccountBalance);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -528,7 +528,7 @@ namespace Inventory {
       if (other.DeliveryChargePerKG != 0) {
         DeliveryChargePerKG = other.DeliveryChargePerKG;
       }
-      if (other.AccountBalance != 0L) {
+      if (other.AccountBalance != 0) {
         AccountBalance = other.AccountBalance;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -566,7 +566,7 @@ namespace Inventory {
             break;
           }
           case 48: {
-            AccountBalance = input.ReadInt64();
+            AccountBalance = input.ReadInt32();
             break;
           }
         }
@@ -604,7 +604,7 @@ namespace Inventory {
             break;
           }
           case 48: {
-            AccountBalance = input.ReadInt64();
+            AccountBalance = input.ReadInt32();
             break;
           }
         }

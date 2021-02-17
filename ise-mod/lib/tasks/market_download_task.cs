@@ -19,6 +19,7 @@ using ise_core.db;
 using LiteDB;
 using RestSharp;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using static ise_core.rest.Helpers;
 using static ise.lib.Consts;
@@ -163,6 +164,8 @@ namespace ise.lib.tasks
                 using (var db = new LiteDatabase(DBLocation))
                 {
                     var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
+                    db.GetCollection<DBCachedTradable>("colony_basket").DeleteAll();
+                    db.GetCollection<DBCachedTradable>("market_basket").DeleteAll();
                     marketCache.DeleteAll();
                     marketCache.InsertBulk(
                         reply.Items.Select(
@@ -266,6 +269,7 @@ namespace ise.lib.tasks
                                 cacheItem.Quality == intQuality
                             );
 
+
                             if (matchMarketCacheItem == null)
                             {
 #if MARKET_DEBUG
@@ -279,6 +283,7 @@ namespace ise.lib.tasks
 
                                 continue;
                             }
+
 
                             // Calculate percentage of HP remaining
                             var itemHitPointsAsPercentage = 100;
@@ -337,19 +342,70 @@ namespace ise.lib.tasks
                                 TranslatedName = matchMarketCacheItem.TranslatedName,
                                 TranslatedStuff = matchMarketCacheItem.TranslatedStuff
                             };
-
                             matchColonyCacheItem.AvailableQuantity += unpackedThing.stackCount;
                             colonyCache.Upsert(matchColonyCacheItem);
                         }
                     }
 
                     Logging.WriteMessage($"Done caching colony items");
+
+                    Logging.WriteMessage("Restoring basket");
+                    RestoreBasket();
+                    Logging.WriteMessage("Done");
                 }
             });
             task.Start();
 
             // Go to next step
             state = State.ColonyCaching;
+        }
+
+        private static void RestoreBasket()
+        {
+            // Open database (or create if doesn't exist)
+            using (var db = new LiteDatabase(DBLocation))
+            {
+                var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
+                var colonyCache = db.GetCollection<DBCachedTradable>("colony_cache");
+                var colonyBasket = db.GetCollection<DBCachedTradable>("colony_basket");
+                var marketBasket = db.GetCollection<DBCachedTradable>("market_basket");
+                marketCache.EnsureIndex(cc => cc.ItemCode);
+                colonyCache.EnsureIndex(cc => cc.ItemCode);
+                colonyBasket.EnsureIndex(cc => cc.ItemCode);
+                marketBasket.EnsureIndex(cc => cc.ItemCode);
+
+                void FindAndSetQuantity(ILiteCollection<DBCachedTradable> collection,
+                    ILiteCollection<DBCachedTradable> basket)
+                {
+                    foreach (var tradable in collection.FindAll())
+                    {
+                        // Get matching basket item
+                        var matchBasketItem = basket.FindById(tradable.ItemCode);
+                        
+                        // We didn't have a matching item, go to next.
+                        if (matchBasketItem == null) continue;
+                        
+                        // Try and set quantity to the what it was before, but clamp it to the new max value if needed
+                        tradable.TradedQuantity = Mathf.Clamp(
+                            matchBasketItem.TradedQuantity,
+                            0,
+                            tradable.AvailableQuantity
+                        );
+                        collection.Upsert(tradable);
+                    }
+                }
+
+                FindAndSetQuantity(colonyCache, colonyBasket);
+                FindAndSetQuantity(marketCache, marketBasket);
+
+                // Delete any items in the basket which we don't have anymore
+                var cachedItems = colonyCache.FindAll().Select(cc => cc.ItemCode);
+                colonyBasket.DeleteMany(x => !cachedItems.Contains(x.ItemCode));
+
+                // Delete any items in the basket which we don't have anymore
+                var marketCachedItems = marketCache.FindAll().Select(cc => cc.ItemCode);
+                marketBasket.DeleteMany(x => !marketCachedItems.Contains(x.ItemCode));
+            }
         }
     }
 }

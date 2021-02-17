@@ -8,6 +8,8 @@
 
 #endregion
 
+using LiteDB;
+
 namespace ise_core.db
 {
     public class DBCachedTradable
@@ -27,10 +29,9 @@ namespace ise_core.db
         string Stuff = 40;
         float Weight = 45;
         */
-        public int Id { get; set; }
 
         public string ThingDef { get; set; }
-        public string ItemCode { get; set; }
+        [BsonId] public string ItemCode { get; set; }
         public int Quality { get; set; }
 
         /// <summary>
@@ -72,7 +73,8 @@ namespace ise_core.db
 
         // This is used by Unity to store the text
         // While they edit the Quantity box
-        public string UnityTextBuffer { get; set; }
+
+        [BsonIgnore] public string UnityTextBuffer { get; set; }
 
         #endregion
     }
