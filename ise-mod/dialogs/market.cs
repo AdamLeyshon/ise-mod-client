@@ -116,7 +116,8 @@ namespace ise.dialogs
         private string filterText = "";
         private List<string> qualityTranslationCache;
         private Vector2 scrollPosition = Vector2.zero;
-        private TradeView uiTradeMode = TradeView.Buy;
+        private TradeView uiTradeMode = TradeView.Sell;
+        private TradeView uiWantedTradeMode = TradeView.Buy;
         private BasketStats stats = new BasketStats();
         private DBInventory promise;
 
@@ -182,16 +183,23 @@ namespace ise.dialogs
 
             Logging.WriteMessage("Updating data source");
 
-            switch (uiTradeMode)
+            if (uiWantedTradeMode != uiTradeMode)
             {
-                case TradeView.Buy:
-                    collection = db.GetCollection<DBCachedTradable>("market_cache");
-                    break;
-                case TradeView.Sell:
-                    collection = db.GetCollection<DBCachedTradable>("colony_cache");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                uiTradeMode = uiWantedTradeMode;
+
+                switch (uiTradeMode)
+                {
+                    case TradeView.Buy:
+                        collection = db.GetCollection<DBCachedTradable>("market_cache");
+                        break;
+                    case TradeView.Sell:
+                        collection = db.GetCollection<DBCachedTradable>("colony_cache");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                RecalculateStats();
             }
 
             var filteredThingDefs = filterCategory.DescendantThingDefs.Select(x => x.defName).ToList();
@@ -207,8 +215,6 @@ namespace ise.dialogs
                 .ThenBy(x => x.TranslatedStuff)
                 .ThenByDescending(x => x.Quality)
                 .ToList();
-
-            RecalculateStats();
 
             dataSourceDirty = false;
         }
@@ -386,7 +392,7 @@ namespace ise.dialogs
             if (Widgets.ButtonText(buttonRect, "Buy"))
             {
                 Logging.WriteMessage("Changing to Buy mode");
-                uiTradeMode = TradeView.Buy;
+                uiWantedTradeMode = TradeView.Buy;
                 if (filterCategory.defName == "Root") filterCategory = DefaultCategory;
 
                 dataSourceDirty = true;
@@ -397,7 +403,7 @@ namespace ise.dialogs
             if (Widgets.ButtonText(buttonRect, "Sell"))
             {
                 Logging.WriteMessage("Changing to Sell mode");
-                uiTradeMode = TradeView.Sell;
+                uiWantedTradeMode = TradeView.Sell;
                 dataSourceDirty = true;
             }
 

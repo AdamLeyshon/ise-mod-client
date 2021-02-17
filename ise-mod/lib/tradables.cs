@@ -73,8 +73,9 @@ namespace ise.lib
                         Stuff = stuff.defName,
                         Minified = thing.Minifiable,
                         Quality = -1,
-                        BaseValue = thing.BaseMarketValue,
-                        Weight = thing.BaseMass
+                        BaseValue = StatDefOf.MarketValue.Worker
+                            .GetValue(StatRequest.For(thing, stuff)),
+                        Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, stuff))
                     };
                 ;
             }
@@ -94,8 +95,9 @@ namespace ise.lib
                             Stuff = stuff.defName,
                             Minified = thing.Minifiable,
                             Quality = quality,
-                            BaseValue = thing.BaseMarketValue,
-                            Weight = thing.BaseMass
+                            BaseValue = StatDefOf.MarketValue.Worker
+                                .GetValue(StatRequest.For(thing, stuff, (QualityCategory) quality)),
+                            Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, stuff, (QualityCategory) quality))
                         };
                 }
         }
@@ -104,14 +106,14 @@ namespace ise.lib
         {
             for (var quality = 2; quality < 7; quality++)
             {
-                var qualityObject = (QualityCategory) quality;
                 yield return new ColonyTradable
                 {
                     ThingDef = thing.defName,
                     Minified = thing.Minifiable,
                     Quality = quality,
-                    BaseValue = thing.BaseMarketValue,
-                    Weight = thing.BaseMass
+                    BaseValue = StatDefOf.MarketValue.Worker
+                        .GetValue(StatRequest.For(thing, null, (QualityCategory) quality)),
+                    Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null, (QualityCategory) quality))
                 };
             }
         }
@@ -136,8 +138,8 @@ namespace ise.lib
                     {
                         ThingDef = thing.defName,
                         Minified = thing.Minifiable,
-                        BaseValue = thing.BaseMarketValue,
-                        Weight = thing.BaseMass
+                        BaseValue = StatDefOf.MarketValue.Worker.GetValue(StatRequest.For(thing, null)),
+                        Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null))
                     }
                 );
 
