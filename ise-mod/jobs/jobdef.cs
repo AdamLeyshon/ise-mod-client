@@ -11,9 +11,15 @@ using Verse;
 
 namespace ise.jobs
 {
+    // These are loaded by RW via XML so they appear technically unused in the code.
+    
     [DefOf]
+    // ReSharper disable once ClassNeverInstantiated.Global
+    // ReSharper disable once InconsistentNaming
     public class ISEJobDefOf
     {
+        // ReSharper disable once UnassignedField.Global
+        // ReSharper disable once InconsistentNaming
         public static JobDef ISEShopOnline;
     }
 }

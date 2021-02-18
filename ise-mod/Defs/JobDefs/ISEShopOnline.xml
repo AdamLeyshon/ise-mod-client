@@ -2,7 +2,7 @@
 <Defs>
     <JobDef>
         <defName>ISEShopOnline</defName>
-        <driverClass>ise.jobs.Job_ISEShopOnline</driverClass>
+        <driverClass>ise.jobs.JobDriverShopOnline</driverClass>
         <reportString>Fuck Amazon</reportString>
         <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
     </JobDef>

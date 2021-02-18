@@ -4,7 +4,7 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, market.cs, Created 2021-02-11
+// ise-mod, tradeui.cs, Created 2021-02-11
 
 #endregion
 
@@ -29,128 +29,139 @@ namespace ise.dialogs
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        private static float uiTradeButtonWidth = 30f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiTradeButtonWidth = 30f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 200f)]
 #endif
-        private static float uiActionButtonHeight = 50f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiActionButtonHeight = 50f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 200f)]
 #endif
-        private static float uiActionButtonWidth = 100f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiActionButtonWidth = 100f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        private static float uiTradeButtonPadding = 10f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiTradeButtonPadding = 10f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        private static float labelStatsWidth = 150f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _labelStatsWidth = 150f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f)]
 #endif
-        private static float gridMargin = 16f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridMargin = 16f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f)]
 #endif
-        private static float gridRowHeight = 30f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowHeight = 30f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        private static float gridRowMargin = 40f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowMargin = 40f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        private static float gridRowQuantityWidth = 75f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowQuantityWidth = 75f;
 
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 300f)]
 #endif
-        private static float gridRowPriceWidth = 100f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowPriceWidth = 100f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 300f)]
 #endif
-        private static float gridRowQualityWidth = 100f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowQualityWidth = 100f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 1000f)]
 #endif
-        private static float gridRowStuffWidth = 300;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowStuffWidth = 300;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 1000f)]
 #endif
-        private static float gridRowNameWidth = 300;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowNameWidth = 300;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f)]
 #endif
-        private static float gridRowStart = 6f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _gridRowStart = 6f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f)]
 #endif
-        private static float uiControlPadding = 6f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiControlPadding = 6f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 30f)]
 #endif
-        private static float uiControlVerticalSpacing = 5f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiControlVerticalSpacing = 5f;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        private static float uiControlHeight = 25f;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        // ReSharper disable once ConvertToConstant.Local
+        private static float _uiControlHeight = 25f;
 
         private static readonly ThingCategoryDef DefaultCategory = ThingCategoryDef.Named("ResourcesRaw");
         private readonly LiteDatabase db;
+        private readonly DBInventory promise;
+        private bool basketItemsOnly;
+        private ItemCache cache;
 
         private bool dataSourceDirty = true;
         private ThingCategoryDef filterCategory = DefaultCategory;
         private string filterText = "";
+        private bool ownedItemsOnly;
         private List<string> qualityTranslationCache;
         private Vector2 scrollPosition = Vector2.zero;
-        private TradeView uiTradeMode = TradeView.Buy;
         private BasketStats stats;
-        private readonly DBInventory promise;
-        private ItemCache cache;
-        private bool basketItemsOnly;
-        private bool ownedItemsOnly;
+        private TradeView uiTradeMode = TradeView.Buy;
 
         #endregion
-
-        private struct ItemCache
-        {
-            public ILiteCollection<DBCachedTradable> Colony;
-            public ILiteCollection<DBCachedTradable> Market;
-            public ILiteCollection<DBCachedTradable> ColonyBasket;
-            public ILiteCollection<DBCachedTradable> MarketBasket;
-            public List<DBCachedTradable> CurrentItems;
-        }
-
-        private struct BasketStats
-        {
-            public float WeightSell { get; set; }
-            public float WeightBuy { get; set; }
-            public float CostSell { get; set; }
-            public float CostBuy { get; set; }
-
-            public float CostSellShipping { get; set; }
-
-            public float CostBuyShipping { get; set; }
-
-            public float CostTotal { get; set; }
-        }
 
         #region ctor
 
@@ -164,18 +175,6 @@ namespace ise.dialogs
             BuildQualityTranslationCache();
         }
 
-        private void SetupData()
-        {
-            cache = new ItemCache()
-            {
-                Colony = db.GetCollection<DBCachedTradable>("colony_cache"),
-                Market = db.GetCollection<DBCachedTradable>("market_cache"),
-                ColonyBasket = db.GetCollection<DBCachedTradable>("colony_basket"),
-                MarketBasket = db.GetCollection<DBCachedTradable>("market_basket"),
-                CurrentItems = null
-            };
-        }
-
         #endregion
 
         #region Properties
@@ -185,6 +184,18 @@ namespace ise.dialogs
         #endregion
 
         #region Methods
+
+        private void SetupData()
+        {
+            cache = new ItemCache
+            {
+                Colony = db.GetCollection<DBCachedTradable>("colony_cache"),
+                Market = db.GetCollection<DBCachedTradable>("market_cache"),
+                ColonyBasket = db.GetCollection<DBCachedTradable>("colony_basket"),
+                MarketBasket = db.GetCollection<DBCachedTradable>("market_basket"),
+                CurrentItems = null
+            };
+        }
 
         private void BuildQualityTranslationCache()
         {
@@ -264,30 +275,30 @@ namespace ise.dialogs
 
         private void DrawOuterFrame(Rect inRect)
         {
-            var addY = uiControlHeight + uiControlVerticalSpacing;
+            var addY = _uiControlHeight + _uiControlVerticalSpacing;
 
-            var targetArea = new Rect(0f, 0f, inRect.width, uiControlHeight);
+            var targetArea = new Rect(0f, 0f, inRect.width, _uiControlHeight);
             DrawStatLabels(targetArea);
 
-            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, uiControlHeight);
+            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, _uiControlHeight);
             DrawStatDetails(targetArea);
 
-            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, uiControlHeight);
+            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, _uiControlHeight);
             DrawModeTabs(targetArea);
 
-            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, uiControlHeight);
+            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, _uiControlHeight);
             DrawFilters(targetArea);
 
-            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, uiControlHeight);
+            targetArea = new Rect(0f, targetArea.y + addY, inRect.width, _uiControlHeight);
             DrawGridHeaders(targetArea);
 
             // Anchor to bottom
-            var actionButtons = new Rect(0f, inRect.height - uiControlVerticalSpacing - uiActionButtonHeight,
-                inRect.width, uiActionButtonHeight);
+            var actionButtons = new Rect(0f, inRect.height - _uiControlVerticalSpacing - _uiActionButtonHeight,
+                inRect.width, _uiActionButtonHeight);
             DrawConfirmCancel(actionButtons);
 
             // Find top of action buttons, subtract spacing, then find distance to top of grid and subtract that
-            var remaining = actionButtons.y - (uiControlVerticalSpacing * 2) - (targetArea.y + addY);
+            var remaining = actionButtons.y - _uiControlVerticalSpacing * 2 - (targetArea.y + addY);
 
             // Grid takes up the remaining space
             targetArea = new Rect(0f, targetArea.y + addY, inRect.width, remaining);
@@ -297,7 +308,7 @@ namespace ise.dialogs
         private void DrawStatLabels(Rect outerFrame)
         {
             // Subtract the grids margin to make the headers line up with grid
-            var width = outerFrame.width + uiControlPadding;
+            var width = outerFrame.width + _uiControlPadding;
 
             GUI.BeginGroup(outerFrame);
 
@@ -307,66 +318,66 @@ namespace ise.dialogs
             // Grid row is drawn RIGHT TO LEFT!
 
             // Total
-            width -= labelStatsWidth;
+            width -= _labelStatsWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            var rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            var rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Total");
 
             // ---------------------------
             // Delivery Costs
             // ---------------------------
             // Sell
-            width -= labelStatsWidth + uiControlPadding;
+            width -= _labelStatsWidth + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Collection Cost");
 
             // Buy
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Delivery Cost");
 
             // ---------------------------
             // SELL
             // ---------------------------
             // Weight
-            width -= labelStatsWidth + uiControlPadding;
+            width -= _labelStatsWidth + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Weight (Sell)");
 
             // Price
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Price (Sell)");
 
             // ---------------------------
             // BUY
             // ---------------------------
             // Weight
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Weight (Buy)");
 
             // Price
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Price (Buy)");
 
             // Bank
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Bank Balance");
 
             // Mode
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, "Trading Mode");
 
             GenUI.ResetLabelAlign();
@@ -376,7 +387,7 @@ namespace ise.dialogs
         private void DrawStatDetails(Rect outerFrame)
         {
             // Subtract the grids margin to make the headers line up with grid
-            var width = outerFrame.width + uiControlPadding;
+            var width = outerFrame.width + _uiControlPadding;
 
             GUI.BeginGroup(outerFrame);
 
@@ -386,22 +397,16 @@ namespace ise.dialogs
             // Grid row is drawn RIGHT TO LEFT!
 
             // Total
-            width -= labelStatsWidth;
+            width -= _labelStatsWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            var rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            var rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             string costText;
             if (stats.CostTotal > 0)
-            {
                 costText = $"Cost: {stats.CostTotal}";
-            }
             else if (stats.CostTotal < 0)
-            {
                 costText = $"Gain: {Math.Abs(stats.CostTotal)}";
-            }
             else
-            {
                 costText = "Equal: 0.00";
-            }
 
             Widgets.Label(rectLabel, costText);
 
@@ -409,58 +414,58 @@ namespace ise.dialogs
             // Delivery Costs
             // ---------------------------
             // Sell
-            width -= labelStatsWidth + uiControlPadding;
+            width -= _labelStatsWidth + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, $"{stats.CostSellShipping}");
 
             // Buy
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, $"{stats.CostBuyShipping}");
 
             // ---------------------------
             // SELL
             // ---------------------------
             // Weight
-            width -= labelStatsWidth;
+            width -= _labelStatsWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, stats.WeightSell.ToStringMass());
 
             // Price
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, $"{stats.CostSell}");
 
             // ---------------------------
             // BUY
             // ---------------------------
             // Weight
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, stats.WeightBuy.ToStringMass());
 
             // Price
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, $"{stats.CostBuy}");
 
             // Price
-            width -= rectLabel.width + uiControlPadding;
+            width -= rectLabel.width + _uiControlPadding;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, $"{promise.AccountBalance}");
 
             // Mode
-            width -= rectLabel.width + uiControlPadding * 2;
+            width -= rectLabel.width + _uiControlPadding * 2;
             Text.Font = GameFont.Medium;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectLabel = new Rect(width, 0f, labelStatsWidth, uiControlHeight);
+            rectLabel = new Rect(width, 0f, _labelStatsWidth, _uiControlHeight);
             Widgets.Label(rectLabel, uiTradeMode == TradeView.Buy ? "BUY" : "SELL");
             Text.Font = GameFont.Small;
 
@@ -471,13 +476,13 @@ namespace ise.dialogs
         private void DrawModeTabs(Rect inRect)
         {
             // Two buttons with margin in between
-            var buttonWidth = (inRect.width - uiControlPadding * 3) / 2f;
+            var buttonWidth = (inRect.width - _uiControlPadding * 3) / 2f;
 
             GUI.BeginGroup(inRect);
             Text.Anchor = TextAnchor.MiddleCenter;
 
             // Buy Button
-            var buttonRect = new Rect(uiControlPadding, 0, buttonWidth, 25f);
+            var buttonRect = new Rect(_uiControlPadding, 0, buttonWidth, 25f);
             if (Widgets.ButtonText(buttonRect, "Buy"))
             {
 #if MARKET_DEBUG
@@ -489,7 +494,7 @@ namespace ise.dialogs
             }
 
             // Sell button
-            buttonRect = new Rect(uiControlPadding * 2 + buttonWidth, 0, buttonWidth, 25f);
+            buttonRect = new Rect(_uiControlPadding * 2 + buttonWidth, 0, buttonWidth, 25f);
             if (Widgets.ButtonText(buttonRect, "Sell"))
             {
 #if MARKET_DEBUG
@@ -506,13 +511,13 @@ namespace ise.dialogs
         private void DrawConfirmCancel(Rect inRect)
         {
             var width = inRect.width;
-            
+
             GUI.BeginGroup(inRect);
             Text.Anchor = TextAnchor.MiddleCenter;
 
             // Confirm button
-            width -= uiControlPadding + uiActionButtonWidth;
-            var buttonRect = new Rect(width, 0, uiActionButtonWidth, inRect.height);
+            width -= _uiControlPadding + _uiActionButtonWidth;
+            var buttonRect = new Rect(width, 0, _uiActionButtonWidth, inRect.height);
             if (Widgets.ButtonText(buttonRect, "Confirm"))
             {
                 string text;
@@ -557,8 +562,8 @@ namespace ise.dialogs
                 }
                 else
                 {
-                    text = $"Thank you for trading with ISE,\r\n" +
-                           $"We hope to hear from you again.";
+                    text = "Thank you for trading with ISE,\r\n" +
+                           "We hope to hear from you again.";
                 }
 
                 Find.WindowStack.Add(new Dialog_MessageBox(
@@ -573,12 +578,9 @@ namespace ise.dialogs
             }
 
             // Cancel Button
-            width -= uiControlPadding + uiActionButtonWidth;
-            buttonRect = new Rect(width, 0, uiActionButtonWidth, inRect.height);
-            if (Widgets.ButtonText(buttonRect, "Cancel"))
-            {
-                Close();
-            }
+            width -= _uiControlPadding + _uiActionButtonWidth;
+            buttonRect = new Rect(width, 0, _uiActionButtonWidth, inRect.height);
+            if (Widgets.ButtonText(buttonRect, "Cancel")) Close();
 
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
@@ -589,7 +591,7 @@ namespace ise.dialogs
             GUI.BeginGroup(outerFrame);
             Text.Anchor = TextAnchor.MiddleLeft;
 
-            var nextControlY = uiControlPadding;
+            var nextControlY = _uiControlPadding;
 
             // Filter category
             var rectCategoryFilter = new Rect(nextControlY, 0, 300f, 25f);
@@ -598,43 +600,37 @@ namespace ise.dialogs
                 OpenFilterChangeFloatMenu();
 
             // Basket filter checkbox
-            nextControlY += uiControlPadding * 2 + rectCategoryFilter.width;
+            nextControlY += _uiControlPadding * 2 + rectCategoryFilter.width;
             var rectBasketCheckbox = new Rect(nextControlY, 0f, 125f, outerFrame.height);
             var oldValue = basketItemsOnly;
             Widgets.CheckboxLabeled(rectBasketCheckbox, "Basket only", ref basketItemsOnly);
-            if (oldValue != basketItemsOnly)
-            {
-                dataSourceDirty = true;
-            }
+            if (oldValue != basketItemsOnly) dataSourceDirty = true;
 
             var lastControlWidth = rectBasketCheckbox.width;
             if (uiTradeMode == TradeView.Buy)
             {
                 // Owned items filter checkbox
-                nextControlY += uiControlPadding * 2 + lastControlWidth;
+                nextControlY += _uiControlPadding * 2 + lastControlWidth;
                 var rectOnlyOwnedCheckbox = new Rect(nextControlY, 0f, 125f, outerFrame.height);
                 oldValue = ownedItemsOnly;
                 Widgets.CheckboxLabeled(rectOnlyOwnedCheckbox, "Owned only", ref ownedItemsOnly);
-                if (oldValue != ownedItemsOnly)
-                {
-                    dataSourceDirty = true;
-                }
+                if (oldValue != ownedItemsOnly) dataSourceDirty = true;
 
                 lastControlWidth = rectOnlyOwnedCheckbox.width;
             }
 
             // Filter Box Label
-            nextControlY += uiControlPadding * 2 + lastControlWidth;
+            nextControlY += _uiControlPadding * 2 + lastControlWidth;
             var rectFilterLabel = new Rect(nextControlY, 0f, 100f, outerFrame.height);
             Widgets.Label(rectFilterLabel, "Filter by Name: ");
 
 
             // Filter Box, takes up rest of space
-            nextControlY += uiControlPadding + rectFilterLabel.width;
+            nextControlY += _uiControlPadding + rectFilterLabel.width;
             var filterRect = new Rect(
                 nextControlY,
                 0,
-                outerFrame.width - nextControlY - uiControlPadding, // Total width of controls + all padding
+                outerFrame.width - nextControlY - _uiControlPadding, // Total width of controls + all padding
                 outerFrame.height
             );
 
@@ -652,7 +648,7 @@ namespace ise.dialogs
         private static void DrawGridHeaders(Rect outerFrame)
         {
             // Subtract the grids margin to make the headers line up with grid
-            var width = outerFrame.width - gridMargin;
+            var width = outerFrame.width - _gridMargin;
 
             GUI.BeginGroup(outerFrame);
 
@@ -662,9 +658,9 @@ namespace ise.dialogs
             // Grid row is drawn RIGHT TO LEFT!
 
             // Draw controls for quantity available
-            width -= gridRowQuantityWidth;
+            width -= _gridRowQuantityWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            var rectQuantityAvailable = new Rect(width, 0f, gridRowQuantityWidth, uiControlHeight);
+            var rectQuantityAvailable = new Rect(width, 0f, _gridRowQuantityWidth, _uiControlHeight);
             Widgets.Label(rectQuantityAvailable, "Available");
 
             // --------------------------------------------------------
@@ -672,64 +668,64 @@ namespace ise.dialogs
             // --------------------------------------------------------
 
             // MAX
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            var rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
+            var rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Max");
 
 
             // Step UP
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Inc");
 
             // TEXT BOX
-            width -= uiTradeButtonPadding + uiTradeButtonWidth * 3;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth * 3;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth * 3, uiControlHeight);
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth * 3, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Quantity");
 
             // Step DOWN
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Dec");
 
             // MIN
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, uiControlHeight);
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Min");
 
             // Price Label
-            width -= gridRowPriceWidth + gridRowMargin;
+            width -= _gridRowPriceWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectPriceLabel = new Rect(width, 0, gridRowPriceWidth, uiControlHeight);
+            var rectPriceLabel = new Rect(width, 0, _gridRowPriceWidth, _uiControlHeight);
             Widgets.Label(rectPriceLabel, "Price");
 
             // Weight Label
-            width -= gridRowPriceWidth + gridRowMargin;
+            width -= _gridRowPriceWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectWeightLabel = new Rect(width, 0, gridRowPriceWidth, uiControlHeight);
+            var rectWeightLabel = new Rect(width, 0, _gridRowPriceWidth, _uiControlHeight);
             Widgets.Label(rectWeightLabel, "Weight");
 
             // Quality Label
-            width -= gridRowQualityWidth + gridRowMargin;
+            width -= _gridRowQualityWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectQuality = new Rect(width, 0f, gridRowQualityWidth, uiControlHeight);
+            var rectQuality = new Rect(width, 0f, _gridRowQualityWidth, _uiControlHeight);
             Widgets.Label(rectQuality, "Item Quality");
 
             // Stuff Label
-            width -= gridRowStuffWidth + gridRowMargin;
+            width -= _gridRowStuffWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectStuff = new Rect(width, 0f, gridRowStuffWidth, uiControlHeight);
+            var rectStuff = new Rect(width, 0f, _gridRowStuffWidth, _uiControlHeight);
             Widgets.Label(rectStuff, "Material");
 
             // Name Label
-            width -= gridRowNameWidth + gridRowMargin;
+            width -= _gridRowNameWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectName = new Rect(width, 0f, gridRowNameWidth, uiControlHeight);
+            var rectName = new Rect(width, 0f, _gridRowNameWidth, _uiControlHeight);
             Widgets.Label(rectName, "Item Name");
 
             GenUI.ResetLabelAlign();
@@ -743,11 +739,11 @@ namespace ise.dialogs
             var gridRowCount = cache.CurrentItems.Count;
 
             // This is the buffer that the rows are rendered in, anything outside of the viewport above is hidden
-            var gridVirtualBuffer = new Rect(0f, 0f, outerFrame.width - gridMargin, gridRowHeight * gridRowCount);
+            var gridVirtualBuffer = new Rect(0f, 0f, outerFrame.width - _gridMargin, _gridRowHeight * gridRowCount);
 
             // Render gridVirtualBuffer to rectGridViewport
             Widgets.BeginScrollView(outerFrame, ref scrollPosition, gridVirtualBuffer);
-            var gridRowYPos = gridRowStart;
+            var gridRowYPos = _gridRowStart;
             var gridBottom = scrollPosition.y - 30f;
             var gridTop = scrollPosition.y + outerFrame.height;
             var rowNumber = 0;
@@ -756,12 +752,12 @@ namespace ise.dialogs
                 if (gridRowYPos > gridBottom && gridRowYPos < gridTop)
                 {
                     // Grid Row
-                    var tradableRow = new Rect(0f, gridRowYPos, gridVirtualBuffer.width, gridRowHeight);
+                    var tradableRow = new Rect(0f, gridRowYPos, gridVirtualBuffer.width, _gridRowHeight);
                     DrawGridRows(tradableRow, rowNumber, cachedTradable);
                 }
 
                 rowNumber++;
-                gridRowYPos += gridRowHeight;
+                gridRowYPos += _gridRowHeight;
             }
 
             GenUI.ResetLabelAlign();
@@ -780,98 +776,84 @@ namespace ise.dialogs
             // Grid row is drawn RIGHT TO LEFT!
 
             // Draw controls for quantity available
-            width -= gridRowQuantityWidth;
+            width -= _gridRowQuantityWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            var rectQuantityAvailable = new Rect(width, 0f, gridRowQuantityWidth, tradeGridRow.height);
+            var rectQuantityAvailable = new Rect(width, 0f, _gridRowQuantityWidth, tradeGridRow.height);
             Widgets.Label(rectQuantityAvailable, rowData.AvailableQuantity.ToString());
 
             // --------------------------------------------------------
             // Quantity buttons
             // --------------------------------------------------------
 
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            var rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, tradeGridRow.height);
+            var rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, tradeGridRow.height);
 
             // MAX
-            if (Widgets.ButtonText(rectTradeButton, ">>"))
-            {
-                TradeMaxMinButtonEvent(false, false, rowData);
-            }
+            if (Widgets.ButtonText(rectTradeButton, ">>")) TradeMaxMinButtonEvent(false, false, rowData);
 
             // Step UP
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, tradeGridRow.height);
-            if (Widgets.ButtonText(rectTradeButton, ">"))
-            {
-                TradeMaxMinButtonEvent(false, true, rowData);
-            }
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, tradeGridRow.height);
+            if (Widgets.ButtonText(rectTradeButton, ">")) TradeMaxMinButtonEvent(false, true, rowData);
 
             // TEXT BOX
-            width -= uiTradeButtonPadding + uiTradeButtonWidth * 3;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth * 3;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth * 3, tradeGridRow.height);
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth * 3, tradeGridRow.height);
             var qty = rowData.TradedQuantity;
             var buffer = rowData.UnityTextBuffer;
             Widgets.TextFieldNumeric(rectTradeButton, ref qty, ref buffer, 0f, rowData.AvailableQuantity);
             if (qty != rowData.TradedQuantity)
-            {
                 // Save changes to quantity
                 SetTradeAmount(rowData, qty);
-            }
 
             // Step DOWN
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, tradeGridRow.height);
-            if (Widgets.ButtonText(rectTradeButton, "<"))
-            {
-                TradeMaxMinButtonEvent(true, true, rowData);
-            }
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, tradeGridRow.height);
+            if (Widgets.ButtonText(rectTradeButton, "<")) TradeMaxMinButtonEvent(true, true, rowData);
 
             // MIN
-            width -= uiTradeButtonPadding + uiTradeButtonWidth;
+            width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
-            rectTradeButton = new Rect(width, 0f, uiTradeButtonWidth, tradeGridRow.height);
-            if (Widgets.ButtonText(rectTradeButton, "<<"))
-            {
-                TradeMaxMinButtonEvent(true, false, rowData);
-            }
+            rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, tradeGridRow.height);
+            if (Widgets.ButtonText(rectTradeButton, "<<")) TradeMaxMinButtonEvent(true, false, rowData);
 
             // Price
-            width -= gridRowPriceWidth + gridRowMargin;
+            width -= _gridRowPriceWidth + _gridRowMargin;
             var priceFor = Math.Round(
                 uiTradeMode == TradeView.Buy ? rowData.WeSellAt : rowData.WeBuyAt,
                 2,
                 MidpointRounding.AwayFromZero
             ).ToString(CultureInfo.InvariantCulture);
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectPriceLabel = new Rect(width, 0, gridRowPriceWidth, tradeGridRow.height);
+            var rectPriceLabel = new Rect(width, 0, _gridRowPriceWidth, tradeGridRow.height);
             Widgets.Label(rectPriceLabel, priceFor);
 
             // Weight Label
-            width -= gridRowPriceWidth + gridRowMargin;
+            width -= _gridRowPriceWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectWeightLabel = new Rect(width, 0, gridRowPriceWidth, uiControlHeight);
+            var rectWeightLabel = new Rect(width, 0, _gridRowPriceWidth, _uiControlHeight);
             Widgets.Label(rectWeightLabel, rowData.Weight.ToStringMass());
 
             // Quality Label
-            width -= gridRowQualityWidth + gridRowMargin;
+            width -= _gridRowQualityWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectQuality = new Rect(width, 0f, gridRowQualityWidth, tradeGridRow.height);
+            var rectQuality = new Rect(width, 0f, _gridRowQualityWidth, tradeGridRow.height);
             Widgets.Label(rectQuality, qualityTranslationCache[rowData.Quality]);
 
             // Stuff Label
-            width -= gridRowStuffWidth + gridRowMargin;
+            width -= _gridRowStuffWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectStuff = new Rect(width, 0f, gridRowStuffWidth, tradeGridRow.height);
+            var rectStuff = new Rect(width, 0f, _gridRowStuffWidth, tradeGridRow.height);
             Widgets.Label(rectStuff, rowData.TranslatedStuff);
 
             // Name Label
-            width -= gridRowNameWidth + gridRowMargin;
+            width -= _gridRowNameWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var rectName = new Rect(width, 0f, gridRowNameWidth, tradeGridRow.height);
+            var rectName = new Rect(width, 0f, _gridRowNameWidth, tradeGridRow.height);
             Widgets.Label(rectName, rowData.TranslatedName);
 
             GenUI.ResetLabelAlign();
@@ -900,13 +882,9 @@ namespace ise.dialogs
             var basket = uiTradeMode == TradeView.Buy ? cache.MarketBasket : cache.ColonyBasket;
 
             if (tradable.TradedQuantity == 0)
-            {
                 basket.Delete(tradable.ItemCode);
-            }
             else
-            {
                 basket.Upsert(tradable);
-            }
 
             (uiTradeMode == TradeView.Buy ? cache.Market : cache.Colony).Upsert(tradable);
             RecalculateStats();
@@ -1015,6 +993,37 @@ namespace ise.dialogs
                 , 2
                 , MidpointRounding.ToEven
             );
+        }
+
+        #endregion
+
+        #region Nested type: BasketStats
+
+        private struct BasketStats
+        {
+            public float WeightSell { get; set; }
+            public float WeightBuy { get; set; }
+            public float CostSell { get; set; }
+            public float CostBuy { get; set; }
+
+            public float CostSellShipping { get; set; }
+
+            public float CostBuyShipping { get; set; }
+
+            public float CostTotal { get; set; }
+        }
+
+        #endregion
+
+        #region Nested type: ItemCache
+
+        private struct ItemCache
+        {
+            public ILiteCollection<DBCachedTradable> Colony;
+            public ILiteCollection<DBCachedTradable> Market;
+            public ILiteCollection<DBCachedTradable> ColonyBasket;
+            public ILiteCollection<DBCachedTradable> MarketBasket;
+            public List<DBCachedTradable> CurrentItems;
         }
 
         #endregion

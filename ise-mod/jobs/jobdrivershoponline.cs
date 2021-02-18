@@ -16,7 +16,8 @@ using Verse.AI;
 
 namespace ise.jobs
 {
-    public class Job_ISEShopOnline : JobDriver
+    // ReSharper disable once UnusedType.Global
+    public class JobDriverShopOnline : JobDriver
     {
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
