@@ -11,15 +11,15 @@
 using System;
 using ise_core.db;
 using LiteDB;
-using Steamworks;
 using Verse;
-using Verse.Steam;
-using static ise.lib.Consts;
+using static ise.lib.Constants;
 
 namespace ise.lib
 {
     internal static class User
     {
+        #region Methods
+
         internal static string GetUserSteamId()
         {
 #if DEBUG
@@ -37,7 +37,7 @@ namespace ise.lib
             using (var db = new LiteDatabase(DBLocation))
             {
                 Logging.WriteMessage($"Loading from {db}");
-                var col = db.GetCollection<DBUser>("user_data");
+                var col = db.GetCollection<DBUser>(UserTable);
 
                 var userData = steamId.NullOrEmpty()
                     ? col.FindOne(data => data.IsSteamUser == false)
@@ -45,10 +45,10 @@ namespace ise.lib
 
                 if (userData == null)
                 {
-                    Logging.WriteMessage($"Creating new user data");
+                    Logging.WriteMessage("Creating new user data");
                     userData = steamId.NullOrEmpty()
-                        ? new DBUser() {UserId = Guid.NewGuid().ToString(), IsSteamUser = false}
-                        : new DBUser() {UserId = steamId, IsSteamUser = true};
+                        ? new DBUser {UserId = Guid.NewGuid().ToString(), IsSteamUser = false}
+                        : new DBUser {UserId = steamId, IsSteamUser = true};
                     col.Insert(userData);
                 }
 
@@ -63,7 +63,7 @@ namespace ise.lib
             using (var db = new LiteDatabase(DBLocation))
             {
                 // Get the collection (or create, if doesn't exist)
-                var col = db.GetCollection<T>("bindings");
+                var col = db.GetCollection<T>(BindingsTable);
 
                 var clientBindData = col.FindOne(data => data.ParentId == parentId);
 
@@ -80,11 +80,13 @@ namespace ise.lib
             using (var db = new LiteDatabase(DBLocation))
             {
                 // Get the collection (or create, if doesn't exist)
-                var col = db.GetCollection<T>("bindings");
+                var col = db.GetCollection<T>(BindingsTable);
 
                 var bind = new T {ParentId = parentId, BindId = bindId};
                 col.Insert(bind);
             }
         }
+
+        #endregion
     }
 }

@@ -97,7 +97,8 @@ namespace ise.lib
                             Quality = quality,
                             BaseValue = StatDefOf.MarketValue.Worker
                                 .GetValue(StatRequest.For(thing, stuff, (QualityCategory) quality)),
-                            Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, stuff, (QualityCategory) quality))
+                            Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, stuff,
+                                (QualityCategory) quality))
                         };
                 }
         }
@@ -105,7 +106,6 @@ namespace ise.lib
         private static IEnumerable<ColonyTradable> ComputeItemsWithQuality(ThingDef thing)
         {
             for (var quality = 2; quality < 7; quality++)
-            {
                 yield return new ColonyTradable
                 {
                     ThingDef = thing.defName,
@@ -115,7 +115,6 @@ namespace ise.lib
                         .GetValue(StatRequest.For(thing, null, (QualityCategory) quality)),
                     Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null, (QualityCategory) quality))
                 };
-            }
         }
 
         private static IEnumerable<ColonyTradable> ComputeThingDef(ThingDef thing,
@@ -148,7 +147,11 @@ namespace ise.lib
 
         internal static List<Thing> AllColonyThingsForTrade(Map map)
         {
-            var allColonyThingsForTrade = new List<Thing>();
+            return new List<Thing>(GetItemsNearBeacons(map));
+        }
+
+        internal static IEnumerable<Thing> GetItemsNearBeacons(Map map, string filterByDefName = null)
+        {
             foreach (var beacon in Building_OrbitalTradeBeacon.AllPowered(map))
             {
                 Logging.WriteMessage($"Found trade beacon @ {beacon.Position.ToString()}");
@@ -157,17 +160,15 @@ namespace ise.lib
                     var thingList = beaconCell.GetThingList(map);
                     for (var i = 0; i < thingList.Count; i++)
                     {
-                        var thing = thingList[i];
-                        if (!CanThisItemBeSold(thing)) continue;
-#if MARKET_DEBUG
-                        Logging.WriteMessage($"{thing.ThingID} can be sold");
-#endif
-                        allColonyThingsForTrade.Add(thing);
+                        // Unpack minified boxes to find out what's in them.
+                        var thing = thingList[i].GetInnerIfMinified();
+                        if ((filterByDefName == null ||
+                             thing.def.defName == filterByDefName) &&
+                            CanThisItemBeSold(thingList[i]))
+                            yield return thingList[i];
                     }
                 }
             }
-
-            return allColonyThingsForTrade;
         }
 
         internal static bool CanThisItemBeSold(Thing t)
@@ -179,22 +180,13 @@ namespace ise.lib
             // If it is minified, unpack it to find out what it really is
             t = t.GetInnerIfMinified();
 
-            if (!CanThisThingDefBeSold(t.def))
-            {
-                return false;
-            }
+            if (!CanThisThingDefBeSold(t.def)) return false;
 
             // Not desiccated
-            if (t.IsNotFresh())
-            {
-                return false;
-            }
+            if (t.IsNotFresh()) return false;
 
             // Don't allow trading dead man clothing
-            if (t is Apparel apparel && apparel.WornByCorpse)
-            {
-                return false;
-            }
+            if (t is Apparel apparel && apparel.WornByCorpse) return false;
 
             // Can't sell BioCoded
             return !EquipmentUtility.IsBiocoded(t);
@@ -202,22 +194,14 @@ namespace ise.lib
 
         private static bool CanThisThingDefBeSold(ThingDef def)
         {
-            if (!def.tradeability.PlayerCanSell())
-            {
-                return false;
-            }
+            if (!def.tradeability.PlayerCanSell()) return false;
 
-            if (def.GetStatValueAbstract(StatDefOf.MarketValue) <= 0f)
-            {
-                return false;
-            }
+            if (def.GetStatValueAbstract(StatDefOf.MarketValue) <= 0f) return false;
 
             if (def.category != ThingCategory.Item &&
                 def.category != ThingCategory.Building
             )
-            {
                 return false;
-            }
 
             return def.category != ThingCategory.Building || def.Minifiable;
         }

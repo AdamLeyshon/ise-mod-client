@@ -16,7 +16,13 @@ namespace ise.lib
 {
     internal static class Logging
     {
+        #region Fields
+
         private const string Prefix = "ISE @ ";
+
+        #endregion
+
+        #region Methods
 
         internal static void WriteErrorMessage(string message)
         {
@@ -37,5 +43,14 @@ namespace ise.lib
             Log.Message($"{Prefix}{DateTime.UtcNow} -> " +
                         $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
         }
+
+        internal static void WriteDebugMessage(string message, StackFrame sf = null)
+        {
+#if DEBUG
+            WriteMessage(message, sf);
+#endif
+        }
+
+        #endregion
     }
 }

@@ -4,7 +4,7 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, market_download.cs, Created 2021-02-12
+// ise-mod, marketdownload.cs, Created 2021-02-12
 
 #endregion
 
@@ -17,8 +17,14 @@ namespace ise.dialogs
 {
     public class DialogMarketDownload : Window, IDialog
     {
-        private Vector2 textWidth;
+        #region Fields
+
         private readonly IDialogTask task;
+        private Vector2 textWidth;
+
+        #endregion
+
+        #region ctor
 
         public DialogMarketDownload(Pawn userPawn)
         {
@@ -29,8 +35,28 @@ namespace ise.dialogs
             task = new MarketDownloadDialogTask(this, pawn);
         }
 
+        #endregion
+
+        #region Properties
+
         public override Vector2 InitialSize =>
             new Vector2(300f, 300f);
+
+        #endregion
+
+        #region IDialog Interface Implementations
+
+        public string DialogMessage { get; set; }
+        public Pawn pawn { get; set; }
+
+        public void CloseDialog()
+        {
+            Close();
+        }
+
+        #endregion
+
+        #region Methods
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -49,12 +75,6 @@ namespace ise.dialogs
             CloseDialog();
         }
 
-        public string DialogMessage { get; set; }
-        public Pawn pawn { get; set; }
-
-        public void CloseDialog()
-        {
-            this.Close();
-        }
+        #endregion
     }
 }

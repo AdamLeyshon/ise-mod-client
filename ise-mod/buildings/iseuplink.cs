@@ -4,11 +4,10 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, uplink.cs, Created 2021-02-10
+// ise-mod, iseuplink.cs, Created 2021-02-10
 
 #endregion
 
-using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
@@ -16,6 +15,8 @@ namespace ise.buildings
 {
     public class ISEUplink : Building
     {
+        #region Methods
+
         internal static bool HasUplink(Map map)
         {
             // If we've got multiple uplinks, only one needs to be powered to have comms
@@ -29,7 +30,7 @@ namespace ise.buildings
 
             return false;
         }
-        
-        
+
+        #endregion
     }
 }

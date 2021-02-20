@@ -4,12 +4,11 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, bind_ui.cs, Created 2021-02-11
+// ise-mod, bind.cs, Created 2021-02-11
 
 #endregion
 
 using System;
-using Bind;
 using ise.lib;
 using ise.lib.tasks;
 using UnityEngine;
@@ -19,8 +18,7 @@ namespace ise.dialogs
 {
     public class DialogBind : Window, IDialog
     {
-        private Vector2 textWidth;
-        private IDialogTask task;
+        #region BindUIType enum
 
         public enum BindUIType
         {
@@ -28,6 +26,17 @@ namespace ise.dialogs
             Colony,
             Account
         }
+
+        #endregion
+
+        #region Fields
+
+        private readonly IDialogTask task;
+        private Vector2 textWidth;
+
+        #endregion
+
+        #region ctor
 
         public DialogBind(Pawn userPawn, BindUIType bindTypeEnum)
         {
@@ -42,7 +51,7 @@ namespace ise.dialogs
                     task = new ClientBindDialogTask(this);
                     break;
                 case BindUIType.Colony:
-                    task = new ColonyBindDialogTask(this);
+                    task = new ColonyBindDialogTask(this, pawn);
                     break;
                 case BindUIType.Account:
                     throw new NotImplementedException();
@@ -51,9 +60,29 @@ namespace ise.dialogs
             }
         }
 
+        #endregion
+
+        #region Properties
+
         public BindUIType BindType { get; set; }
 
         public override Vector2 InitialSize => new Vector2(300f, 300f);
+
+        #endregion
+
+        #region IDialog Interface Implementations
+
+        public string DialogMessage { get; set; }
+        public Pawn pawn { get; set; }
+
+        public void CloseDialog()
+        {
+            Close();
+        }
+
+        #endregion
+
+        #region Methods
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -84,12 +113,6 @@ namespace ise.dialogs
             CloseDialog();
         }
 
-        public string DialogMessage { get; set; }
-        public Pawn pawn { get; set; }
-
-        public void CloseDialog()
-        {
-            this.Close();
-        }
+        #endregion
     }
 }

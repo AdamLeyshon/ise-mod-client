@@ -8,26 +8,35 @@
 
 #endregion
 
-using System;
-using ise;
+using System.Collections.Generic;
 using ise.lib;
 using ise_core.db;
-using static ise.lib.User;
 using Verse;
+using static ise.lib.User;
 using static ise.lib.game.GameInfo;
 
 namespace ise.components
 {
     public class ISEGameComponent : GameComponent
     {
-        internal string ColonyBind;
+        #region Fields
+
+        private readonly Dictionary<string, string> colonyCache = new Dictionary<string, string>();
         internal string ClientBind;
-        private bool spawnToolUsed = false;
+        private bool spawnToolUsed;
+
+        #endregion
+
+        #region ctor
 
         public ISEGameComponent(Game game)
         {
-            Logging.WriteMessage($"Game Component installed");
+            Logging.WriteMessage("Game Component installed");
         }
+
+        #endregion
+
+        #region Properties
 
         public bool SpawnToolUsed
         {
@@ -35,23 +44,30 @@ namespace ise.components
             private set
             {
                 if (value)
-                {
                     // Don't allow unsetting
                     spawnToolUsed = true;
-                }
             }
         }
 
+        /// <summary>
+        ///     Set if the bind has already been verified since game start.
+        /// </summary>
+        public bool ClientBindVerified { get; set; }
+
+        #endregion
+
+        #region Methods
+
         public override void LoadedGame()
         {
-            Logging.WriteMessage($"Loaded game");
+            Logging.WriteMessage("Loaded game");
             base.LoadedGame();
             LoadBinds();
         }
 
         public override void StartedNewGame()
         {
-            Logging.WriteMessage($"Start new game");
+            Logging.WriteMessage("Start new game");
             base.StartedNewGame();
             LoadBinds();
         }
@@ -64,18 +80,8 @@ namespace ise.components
                 Logging.WriteMessage($"No Client bind for: {IseBootStrap.User.UserId}");
                 return;
             }
-            
+
             Logging.WriteMessage($"Client bind {ClientBind}");
-
-            ColonyBind = LoadBind<DBColonyBind>(ClientBind);
-            if (ColonyBind.NullOrEmpty())
-            {
-                Logging.WriteMessage($"No colony bind for: {ClientBind}");
-                return;
-            }
-
-            Logging.WriteMessage($"Colony bind {ColonyBind}");
-
             // Do other stuff
         }
 
@@ -87,9 +93,22 @@ namespace ise.components
             return GetColonyFaction().HasName && m.Parent.HasName && MapIsSettlementOfPlayer(m);
         }
 
-        /// <summary>
-        /// Set if the bind has already been verified since game start.
-        /// </summary>
-        public bool BindVerified { get; set; }
+        internal string GetColonyId(Map m)
+        {
+            var mapId = GetUniqueMapID(m);
+            if (colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
+            outputId = LoadBind<DBColonyBind>(mapId);
+            if (outputId.NullOrEmpty())
+            {
+                Logging.WriteMessage($"No colony bind for: {ClientBind}");
+                return null;
+            }
+
+            colonyCache.Add(mapId, outputId);
+            Logging.WriteMessage($"Colony bind {outputId}");
+            return outputId;
+        }
+
+        #endregion
     }
 }

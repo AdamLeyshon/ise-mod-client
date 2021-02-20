@@ -8,7 +8,6 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using Colony;
 using RimWorld;
@@ -26,22 +25,17 @@ namespace ise.lib.game
             var platformString = Application.platform.ToString();
             PlatformEnum platform;
             if (platformString.Contains("Windows"))
-            {
                 platform = PlatformEnum.Windows;
-            }
             else if (platformString.Contains("Linux"))
                 platform = PlatformEnum.Linux;
             else if (platformString.Contains("OSX"))
-            {
                 platform = PlatformEnum.Mac;
-            }
             else
-            {
                 platform = PlatformEnum.Unknown;
-            }
+
             return platform;
         }
-        
+
         internal static Faction GetColonyFaction()
         {
             return Find.FactionManager.AllFactions.FirstOrDefault(f => f.IsPlayer);
@@ -76,7 +70,7 @@ namespace ise.lib.game
 
         internal static string GetUniqueMapID(Map m)
         {
-            return Crypto.GetShaHash($"{m.Tile}{Current.CreatingWorld.info.seedString}");
+            return Crypto.GetShaHash($"{m.Tile}{Current.Game.World.info.seedString}");
         }
 
         #endregion

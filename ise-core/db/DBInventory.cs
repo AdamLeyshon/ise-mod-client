@@ -1,30 +1,50 @@
 #region License
+
 // This file was created by TwistedSoul @ TheCodeCache.net
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-core, DBInventory.cs, Created 2021-02-12
+// ise-core, DBInventoryPromise.cs, Created 2021-02-12
+
 #endregion
+
+using LiteDB;
 
 namespace ise_core.db
 {
-    public class DBInventory
+    public class DBInventoryPromise
     {
         #region Properties
 
-        // Server Promise
+        /// <summary>
+        /// Server Promise Id
+        /// </summary>
         public string InventoryPromiseId { get; set; }
 
-        // UTC Epoch timestamp of when this offer expires
+        /// <summary>
+        /// The Colony this promise belongs to
+        /// </summary>
+        [BsonId]
+        public string ColonyId { get; set; }
+
+        /// <summary>
+        /// UTC Epoch timestamp of when this offer expires
+        /// </summary>
         public long InventoryPromiseExpires { get; set; }
 
-        // Fixed amount per KG of item to be sold
+        /// <summary>
+        /// Fixed amount per KG of item to be sold
+        /// </summary>
         public int CollectionChargePerKG { get; set; }
 
-        // Fixed amount per KG of item to be bought
+        /// <summary>
+        /// Fixed amount per KG of item to be bought
+        /// </summary>
         public int DeliveryChargePerKG { get; set; }
 
-        // Amount of cash in their account already.
+        /// <summary>
+        /// Amount of cash in their account already.
+        /// </summary>
         public long AccountBalance { get; set; }
 
         #endregion

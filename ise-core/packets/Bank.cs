@@ -26,17 +26,16 @@ namespace Bank {
           string.Concat(
             "CgpiYW5rLnByb3RvEgRiYW5rImgKCEJhbmtEYXRhEiwKB2JhbGFuY2UYASAD",
             "KAsyGy5iYW5rLkJhbmtEYXRhLkJhbGFuY2VFbnRyeRouCgxCYWxhbmNlRW50",
-            "cnkSCwoDa2V5GAEgASgFEg0KBXZhbHVlGAIgASgFOgI4ASJeCg5CYW5rR2V0",
+            "cnkSCwoDa2V5GAEgASgFEg0KBXZhbHVlGAIgASgFOgI4ASI4Cg5CYW5rR2V0",
             "UmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29sb255SWQYAiAB",
-            "KAkSJAoIY3VycmVuY3kYAyABKA4yEi5iYW5rLkJhbmtDdXJyZW5jeSoXCgxD",
-            "dXJyZW5jeUVudW0SBwoDVVRDEAAqGgoMQmFua0N1cnJlbmN5EgoKBlNpbHZl",
-            "chAAMjwKC0JhbmtTZXJ2aWNlEi0KA0dldBIULmJhbmsuQmFua0dldFJlcXVl",
-            "c3QaDi5iYW5rLkJhbmtEYXRhIgBiBnByb3RvMw=="));
+            "KAkqFwoMQ3VycmVuY3lFbnVtEgcKA1VUQxAAKhoKDEJhbmtDdXJyZW5jeRIK",
+            "CgZTaWx2ZXIQADI8CgtCYW5rU2VydmljZRItCgNHZXQSFC5iYW5rLkJhbmtH",
+            "ZXRSZXF1ZXN0Gg4uYmFuay5CYW5rRGF0YSIAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Bank.CurrencyEnum), typeof(global::Bank.BankCurrency), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Bank.BankData), global::Bank.BankData.Parser, new[]{ "Balance" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Bank.BankGetRequest), global::Bank.BankGetRequest.Parser, new[]{ "ClientBindId", "ColonyId", "Currency" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Bank.BankGetRequest), global::Bank.BankGetRequest.Parser, new[]{ "ClientBindId", "ColonyId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -249,7 +248,6 @@ namespace Bank {
     public BankGetRequest(BankGetRequest other) : this() {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
-      currency_ = other.currency_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -280,17 +278,6 @@ namespace Bank {
       }
     }
 
-    /// <summary>Field number for the "currency" field.</summary>
-    public const int CurrencyFieldNumber = 3;
-    private global::Bank.BankCurrency currency_ = global::Bank.BankCurrency.Silver;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Bank.BankCurrency Currency {
-      get { return currency_; }
-      set {
-        currency_ = value;
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as BankGetRequest);
@@ -306,7 +293,6 @@ namespace Bank {
       }
       if (ClientBindId != other.ClientBindId) return false;
       if (ColonyId != other.ColonyId) return false;
-      if (Currency != other.Currency) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -315,7 +301,6 @@ namespace Bank {
       int hash = 1;
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
       if (ColonyId.Length != 0) hash ^= ColonyId.GetHashCode();
-      if (Currency != global::Bank.BankCurrency.Silver) hash ^= Currency.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -340,10 +325,6 @@ namespace Bank {
         output.WriteRawTag(18);
         output.WriteString(ColonyId);
       }
-      if (Currency != global::Bank.BankCurrency.Silver) {
-        output.WriteRawTag(24);
-        output.WriteEnum((int) Currency);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -361,10 +342,6 @@ namespace Bank {
         output.WriteRawTag(18);
         output.WriteString(ColonyId);
       }
-      if (Currency != global::Bank.BankCurrency.Silver) {
-        output.WriteRawTag(24);
-        output.WriteEnum((int) Currency);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -379,9 +356,6 @@ namespace Bank {
       }
       if (ColonyId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ColonyId);
-      }
-      if (Currency != global::Bank.BankCurrency.Silver) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Currency);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -399,9 +373,6 @@ namespace Bank {
       }
       if (other.ColonyId.Length != 0) {
         ColonyId = other.ColonyId;
-      }
-      if (other.Currency != global::Bank.BankCurrency.Silver) {
-        Currency = other.Currency;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -425,10 +396,6 @@ namespace Bank {
             ColonyId = input.ReadString();
             break;
           }
-          case 24: {
-            Currency = (global::Bank.BankCurrency) input.ReadEnum();
-            break;
-          }
         }
       }
     #endif
@@ -449,10 +416,6 @@ namespace Bank {
           }
           case 18: {
             ColonyId = input.ReadString();
-            break;
-          }
-          case 24: {
-            Currency = (global::Bank.BankCurrency) input.ReadEnum();
             break;
           }
         }

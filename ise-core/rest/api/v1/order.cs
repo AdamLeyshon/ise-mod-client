@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using ise_core.rest;
 using Order;
 using RestSharp;
-using static ise_core.rest.api.v1.consts;
+using static ise_core.rest.api.v1.Constants;
 
 namespace ise_core.rest.api.v1
 {

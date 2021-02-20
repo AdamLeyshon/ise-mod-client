@@ -4,7 +4,7 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, client_bind.cs, Created 2021-02-11
+// ise-mod, marketdownloaddialogtask.cs, Created 2021-02-12
 
 #endregion
 
@@ -22,47 +22,47 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using static ise_core.rest.Helpers;
-using static ise.lib.Consts;
-using static ise_core.rest.api.v1.consts;
+using static ise.lib.Constants;
+using static ise_core.rest.api.v1.Constants;
 using static ise.lib.Tradables;
+using static ise.lib.Cache;
 
 namespace ise.lib.tasks
 {
     internal class MarketDownloadDialogTask : AbstractDialogTask
     {
-        private enum State
-        {
-            Start,
-            Request,
-            MarketCaching,
-            ColonyCaching,
-            Done,
-            Error,
-        }
+        #region Fields
+
+        private readonly string colonyId;
+        private readonly ISEGameComponent gc;
+        private readonly Pawn pawn;
+        private List<Thing> colonyThings;
 
         private State state;
         private Task task;
-        private List<Thing> colonyThings;
-        private readonly Pawn pawn;
+
+        #endregion
+
+        #region ctor
 
         public MarketDownloadDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
         {
             pawn = userPawn;
             state = State.Start;
+            gc = Current.Game.GetComponent<ISEGameComponent>();
+            if (pawn == null) throw new ArgumentNullException(nameof(userPawn));
 
-            if (pawn == null)
-            {
-                Logging.WriteErrorMessage("Pawn is NULL!");
-            }
+            colonyId = gc.GetColonyId(pawn.Map);
         }
+
+        #endregion
+
+        #region Methods
 
         public override void Update()
         {
             // Handle task errors first.
-            if (task != null && task.IsFaulted)
-            {
-                LogTaskError();
-            }
+            if (task != null && task.IsFaulted) LogTaskError();
 
             switch (state)
             {
@@ -72,26 +72,17 @@ namespace ise.lib.tasks
                     break;
                 case State.Request:
                     Dialog.DialogMessage = "Downloading Market Data";
-                    if (task != null && task.IsCompleted)
-                    {
-                        ProcessInventoryReply(((Task<InventoryReply>) task).Result);
-                    }
+                    if (task != null && task.IsCompleted) ProcessInventoryReply(((Task<InventoryReply>) task).Result);
 
                     break;
                 case State.MarketCaching:
                     Dialog.DialogMessage = "Building Cache";
-                    if (task != null && task.IsCompleted)
-                    {
-                        GatherColonyInventory();
-                    }
+                    if (task != null && task.IsCompleted) GatherColonyInventory();
 
                     break;
                 case State.ColonyCaching:
                     Dialog.DialogMessage = "Getting colony inventory";
-                    if (task != null && task.IsCompleted)
-                    {
-                        state = State.Done;
-                    }
+                    if (task != null && task.IsCompleted) state = State.Done;
 
                     break;
 
@@ -113,32 +104,29 @@ namespace ise.lib.tasks
             Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
             if (task.Exception?.InnerExceptions != null)
                 foreach (var innerException in task.Exception.InnerExceptions)
-                {
                     Logging.WriteErrorMessage($"Inner exception in task {innerException}");
-                }
 
             task = null;
         }
 
         private void StartDownload()
         {
-            DBInventory inventory;
+            DBInventoryPromise inventoryPromise;
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
             {
-                inventory = db.GetCollection<DBInventory>().FindAll().FirstOrDefault();
+                inventoryPromise = db.GetCollection<DBInventoryPromise>(PromiseTable).FindById(colonyId);
             }
 
-            if (inventory != null && inventory.InventoryPromiseExpires > GetUTCNow())
+            if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
                 // No need to download, promise is still valid
                 GatherColonyInventory();
             }
             else
             {
-                var gc = Current.Game.GetComponent<ISEGameComponent>();
-                var request = new InventoryRequest {ColonyId = gc.ColonyBind, ClientBindId = gc.ClientBind};
-                Logging.WriteMessage($"Asking server for Inventory");
+                var request = new InventoryRequest {ColonyId = colonyId, ClientBindId = gc.ClientBind};
+                Logging.WriteMessage("Asking server for Inventory");
                 task = SendAndParseReplyAsync(
                     request,
                     InventoryReply.Parser,
@@ -158,14 +146,12 @@ namespace ise.lib.tasks
             {
                 Logging.WriteMessage($"Building cache of {reply.Items.Count} market items");
 
-                var thingDefs = DefDatabase<ThingDef>.AllDefsListForReading;
-
                 // Open database (or create if doesn't exist)
                 using (var db = new LiteDatabase(DBLocation))
                 {
-                    var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
-                    db.GetCollection<DBCachedTradable>("colony_basket").DeleteAll();
-                    db.GetCollection<DBCachedTradable>("market_basket").DeleteAll();
+                    var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
+                    GetCache(db, colonyId, CacheType.ColonyBasket).DeleteAll();
+                    db.GetCollection<DBCachedTradable>(MarketBasketTable).DeleteAll();
                     marketCache.DeleteAll();
                     marketCache.InsertBulk(
                         reply.Items.Select(
@@ -188,16 +174,17 @@ namespace ise.lib.tasks
                                 Category = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).FirstThingCategory.defName
                             }));
                     marketCache.EnsureIndex(mc => mc.ThingDef);
-                    var inventoryCache = db.GetCollection<DBInventory>();
-                    inventoryCache.DeleteAll();
-                    inventoryCache.Insert(new DBInventory
+                    var inventoryCache = db.GetCollection<DBInventoryPromise>(PromiseTable);
+                    inventoryCache.DeleteMany(x => x.ColonyId == colonyId);
+                    inventoryCache.Insert(new DBInventoryPromise
                     {
+                        ColonyId = colonyId,
                         InventoryPromiseId = reply.InventoryPromiseId,
                         InventoryPromiseExpires = reply.InventoryPromiseExpires,
                         CollectionChargePerKG = reply.CollectionChargePerKG,
                         DeliveryChargePerKG = reply.DeliveryChargePerKG, AccountBalance = reply.AccountBalance
                     });
-                    Logging.WriteMessage($"Done caching market items");
+                    Logging.WriteMessage("Done caching market items");
                 }
             });
             task.Start();
@@ -211,31 +198,30 @@ namespace ise.lib.tasks
             task = new Task(delegate
             {
                 Logging.WriteMessage("Building colony item cache");
-#if MARKET_DEBUG
-                Logging.WriteMessage("Getting list of all items in range of beacons");
-                Logging.WriteMessage($"on map for {pawn.Name}");
-#endif
+
+                Logging.WriteDebugMessage("Getting list of all items in range of beacons");
+                Logging.WriteDebugMessage($"on map for {pawn.Name}");
+
                 colonyThings = AllColonyThingsForTrade(pawn.Map);
 
                 // Open database (or create if doesn't exist)
                 using (var db = new LiteDatabase(DBLocation))
                 {
-                    var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
-                    var colonyCache = db.GetCollection<DBCachedTradable>("colony_cache");
+                    var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
+                    var colonyCache = GetCache(db, colonyId, CacheType.ColonyCache);
 
                     // Clear colony cache
-#if MARKET_DEBUG
-                    Logging.WriteMessage("Cleared colony cache");
-#endif
+
+                    Logging.WriteDebugMessage("Cleared colony cache");
+
                     colonyCache.DeleteAll();
                     colonyCache.EnsureIndex(cc => cc.ThingDef);
 
                     // For each downloaded market item
                     foreach (var thingGroup in colonyThings.GroupBy(ci => ci.def.defName))
                     {
-#if MARKET_DEBUG
-                        Logging.WriteMessage($"Working on group {thingGroup.Key}");
-#endif
+                        Logging.WriteDebugMessage($"Working on group {thingGroup.Key}");
+
                         foreach (var ci in thingGroup.OrderByDescending(ci => ci.HitPoints))
                         {
                             var unpackedThing = ci.GetInnerIfMinified();
@@ -245,22 +231,21 @@ namespace ise.lib.tasks
 
                             if (qualityCategory != null && (int) qualityCategory < 2)
                             {
-#if MARKET_DEBUG
-                                Logging.WriteMessage(
+                                Logging.WriteDebugMessage(
                                     $"Item {unpackedThing.ThingID} was less than Normal quality, Skipped");
-#endif
+
                                 continue;
                             }
 
                             // Check if the item has quality, set to 0 if not.
-                            var intQuality = (qualityCategory == null ? 0 : (int) qualityCategory);
+                            var intQuality = qualityCategory == null ? 0 : (int) qualityCategory;
 
-#if MARKET_DEBUG
-                            Logging.WriteMessage(
+
+                            Logging.WriteDebugMessage(
                                 $"Searching market for {unpackedThing.def.defName}, " +
                                 $"Quality: {intQuality}, " +
                                 $"Stuff: {stuff} ");
-#endif
+
 
                             // Get all matching colony items
                             var matchMarketCacheItem = marketCache.FindOne(cacheItem =>
@@ -272,14 +257,14 @@ namespace ise.lib.tasks
 
                             if (matchMarketCacheItem == null)
                             {
-#if MARKET_DEBUG
-                                Logging.WriteMessage($"Did not find a Market entry! How?");
-#endif
+                                if (unpackedThing.def.defName != ThingDefSilver)
+                                    Logging.WriteMessage(
+                                        $"Did not find a Market entry for {unpackedThing.def.defName}, " +
+                                        "This could be a problem.");
+
                                 if (!(ci is MinifiedThing))
-                                {
                                     // If not minified skip this ThingDef group, else go to next minified item
                                     break;
-                                }
 
                                 continue;
                             }
@@ -287,35 +272,30 @@ namespace ise.lib.tasks
 
                             // Calculate percentage of HP remaining
                             var itemHitPointsAsPercentage = 100;
-#if MARKET_DEBUG
-                            Logging.WriteMessage(
+
+                            Logging.WriteDebugMessage(
                                 $"Item Stack HP {unpackedThing.HitPoints}/{unpackedThing.MaxHitPoints}, " +
                                 $"Size: {unpackedThing.stackCount}");
-#endif
+
                             // -1 is no damage, Ludeon, why? why not just HitPoints=MaxHitPoints?
                             if (unpackedThing.HitPoints != -1)
-                            {
                                 // The brackets here are not redundant no matter what Rider/ReSharper suggests
                                 // Removing the casts/brackets causes incorrect percentage computation.
                                 itemHitPointsAsPercentage =
-                                    (int) Math.Floor(((float) unpackedThing.HitPoints /
-                                                      (float) unpackedThing.MaxHitPoints) * 100f);
-                            }
-#if MARKET_DEBUG
-                            Logging.WriteMessage($"Item Stack HP {itemHitPointsAsPercentage}%");
-#endif
+                                    (int) Math.Floor(unpackedThing.HitPoints /
+                                        (float) unpackedThing.MaxHitPoints * 100f);
+
+                            Logging.WriteDebugMessage($"Item Stack HP {itemHitPointsAsPercentage}%");
+
                             // Below this threshold, we don't  want the remaining items in this groups
                             // Break now to save iteration.
                             if (itemHitPointsAsPercentage < 15)
                             {
-#if MARKET_DEBUG
-                                Logging.WriteMessage($"Item has low HP, skipping.");
-#endif
+                                Logging.WriteDebugMessage("Item has low HP, skipping.");
+
                                 if (!(ci is MinifiedThing))
-                                {
                                     // If not minified skip this ThingDef group, else go to next minified item
                                     break;
-                                }
 
                                 continue;
                             }
@@ -326,7 +306,7 @@ namespace ise.lib.tasks
                                 // Check if the item has quality, set to 0 if not.
                                 (qualityCategory == null ? 0 : (int) qualityCategory) == cacheItem.Quality &&
                                 itemHitPointsAsPercentage == cacheItem.HitPoints
-                            ) ?? new DBCachedTradable()
+                            ) ?? new DBCachedTradable
                             {
                                 ItemCode = matchMarketCacheItem.ItemCode,
                                 ThingDef = matchMarketCacheItem.ThingDef,
@@ -347,11 +327,11 @@ namespace ise.lib.tasks
                         }
                     }
 
-                    Logging.WriteMessage($"Done caching colony items");
+                    Logging.WriteMessage("Done caching colony items");
 
-                    Logging.WriteMessage("Restoring basket");
+                    Logging.WriteDebugMessage("Restoring basket");
                     RestoreBasket();
-                    Logging.WriteMessage("Done");
+                    Logging.WriteDebugMessage("Done");
                 }
             });
             task.Start();
@@ -360,15 +340,17 @@ namespace ise.lib.tasks
             state = State.ColonyCaching;
         }
 
-        private static void RestoreBasket()
+        private void RestoreBasket()
         {
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
             {
-                var marketCache = db.GetCollection<DBCachedTradable>("market_cache");
-                var colonyCache = db.GetCollection<DBCachedTradable>("colony_cache");
-                var colonyBasket = db.GetCollection<DBCachedTradable>("colony_basket");
-                var marketBasket = db.GetCollection<DBCachedTradable>("market_basket");
+                var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
+                var marketBasket = GetCache(db, colonyId, CacheType.MarketBasket);
+
+                var colonyCache = GetCache(db, colonyId, CacheType.ColonyCache);
+                var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket);
+
                 marketCache.EnsureIndex(cc => cc.ItemCode);
                 colonyCache.EnsureIndex(cc => cc.ItemCode);
                 colonyBasket.EnsureIndex(cc => cc.ItemCode);
@@ -381,10 +363,10 @@ namespace ise.lib.tasks
                     {
                         // Get matching basket item
                         var matchBasketItem = basket.FindById(tradable.ItemCode);
-                        
+
                         // We didn't have a matching item, go to next.
                         if (matchBasketItem == null) continue;
-                        
+
                         // Try and set quantity to the what it was before, but clamp it to the new max value if needed
                         tradable.TradedQuantity = Mathf.Clamp(
                             matchBasketItem.TradedQuantity,
@@ -407,5 +389,21 @@ namespace ise.lib.tasks
                 marketBasket.DeleteMany(x => !marketCachedItems.Contains(x.ItemCode));
             }
         }
+
+        #endregion
+
+        #region Nested type: State
+
+        private enum State
+        {
+            Start,
+            Request,
+            MarketCaching,
+            ColonyCaching,
+            Done,
+            Error,
+        }
+
+        #endregion
     }
 }

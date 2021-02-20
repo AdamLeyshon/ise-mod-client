@@ -12,9 +12,23 @@ using Verse;
 
 namespace ise.lib
 {
-    internal static class Consts
+    internal static class Constants
     {
+        #region Fields
+
+        internal const string ColonyBasketTable = "colony_basket";
+        internal const string MarketBasketTable = "market_basket";
+        internal const string OrderTable = "orders";
+        internal const string MarketCacheTable = "market_cache";
+        internal const string ColonyCacheTable = "colony_cache";
+        internal const string PromiseTable = "promise";
+        internal const string UserTable = "user_data";
+        internal const string BindingsTable = "bindings";
+        internal const string ThingDefSilver = "Silver";
+
         internal static readonly string DBLocation =
             $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=shared";
+
+        #endregion
     }
 }

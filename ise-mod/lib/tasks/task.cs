@@ -14,19 +14,33 @@ namespace ise.lib.tasks
 {
     public interface IDialogTask
     {
+        #region Properties
+
         IDialog Dialog { get; set; }
 
         bool Done { get; set; }
 
+        #endregion
+
+        #region Methods
+
         void Update();
+
+        #endregion
     }
 
     internal abstract class AbstractDialogTask : IDialogTask
     {
+        #region ctor
+
         public AbstractDialogTask(IDialog dialog)
         {
             Dialog = dialog;
         }
+
+        #endregion
+
+        #region IDialogTask Interface Implementations
 
         public bool Done { get; set; }
 
@@ -35,5 +49,7 @@ namespace ise.lib.tasks
         public virtual void Update()
         {
         }
+
+        #endregion
     }
 }

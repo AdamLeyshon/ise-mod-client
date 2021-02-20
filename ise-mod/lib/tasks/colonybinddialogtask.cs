@@ -4,57 +4,57 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, client_bind.cs, Created 2021-02-11
+// ise-mod, colonybinddialogtask.cs, Created 2021-02-11
 
 #endregion
 
 using System;
 using System.Threading.Tasks;
 using Colony;
+using ise.components;
 using ise.dialogs;
+using ise_core.db;
 using RestSharp;
+using RimWorld;
 using Verse;
 using static ise_core.rest.Helpers;
 using static ise.lib.User;
-using static ise_core.rest.api.v1.consts;
-using ise.components;
-using ise_core.db;
-using RimWorld;
+using static ise_core.rest.api.v1.Constants;
 using GameInfo = ise.lib.game.GameInfo;
 
 namespace ise.lib.tasks
 {
     internal class ColonyBindDialogTask : AbstractDialogTask
     {
-        private enum State
-        {
-            Start,
-            Create,
-            GetDetails,
-            UpdateData,
-            UpdateMods,
-            UpdateTradables,
-            Done,
-            Error,
-        }
+        #region Fields
+
+        private readonly ISEGameComponent gc;
+        private readonly Pawn pawn;
+        private string colonyId;
 
         private State state;
         private Task task;
-        private readonly ISEGameComponent gc;
 
-        public ColonyBindDialogTask(IDialog dialog) : base(dialog)
+        #endregion
+
+        #region ctor
+
+        public ColonyBindDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
         {
             state = State.Start;
             gc = Current.Game.GetComponent<ISEGameComponent>();
+            pawn = userPawn;
+            colonyId = gc.GetColonyId(pawn.Map);
         }
+
+        #endregion
+
+        #region Methods
 
         public override void Update()
         {
             // Handle task errors first.
-            if (task != null && task.IsFaulted)
-            {
-                LogTaskError();
-            }
+            if (task != null && task.IsFaulted) LogTaskError();
 
             switch (state)
             {
@@ -64,42 +64,29 @@ namespace ise.lib.tasks
                     break;
                 case State.Create:
                     Dialog.DialogMessage = "Registering Colony";
-                    if (task != null && task.IsCompleted)
-                    {
-                        ProcessColonyCreateReply(((Task<ColonyData>) task).Result);
-                    }
+                    if (task != null && task.IsCompleted) ProcessColonyCreateReply(((Task<ColonyData>) task).Result);
 
                     break;
                 case State.GetDetails:
                     Dialog.DialogMessage = "Checking Details";
-                    if (task != null && task.IsCompleted)
-                    {
-                        ProcessGetColonyDataReply(((Task<ColonyData>) task).Result);
-                    }
+                    if (task != null && task.IsCompleted) ProcessGetColonyDataReply(((Task<ColonyData>) task).Result);
 
                     break;
                 case State.UpdateData:
                     Dialog.DialogMessage = "Updating Colony Details";
-                    if (task != null && task.IsCompleted)
-                    {
-                        ProcessUpdateColonyReply(((Task<ColonyData>) task).Result);
-                    }
+                    if (task != null && task.IsCompleted) ProcessUpdateColonyReply(((Task<ColonyData>) task).Result);
 
                     break;
                 case State.UpdateMods:
                     Dialog.DialogMessage = "Updating Colony Mods";
                     if (task != null && task.IsCompleted)
-                    {
                         ProcessColonyModsUpdateReply(((Task<ColonyModsSetReply>) task).Result);
-                    }
 
                     break;
                 case State.UpdateTradables:
                     Dialog.DialogMessage = "Updating Colony Tradables";
                     if (task != null && task.IsCompleted)
-                    {
                         ProcessColonyTradablesReply(((Task<ColonyTradableSetReply>) task).Result);
-                    }
 
                     break;
                 case State.Done:
@@ -124,7 +111,7 @@ namespace ise.lib.tasks
 
         private void StartCreate()
         {
-            if (!gc.ColonyBind.NullOrEmpty())
+            if (!colonyId.NullOrEmpty())
             {
                 // Jump straight to verify
                 StartColonyGet();
@@ -164,7 +151,8 @@ namespace ise.lib.tasks
             Logging.WriteMessage($"Got new Colony ID: {reply.ColonyId}");
 
             SaveBind<DBColonyBind>(gc.ClientBind, reply.ColonyId);
-            gc.ColonyBind = reply.ColonyId;
+            SaveBind<DBMapBind>(GameInfo.GetUniqueMapID(pawn.Map), reply.ColonyId);
+            colonyId = reply.ColonyId;
 
             // Jump to Colony Mods
             StartColonyUpdateMods();
@@ -176,7 +164,7 @@ namespace ise.lib.tasks
             var request = new ColonyGetRequest
             {
                 ClientBindId = gc.ClientBind,
-                ColonyId = gc.ColonyBind,
+                ColonyId = colonyId,
             };
             task = SendAndParseReplyAsync(
                 request,
@@ -198,13 +186,13 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdate()
         {
-            Logging.WriteMessage($"Updating Colony Details for {gc.ColonyBind}");
+            Logging.WriteMessage($"Updating Colony Details for {gc.GetColonyId(pawn.Map)}");
             var request = new ColonyUpdateRequest
             {
                 ClientBindId = gc.ClientBind,
                 Data = new ColonyData
                 {
-                    ColonyId = gc.ColonyBind,
+                    ColonyId = colonyId,
                     Tick = Current.Game.tickManager.TicksGame,
                     UsedDevMode = gc.SpawnToolUsed,
                     GameVersion = VersionControl.CurrentVersionStringWithRev,
@@ -224,17 +212,17 @@ namespace ise.lib.tasks
 
         private void ProcessUpdateColonyReply(ColonyData reply)
         {
-            Logging.WriteMessage($"Server accepted colony update");
+            Logging.WriteMessage("Server accepted colony update");
             StartColonyUpdateMods();
         }
 
         private void StartColonyUpdateMods()
         {
-            Logging.WriteMessage($"Update Colony mods {gc.ColonyBind}");
-            var request = new ColonyModsSetRequest()
+            Logging.WriteMessage($"Update Colony mods {colonyId}");
+            var request = new ColonyModsSetRequest
             {
                 ClientBindId = gc.ClientBind,
-                ColonyId = gc.ColonyBind,
+                ColonyId = colonyId,
             };
             request.ModName.AddRange(Mods.GetModList());
 
@@ -251,20 +239,20 @@ namespace ise.lib.tasks
 
         private void ProcessColonyModsUpdateReply(ColonyModsSetReply reply)
         {
-            Logging.WriteMessage($"Server accepted colony mods");
+            Logging.WriteMessage("Server accepted colony mods");
             StartColonyUpdateTradables();
         }
 
         private void StartColonyUpdateTradables()
         {
-            Logging.WriteMessage($"Update Colony tradables {gc.ColonyBind}");
+            Logging.WriteMessage($"Update Colony tradables {colonyId}");
 
             task = new Task<ColonyTradableSetReply>(delegate
             {
-                var request = new ColonyTradableSetRequest()
+                var request = new ColonyTradableSetRequest
                 {
                     ClientBindId = gc.ClientBind,
-                    ColonyId = gc.ColonyBind,
+                    ColonyId = colonyId,
                 };
                 request.Item.AddRange(Tradables.GetAllTradables());
 
@@ -283,8 +271,26 @@ namespace ise.lib.tasks
 
         private void ProcessColonyTradablesReply(ColonyTradableSetReply reply)
         {
-            Logging.WriteMessage($"Server accepted colony tradables");
+            Logging.WriteMessage("Server accepted colony tradables");
             state = State.Done;
         }
+
+        #endregion
+
+        #region Nested type: State
+
+        private enum State
+        {
+            Start,
+            Create,
+            GetDetails,
+            UpdateData,
+            UpdateMods,
+            UpdateTradables,
+            Done,
+            Error,
+        }
+
+        #endregion
     }
 }

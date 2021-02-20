@@ -15,7 +15,7 @@ using Colony;
 using ise_core.rest;
 using RestSharp;
 using Tradable;
-using static ise_core.rest.api.v1.consts;
+using static ise_core.rest.api.v1.Constants;
 
 namespace ise_core.rest.api.v1
 {

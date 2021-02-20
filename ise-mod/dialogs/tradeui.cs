@@ -12,13 +12,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ise.components;
 using ise.lib;
 using ise_core.db;
 using LiteDB;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using static ise.lib.Consts;
+using static ise.lib.Constants;
+using static ise.lib.Cache;
+using static ise.lib.Tradables;
 
 namespace ise.dialogs
 {
@@ -148,7 +151,8 @@ namespace ise.dialogs
 
         private static readonly ThingCategoryDef DefaultCategory = ThingCategoryDef.Named("ResourcesRaw");
         private readonly LiteDatabase db;
-        private readonly DBInventory promise;
+        private readonly Pawn pawn;
+        private readonly DBInventoryPromise promise;
         private bool basketItemsOnly;
         private ItemCache cache;
 
@@ -167,11 +171,13 @@ namespace ise.dialogs
 
         public DialogTradeUI(Pawn userPawn)
         {
+            var gc = Current.Game.GetComponent<ISEGameComponent>();
             forcePause = true;
+            pawn = userPawn;
             //absorbInputAroundWindow = true;
             db = new LiteDatabase(DBLocation);
             SetupData();
-            promise = db.GetCollection<DBInventory>().FindAll().First();
+            promise = db.GetCollection<DBInventoryPromise>(PromiseTable).FindById(gc.GetColonyId(userPawn.Map));
             BuildQualityTranslationCache();
         }
 
@@ -187,12 +193,14 @@ namespace ise.dialogs
 
         private void SetupData()
         {
+            var gc = Current.Game.GetComponent<ISEGameComponent>();
+            var colonyId = gc.GetColonyId(pawn.Map);
             cache = new ItemCache
             {
-                Colony = db.GetCollection<DBCachedTradable>("colony_cache"),
-                Market = db.GetCollection<DBCachedTradable>("market_cache"),
-                ColonyBasket = db.GetCollection<DBCachedTradable>("colony_basket"),
-                MarketBasket = db.GetCollection<DBCachedTradable>("market_basket"),
+                Colony = GetCache(db, colonyId, CacheType.ColonyCache),
+                ColonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket),
+                Market = GetCache(db, colonyId, CacheType.MarketCache),
+                MarketBasket = GetCache(db, colonyId, CacheType.MarketBasket),
                 CurrentItems = null
             };
         }
@@ -485,9 +493,6 @@ namespace ise.dialogs
             var buttonRect = new Rect(_uiControlPadding, 0, buttonWidth, 25f);
             if (Widgets.ButtonText(buttonRect, "Buy"))
             {
-#if MARKET_DEBUG
-                Logging.WriteMessage("Changing to Buy mode");
-#endif
                 uiTradeMode = TradeView.Buy;
                 if (filterCategory.defName == "Root") filterCategory = DefaultCategory;
                 dataSourceDirty = true;
@@ -497,9 +502,6 @@ namespace ise.dialogs
             buttonRect = new Rect(_uiControlPadding * 2 + buttonWidth, 0, buttonWidth, 25f);
             if (Widgets.ButtonText(buttonRect, "Sell"))
             {
-#if MARKET_DEBUG
-                Logging.WriteMessage("Changing to Sell mode");
-#endif
                 uiTradeMode = TradeView.Sell;
                 dataSourceDirty = true;
             }
@@ -520,6 +522,19 @@ namespace ise.dialogs
             var buttonRect = new Rect(width, 0, _uiActionButtonWidth, inRect.height);
             if (Widgets.ButtonText(buttonRect, "Confirm"))
             {
+                var fundsAvailable = 0;
+                var silver = GetItemsNearBeacons(pawn.Map, ThingDefSilver);
+                fundsAvailable = silver.Sum(s => s.stackCount);
+                var remaining = Mathf.Clamp((int) Math.Ceiling(Math.Round(
+                    stats.CostTotal - promise.AccountBalance,
+                    2,
+                    MidpointRounding.ToEven
+                )), 0, int.MaxValue);
+                var canAfford = false;
+                var noMoney = "Your colony can't afford this right now.\r\n" +
+                              $"You have {fundsAvailable} Silver in stockpiles and " +
+                              $"{promise.AccountBalance} in your account";
+
                 string text;
                 if (stats.CostTotal > 0)
                 {
@@ -527,31 +542,43 @@ namespace ise.dialogs
                     {
                         if (promise.AccountBalance > stats.CostTotal)
                         {
-                            var remaining = Math.Round(
+                            var accRemaining = (int) Math.Ceiling(Math.Round(
                                 promise.AccountBalance - stats.CostTotal,
                                 2,
                                 MidpointRounding.ToEven
-                            );
+                            ));
                             text = "We will withdraw the full amount from your account,\r\n" +
-                                   $"Your account balance will be {remaining}\r\n" +
+                                   $"Your account balance will be {accRemaining}\r\n" +
                                    $"The total cost is: {stats.CostTotal}";
+                            canAfford = true;
                         }
                         else
                         {
-                            var remaining = Math.Round(
-                                stats.CostTotal - promise.AccountBalance,
-                                2,
-                                MidpointRounding.ToEven
-                            );
-                            text = "There are insufficient funds in your account,\r\n" +
-                                   $"We will withdraw {promise.AccountBalance} of the " +
-                                   $"total {stats.CostTotal} from your account" +
-                                   $"\r\nThe remaining balance due is: {remaining}";
+                            if (fundsAvailable < remaining)
+                            {
+                                text = noMoney;
+                            }
+                            else
+                            {
+                                text = "There are insufficient funds in your account,\r\n" +
+                                       $"We will withdraw {promise.AccountBalance} of the " +
+                                       $"total {stats.CostTotal} from your account" +
+                                       $"\r\nThe remaining balance due is: {remaining}";
+                                canAfford = true;
+                            }
                         }
                     }
                     else
                     {
-                        text = $"The total balance is due is: {stats.CostTotal}";
+                        if (fundsAvailable < stats.CostTotal)
+                        {
+                            text = noMoney;
+                        }
+                        else
+                        {
+                            text = $"The total balance is due is: {stats.CostTotal}";
+                            canAfford = true;
+                        }
                     }
                 }
                 else if (stats.CostTotal < 0)
@@ -559,22 +586,31 @@ namespace ise.dialogs
                     var credit = Math.Abs(stats.CostTotal);
                     text = $"Your account will be credited with: {Math.Abs(stats.CostTotal)}\r\n" +
                            $"Your new balance will be approximately: {promise.AccountBalance + credit}";
+                    canAfford = true;
                 }
                 else
                 {
                     text = "Thank you for trading with ISE,\r\n" +
                            "We hope to hear from you again.";
+                    canAfford = true;
                 }
 
-                Find.WindowStack.Add(new Dialog_MessageBox(
-                    text,
-                    "Agree, Place Order",
-                    delegate { Logging.WriteMessage("CONFIRMED"); },
-                    "Decline",
-                    null,
-                    "Terms and Conditions", false,
-                    delegate { Logging.WriteMessage("CONFIRMED"); }
-                ));
+                if (canAfford)
+                    Find.WindowStack.Add(new Dialog_MessageBox(
+                        text,
+                        "Agree, Place Order",
+                        delegate { PlaceOrder(remaining); },
+                        "Decline",
+                        null,
+                        "Terms and Conditions", false,
+                        delegate { PlaceOrder(remaining); }
+                    ));
+                else
+                    Find.WindowStack.Add(new Dialog_MessageBox(
+                        text,
+                        "Oh...",
+                        title: "Insufficient funds"
+                    ));
             }
 
             // Cancel Button
@@ -584,6 +620,12 @@ namespace ise.dialogs
 
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
+        }
+
+        private void PlaceOrder(int remaining)
+        {
+            Find.WindowStack.Add(new DialogOrder(pawn, remaining));
+            Close();
         }
 
         private void DrawFilters(Rect outerFrame)

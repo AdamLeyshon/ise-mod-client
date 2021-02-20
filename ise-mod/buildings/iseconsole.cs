@@ -4,14 +4,11 @@
 // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // However! If you would like to contribute to GWP please feel free to drop me a message.
 // 
-// ise-mod, console.cs, Created 2021-02-10
+// ise-mod, iseconsole.cs, Created 2021-02-10
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using ise.components;
 using ise.dialogs;
 using ise.jobs;
@@ -23,13 +20,23 @@ namespace ise.buildings
 {
     public class ISEConsole : Building
     {
+        #region Fields
+
         private CompPowerTrader powerComp;
+
+        #endregion
+
+        #region Properties
 
         public bool CanShopOnlineNow =>
             Spawned &&
             ISEUplink.HasUplink(Map) &&
             !Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) &&
             powerComp.PowerOn;
+
+        #endregion
+
+        #region Methods
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
@@ -39,7 +46,7 @@ namespace ise.buildings
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
         {
-            FloatMenuOption failureReason = GetFailureReason(myPawn);
+            var failureReason = GetFailureReason(myPawn);
             if (failureReason != null)
             {
                 yield return failureReason;
@@ -53,17 +60,17 @@ namespace ise.buildings
         private FloatMenuOption GetFailureReason(Pawn myPawn)
         {
             if (!ISEUplink.HasUplink(Map))
-                return new FloatMenuOption("ISENeedUplink".Translate(), (Action) null);
-            if (!myPawn.CanReach((LocalTargetInfo) (Thing) this, PathEndMode.InteractionCell, Danger.Some))
-                return new FloatMenuOption("CannotUseNoPath".Translate(), (Action) null);
-            if (this.Spawned && this.Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
-                return new FloatMenuOption("CannotUseSolarFlare".Translate(), (Action) null);
-            if (!this.powerComp.PowerOn)
-                return new FloatMenuOption("CannotUseNoPower".Translate(), (Action) null);
-            if (this.CanShopOnlineNow)
-                return (FloatMenuOption) null;
-            Verse.Log.Error($"{myPawn} could not use console for unknown reason.");
-            return new FloatMenuOption("Cannot use now", (Action) null);
+                return new FloatMenuOption("ISENeedUplink".Translate(), null);
+            if (!myPawn.CanReach((LocalTargetInfo) this, PathEndMode.InteractionCell, Danger.Some))
+                return new FloatMenuOption("CannotUseNoPath".Translate(), null);
+            if (Spawned && Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
+                return new FloatMenuOption("CannotUseSolarFlare".Translate(), null);
+            if (!powerComp.PowerOn)
+                return new FloatMenuOption("CannotUseNoPower".Translate(), null);
+            if (CanShopOnlineNow)
+                return null;
+            Log.Error($"{myPawn} could not use console for unknown reason.");
+            return new FloatMenuOption("Cannot use now", null);
         }
 
         private void GiveJobShopOnline(Pawn myPawn, ISEConsole target)
@@ -74,9 +81,11 @@ namespace ise.buildings
         public void ShopOnline(Pawn user)
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
-            Find.WindowStack.Add(gc.BindVerified
+            Find.WindowStack.Add(gc.ClientBindVerified
                 ? new DialogBind(user, DialogBind.BindUIType.Colony)
                 : new DialogBind(user, DialogBind.BindUIType.Client));
         }
+
+        #endregion
     }
 }

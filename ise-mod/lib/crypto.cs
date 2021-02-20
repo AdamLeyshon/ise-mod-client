@@ -9,21 +9,26 @@
 #endregion
 
 using System;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ise.lib
 {
     public static class Crypto
     {
+        #region Methods
+
         internal static string GetShaHash(string input)
         {
             return BitConverter
                 .ToString(
-                    System.Security.Cryptography.SHA1
+                    SHA1
                         .Create()
                         .ComputeHash(Encoding.UTF8.GetBytes(input))
                 )
                 .Replace("-", string.Empty);
         }
+
+        #endregion
     }
 }

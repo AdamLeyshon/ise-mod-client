@@ -10,7 +10,7 @@
 
 using Bind;
 using RestSharp;
-using static ise_core.rest.api.v1.consts;
+using static ise_core.rest.api.v1.Constants;
 
 namespace ise_core.rest.api.v1.bind
 {

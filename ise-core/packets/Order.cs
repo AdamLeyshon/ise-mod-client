@@ -24,64 +24,73 @@ namespace Order {
     static OrderReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtvcmRlci5wcm90bxIFb3JkZXIiPwoJT3JkZXJJdGVtEhAKCEl0ZW1Db2Rl",
-            "GAEgASgJEhAKCFF1YW50aXR5GAIgASgFEg4KBkhlYWx0aBgDIAEoAiKxAQoM",
-            "T3JkZXJSZXF1ZXN0EhQKDENsaWVudEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJ",
-            "ZBgCIAEoCRISCgpDb2xvbnlUaWNrGAMgASgFEiQKCldhbnRUb1NlbGwYBCAD",
-            "KAsyEC5vcmRlci5PcmRlckl0ZW0SIwoJV2FudFRvQnV5GAUgAygLMhAub3Jk",
-            "ZXIuT3JkZXJJdGVtEhoKEkludmVudG9yeVByb21pc2VJZBgGIAEoCSKBAQoK",
-            "T3JkZXJSZXBseRIPCgdPcmRlcklkGAEgASgJEikKBnN0YXR1cxgCIAEoDjIZ",
-            "Lm9yZGVyLk9yZGVyUmVxdWVzdFN0YXR1cxIlCgt1bmF2YWlsYWJsZRgDIAMo",
-            "CzIQLm9yZGVyLk9yZGVySXRlbRIQCghyZWZ1bmRlZBgEIAEoBSJNChJPcmRl",
+            "CgtvcmRlci5wcm90bxIFb3JkZXIaCmJhbmsucHJvdG8iPwoJT3JkZXJJdGVt",
+            "EhAKCEl0ZW1Db2RlGAEgASgJEhAKCFF1YW50aXR5GAIgASgFEg4KBkhlYWx0",
+            "aBgDIAEoAiJkCgxEZWxpdmVyeUl0ZW0SEAoIVGhpbmdEZWYYASABKAkSEAoI",
+            "UXVhbnRpdHkYAiABKAUSDwoHUXVhbGl0eRgDIAEoBRINCgVTdHVmZhgEIAEo",
+            "CRIQCghNaW5pZmllZBgFIAEoCCLwAQoMT3JkZXJSZXF1ZXN0EhQKDENsaWVu",
+            "dEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCRISCgpDb2xvbnlUaWNr",
+            "GAMgASgFEiQKCldhbnRUb1NlbGwYBCADKAsyEC5vcmRlci5PcmRlckl0ZW0S",
+            "IwoJV2FudFRvQnV5GAUgAygLMhAub3JkZXIuT3JkZXJJdGVtEhoKEkludmVu",
+            "dG9yeVByb21pc2VJZBgGIAEoCRIkCghDdXJyZW5jeRgHIAEoDjISLmJhbmsu",
+            "QmFua0N1cnJlbmN5EhcKD0FkZGl0aW9uYWxGdW5kcxgIIAEoBSJNChJPcmRl",
             "clN0YXR1c1JlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJEhAKCENvbG9u",
-            "eUlkGAIgASgJEg8KB09yZGVySWQYAyABKAkiYQoQT3JkZXJTdGF0dXNSZXBs",
-            "eRIPCgdPcmRlcklkGAEgASgJEiYKBlN0YXR1cxgCIAEoDjIWLm9yZGVyLk9y",
-            "ZGVyU3RhdHVzRW51bRIUCgxEZWxpdmVyeVRpY2sYAyABKAUiOgoQT3JkZXJM",
-            "aXN0UmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29sb255SWQY",
-            "AiABKAkiOQoOT3JkZXJMaXN0UmVwbHkSJwoGb3JkZXJzGAEgAygLMhcub3Jk",
-            "ZXIuT3JkZXJTdGF0dXNSZXBseSKJAQoST3JkZXJVcGRhdGVSZXF1ZXN0EhQK",
-            "DENsaWVudEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCRIPCgdPcmRl",
-            "cklkGAMgASgJEiYKBnN0YXR1cxgEIAEoDjIWLm9yZGVyLk9yZGVyU3RhdHVz",
-            "RW51bRISCgpDb2xvbnlUaWNrGAUgASgFKkgKEk9yZGVyUmVxdWVzdFN0YXR1",
-            "cxIMCghSZWplY3RlZBAAEg8KC0FjY2VwdGVkQWxsEAESEwoPQWNjZXB0ZWRQ",
-            "YXJ0aWFsEAIqWgoPT3JkZXJTdGF0dXNFbnVtEgoKBlBsYWNlZBAAEhIKDk91",
-            "dEZvckRlbGl2ZXJ5EAESDQoJRGVsaXZlcmVkEAISCgoGRmFpbGVkEAMSDAoI",
-            "UmV2ZXJzZWQQBDKFAgoMT3JkZXJTZXJ2aWNlEjYKClBsYWNlT3JkZXISEy5v",
-            "cmRlci5PcmRlclJlcXVlc3QaES5vcmRlci5PcmRlclJlcGx5IgASOAoETGlz",
-            "dBIXLm9yZGVyLk9yZGVyTGlzdFJlcXVlc3QaFS5vcmRlci5PcmRlckxpc3RS",
-            "ZXBseSIAEkMKC09yZGVyU3RhdHVzEhkub3JkZXIuT3JkZXJTdGF0dXNSZXF1",
-            "ZXN0Ghcub3JkZXIuT3JkZXJTdGF0dXNSZXBseSIAEj4KBlVwZGF0ZRIZLm9y",
-            "ZGVyLk9yZGVyVXBkYXRlUmVxdWVzdBoXLm9yZGVyLk9yZGVyU3RhdHVzUmVw",
-            "bHkiAGIGcHJvdG8z"));
+            "eUlkGAIgASgJEg8KB09yZGVySWQYAyABKAkiOgoQT3JkZXJMaXN0UmVxdWVz",
+            "dBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29sb255SWQYAiABKAkiiQEK",
+            "Ek9yZGVyVXBkYXRlUmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoI",
+            "Q29sb255SWQYAiABKAkSDwoHT3JkZXJJZBgDIAEoCRImCgZzdGF0dXMYBCAB",
+            "KA4yFi5vcmRlci5PcmRlclN0YXR1c0VudW0SEgoKQ29sb255VGljaxgFIAEo",
+            "BSJhChBPcmRlclN0YXR1c1JlcGx5Eg8KB09yZGVySWQYASABKAkSJgoGU3Rh",
+            "dHVzGAIgASgOMhYub3JkZXIuT3JkZXJTdGF0dXNFbnVtEhQKDERlbGl2ZXJ5",
+            "VGljaxgDIAEoBSKoAQoKT3JkZXJSZXBseRIlCgRkYXRhGAEgASgLMhcub3Jk",
+            "ZXIuT3JkZXJTdGF0dXNSZXBseRIpCgZzdGF0dXMYAiABKA4yGS5vcmRlci5P",
+            "cmRlclJlcXVlc3RTdGF0dXMSJQoLdW5hdmFpbGFibGUYAyADKAsyEC5vcmRl",
+            "ci5PcmRlckl0ZW0SEAoIcmVmdW5kZWQYBCABKAUSDwoHYmFsYW5jZRgFIAEo",
+            "BSI5Cg5PcmRlckxpc3RSZXBseRInCgZvcmRlcnMYASADKAsyFy5vcmRlci5P",
+            "cmRlclN0YXR1c1JlcGx5IjgKEk9yZGVyTWFuaWZlc3RSZXBseRIiCgVpdGVt",
+            "cxgBIAMoCzITLm9yZGVyLkRlbGl2ZXJ5SXRlbSpaCg9PcmRlclN0YXR1c0Vu",
+            "dW0SCgoGUGxhY2VkEAASEgoOT3V0Rm9yRGVsaXZlcnkQARINCglEZWxpdmVy",
+            "ZWQQAhIKCgZGYWlsZWQQAxIMCghSZXZlcnNlZBAEKkgKEk9yZGVyUmVxdWVz",
+            "dFN0YXR1cxIMCghSZWplY3RlZBAAEg8KC0FjY2VwdGVkQWxsEAESEwoPQWNj",
+            "ZXB0ZWRQYXJ0aWFsEAIyzAIKDE9yZGVyU2VydmljZRI2CgpQbGFjZU9yZGVy",
+            "EhMub3JkZXIuT3JkZXJSZXF1ZXN0GhEub3JkZXIuT3JkZXJSZXBseSIAEjgK",
+            "BExpc3QSFy5vcmRlci5PcmRlckxpc3RSZXF1ZXN0GhUub3JkZXIuT3JkZXJM",
+            "aXN0UmVwbHkiABJDCgtPcmRlclN0YXR1cxIZLm9yZGVyLk9yZGVyU3RhdHVz",
+            "UmVxdWVzdBoXLm9yZGVyLk9yZGVyU3RhdHVzUmVwbHkiABI+CgZVcGRhdGUS",
+            "GS5vcmRlci5PcmRlclVwZGF0ZVJlcXVlc3QaFy5vcmRlci5PcmRlclN0YXR1",
+            "c1JlcGx5IgASRQoLR2V0TWFuaWZlc3QSGS5vcmRlci5PcmRlclN0YXR1c1Jl",
+            "cXVlc3QaGS5vcmRlci5PcmRlck1hbmlmZXN0UmVwbHkiAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Order.OrderRequestStatus), typeof(global::Order.OrderStatusEnum), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::FileDescriptor[] { global::Bank.BankReflection.Descriptor, },
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Order.OrderStatusEnum), typeof(global::Order.OrderRequestStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderItem), global::Order.OrderItem.Parser, new[]{ "ItemCode", "Quantity", "Health" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderRequest), global::Order.OrderRequest.Parser, new[]{ "ClientBindId", "ColonyId", "ColonyTick", "WantToSell", "WantToBuy", "InventoryPromiseId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderReply), global::Order.OrderReply.Parser, new[]{ "OrderId", "Status", "Unavailable", "Refunded" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.DeliveryItem), global::Order.DeliveryItem.Parser, new[]{ "ThingDef", "Quantity", "Quality", "Stuff", "Minified" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderRequest), global::Order.OrderRequest.Parser, new[]{ "ClientBindId", "ColonyId", "ColonyTick", "WantToSell", "WantToBuy", "InventoryPromiseId", "Currency", "AdditionalFunds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderStatusRequest), global::Order.OrderStatusRequest.Parser, new[]{ "ClientBindId", "ColonyId", "OrderId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderStatusReply), global::Order.OrderStatusReply.Parser, new[]{ "OrderId", "Status", "DeliveryTick" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderListRequest), global::Order.OrderListRequest.Parser, new[]{ "ClientBindId", "ColonyId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderUpdateRequest), global::Order.OrderUpdateRequest.Parser, new[]{ "ClientBindId", "ColonyId", "OrderId", "Status", "ColonyTick" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderStatusReply), global::Order.OrderStatusReply.Parser, new[]{ "OrderId", "Status", "DeliveryTick" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderReply), global::Order.OrderReply.Parser, new[]{ "Data", "Status", "Unavailable", "Refunded", "Balance" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderListReply), global::Order.OrderListReply.Parser, new[]{ "Orders" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderUpdateRequest), global::Order.OrderUpdateRequest.Parser, new[]{ "ClientBindId", "ColonyId", "OrderId", "Status", "ColonyTick" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderManifestReply), global::Order.OrderManifestReply.Parser, new[]{ "Items" }, null, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Enums
-  public enum OrderRequestStatus {
-    [pbr::OriginalName("Rejected")] Rejected = 0,
-    [pbr::OriginalName("AcceptedAll")] AcceptedAll = 1,
-    [pbr::OriginalName("AcceptedPartial")] AcceptedPartial = 2,
-  }
-
   public enum OrderStatusEnum {
     [pbr::OriginalName("Placed")] Placed = 0,
     [pbr::OriginalName("OutForDelivery")] OutForDelivery = 1,
     [pbr::OriginalName("Delivered")] Delivered = 2,
     [pbr::OriginalName("Failed")] Failed = 3,
     [pbr::OriginalName("Reversed")] Reversed = 4,
+  }
+
+  public enum OrderRequestStatus {
+    [pbr::OriginalName("Rejected")] Rejected = 0,
+    [pbr::OriginalName("AcceptedAll")] AcceptedAll = 1,
+    [pbr::OriginalName("AcceptedPartial")] AcceptedPartial = 2,
   }
 
   #endregion
@@ -335,6 +344,322 @@ namespace Order {
 
   }
 
+  public sealed partial class DeliveryItem : pb::IMessage<DeliveryItem>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DeliveryItem> _parser = new pb::MessageParser<DeliveryItem>(() => new DeliveryItem());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DeliveryItem> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeliveryItem() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeliveryItem(DeliveryItem other) : this() {
+      thingDef_ = other.thingDef_;
+      quantity_ = other.quantity_;
+      quality_ = other.quality_;
+      stuff_ = other.stuff_;
+      minified_ = other.minified_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeliveryItem Clone() {
+      return new DeliveryItem(this);
+    }
+
+    /// <summary>Field number for the "ThingDef" field.</summary>
+    public const int ThingDefFieldNumber = 1;
+    private string thingDef_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ThingDef {
+      get { return thingDef_; }
+      set {
+        thingDef_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "Quantity" field.</summary>
+    public const int QuantityFieldNumber = 2;
+    private int quantity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Quantity {
+      get { return quantity_; }
+      set {
+        quantity_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "Quality" field.</summary>
+    public const int QualityFieldNumber = 3;
+    private int quality_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Quality {
+      get { return quality_; }
+      set {
+        quality_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "Stuff" field.</summary>
+    public const int StuffFieldNumber = 4;
+    private string stuff_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Stuff {
+      get { return stuff_; }
+      set {
+        stuff_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "Minified" field.</summary>
+    public const int MinifiedFieldNumber = 5;
+    private bool minified_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Minified {
+      get { return minified_; }
+      set {
+        minified_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DeliveryItem);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeliveryItem other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ThingDef != other.ThingDef) return false;
+      if (Quantity != other.Quantity) return false;
+      if (Quality != other.Quality) return false;
+      if (Stuff != other.Stuff) return false;
+      if (Minified != other.Minified) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ThingDef.Length != 0) hash ^= ThingDef.GetHashCode();
+      if (Quantity != 0) hash ^= Quantity.GetHashCode();
+      if (Quality != 0) hash ^= Quality.GetHashCode();
+      if (Stuff.Length != 0) hash ^= Stuff.GetHashCode();
+      if (Minified != false) hash ^= Minified.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (ThingDef.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ThingDef);
+      }
+      if (Quantity != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Quantity);
+      }
+      if (Quality != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Quality);
+      }
+      if (Stuff.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Stuff);
+      }
+      if (Minified != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Minified);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (ThingDef.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ThingDef);
+      }
+      if (Quantity != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Quantity);
+      }
+      if (Quality != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Quality);
+      }
+      if (Stuff.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Stuff);
+      }
+      if (Minified != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Minified);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ThingDef.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ThingDef);
+      }
+      if (Quantity != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Quantity);
+      }
+      if (Quality != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Quality);
+      }
+      if (Stuff.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Stuff);
+      }
+      if (Minified != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DeliveryItem other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ThingDef.Length != 0) {
+        ThingDef = other.ThingDef;
+      }
+      if (other.Quantity != 0) {
+        Quantity = other.Quantity;
+      }
+      if (other.Quality != 0) {
+        Quality = other.Quality;
+      }
+      if (other.Stuff.Length != 0) {
+        Stuff = other.Stuff;
+      }
+      if (other.Minified != false) {
+        Minified = other.Minified;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            ThingDef = input.ReadString();
+            break;
+          }
+          case 16: {
+            Quantity = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            Quality = input.ReadInt32();
+            break;
+          }
+          case 34: {
+            Stuff = input.ReadString();
+            break;
+          }
+          case 40: {
+            Minified = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            ThingDef = input.ReadString();
+            break;
+          }
+          case 16: {
+            Quantity = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            Quality = input.ReadInt32();
+            break;
+          }
+          case 34: {
+            Stuff = input.ReadString();
+            break;
+          }
+          case 40: {
+            Minified = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
   public sealed partial class OrderRequest : pb::IMessage<OrderRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -347,7 +672,7 @@ namespace Order {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Order.OrderReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -370,6 +695,8 @@ namespace Order {
       wantToSell_ = other.wantToSell_.Clone();
       wantToBuy_ = other.wantToBuy_.Clone();
       inventoryPromiseId_ = other.inventoryPromiseId_;
+      currency_ = other.currency_;
+      additionalFunds_ = other.additionalFunds_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -442,6 +769,28 @@ namespace Order {
       }
     }
 
+    /// <summary>Field number for the "Currency" field.</summary>
+    public const int CurrencyFieldNumber = 7;
+    private global::Bank.BankCurrency currency_ = global::Bank.BankCurrency.Silver;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Bank.BankCurrency Currency {
+      get { return currency_; }
+      set {
+        currency_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "AdditionalFunds" field.</summary>
+    public const int AdditionalFundsFieldNumber = 8;
+    private int additionalFunds_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int AdditionalFunds {
+      get { return additionalFunds_; }
+      set {
+        additionalFunds_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as OrderRequest);
@@ -461,6 +810,8 @@ namespace Order {
       if(!wantToSell_.Equals(other.wantToSell_)) return false;
       if(!wantToBuy_.Equals(other.wantToBuy_)) return false;
       if (InventoryPromiseId != other.InventoryPromiseId) return false;
+      if (Currency != other.Currency) return false;
+      if (AdditionalFunds != other.AdditionalFunds) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -473,6 +824,8 @@ namespace Order {
       hash ^= wantToSell_.GetHashCode();
       hash ^= wantToBuy_.GetHashCode();
       if (InventoryPromiseId.Length != 0) hash ^= InventoryPromiseId.GetHashCode();
+      if (Currency != global::Bank.BankCurrency.Silver) hash ^= Currency.GetHashCode();
+      if (AdditionalFunds != 0) hash ^= AdditionalFunds.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -507,6 +860,14 @@ namespace Order {
         output.WriteRawTag(50);
         output.WriteString(InventoryPromiseId);
       }
+      if (Currency != global::Bank.BankCurrency.Silver) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) Currency);
+      }
+      if (AdditionalFunds != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(AdditionalFunds);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -534,6 +895,14 @@ namespace Order {
         output.WriteRawTag(50);
         output.WriteString(InventoryPromiseId);
       }
+      if (Currency != global::Bank.BankCurrency.Silver) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) Currency);
+      }
+      if (AdditionalFunds != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(AdditionalFunds);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -556,6 +925,12 @@ namespace Order {
       size += wantToBuy_.CalculateSize(_repeated_wantToBuy_codec);
       if (InventoryPromiseId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(InventoryPromiseId);
+      }
+      if (Currency != global::Bank.BankCurrency.Silver) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Currency);
+      }
+      if (AdditionalFunds != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(AdditionalFunds);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -581,6 +956,12 @@ namespace Order {
       wantToBuy_.Add(other.wantToBuy_);
       if (other.InventoryPromiseId.Length != 0) {
         InventoryPromiseId = other.InventoryPromiseId;
+      }
+      if (other.Currency != global::Bank.BankCurrency.Silver) {
+        Currency = other.Currency;
+      }
+      if (other.AdditionalFunds != 0) {
+        AdditionalFunds = other.AdditionalFunds;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -618,6 +999,14 @@ namespace Order {
           }
           case 50: {
             InventoryPromiseId = input.ReadString();
+            break;
+          }
+          case 56: {
+            Currency = (global::Bank.BankCurrency) input.ReadEnum();
+            break;
+          }
+          case 64: {
+            AdditionalFunds = input.ReadInt32();
             break;
           }
         }
@@ -658,273 +1047,12 @@ namespace Order {
             InventoryPromiseId = input.ReadString();
             break;
           }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  public sealed partial class OrderReply : pb::IMessage<OrderReply>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<OrderReply> _parser = new pb::MessageParser<OrderReply>(() => new OrderReply());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<OrderReply> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Order.OrderReflection.Descriptor.MessageTypes[2]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderReply() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderReply(OrderReply other) : this() {
-      orderId_ = other.orderId_;
-      status_ = other.status_;
-      unavailable_ = other.unavailable_.Clone();
-      refunded_ = other.refunded_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderReply Clone() {
-      return new OrderReply(this);
-    }
-
-    /// <summary>Field number for the "OrderId" field.</summary>
-    public const int OrderIdFieldNumber = 1;
-    private string orderId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string OrderId {
-      get { return orderId_; }
-      set {
-        orderId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "status" field.</summary>
-    public const int StatusFieldNumber = 2;
-    private global::Order.OrderRequestStatus status_ = global::Order.OrderRequestStatus.Rejected;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Order.OrderRequestStatus Status {
-      get { return status_; }
-      set {
-        status_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "unavailable" field.</summary>
-    public const int UnavailableFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::Order.OrderItem> _repeated_unavailable_codec
-        = pb::FieldCodec.ForMessage(26, global::Order.OrderItem.Parser);
-    private readonly pbc::RepeatedField<global::Order.OrderItem> unavailable_ = new pbc::RepeatedField<global::Order.OrderItem>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Order.OrderItem> Unavailable {
-      get { return unavailable_; }
-    }
-
-    /// <summary>Field number for the "refunded" field.</summary>
-    public const int RefundedFieldNumber = 4;
-    private int refunded_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int Refunded {
-      get { return refunded_; }
-      set {
-        refunded_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as OrderReply);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(OrderReply other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (OrderId != other.OrderId) return false;
-      if (Status != other.Status) return false;
-      if(!unavailable_.Equals(other.unavailable_)) return false;
-      if (Refunded != other.Refunded) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (OrderId.Length != 0) hash ^= OrderId.GetHashCode();
-      if (Status != global::Order.OrderRequestStatus.Rejected) hash ^= Status.GetHashCode();
-      hash ^= unavailable_.GetHashCode();
-      if (Refunded != 0) hash ^= Refunded.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (OrderId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrderId);
-      }
-      if (Status != global::Order.OrderRequestStatus.Rejected) {
-        output.WriteRawTag(16);
-        output.WriteEnum((int) Status);
-      }
-      unavailable_.WriteTo(output, _repeated_unavailable_codec);
-      if (Refunded != 0) {
-        output.WriteRawTag(32);
-        output.WriteInt32(Refunded);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (OrderId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrderId);
-      }
-      if (Status != global::Order.OrderRequestStatus.Rejected) {
-        output.WriteRawTag(16);
-        output.WriteEnum((int) Status);
-      }
-      unavailable_.WriteTo(ref output, _repeated_unavailable_codec);
-      if (Refunded != 0) {
-        output.WriteRawTag(32);
-        output.WriteInt32(Refunded);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (OrderId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrderId);
-      }
-      if (Status != global::Order.OrderRequestStatus.Rejected) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
-      }
-      size += unavailable_.CalculateSize(_repeated_unavailable_codec);
-      if (Refunded != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Refunded);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(OrderReply other) {
-      if (other == null) {
-        return;
-      }
-      if (other.OrderId.Length != 0) {
-        OrderId = other.OrderId;
-      }
-      if (other.Status != global::Order.OrderRequestStatus.Rejected) {
-        Status = other.Status;
-      }
-      unavailable_.Add(other.unavailable_);
-      if (other.Refunded != 0) {
-        Refunded = other.Refunded;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            OrderId = input.ReadString();
+          case 56: {
+            Currency = (global::Bank.BankCurrency) input.ReadEnum();
             break;
           }
-          case 16: {
-            Status = (global::Order.OrderRequestStatus) input.ReadEnum();
-            break;
-          }
-          case 26: {
-            unavailable_.AddEntriesFrom(input, _repeated_unavailable_codec);
-            break;
-          }
-          case 32: {
-            Refunded = input.ReadInt32();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            OrderId = input.ReadString();
-            break;
-          }
-          case 16: {
-            Status = (global::Order.OrderRequestStatus) input.ReadEnum();
-            break;
-          }
-          case 26: {
-            unavailable_.AddEntriesFrom(ref input, _repeated_unavailable_codec);
-            break;
-          }
-          case 32: {
-            Refunded = input.ReadInt32();
+          case 64: {
+            AdditionalFunds = input.ReadInt32();
             break;
           }
         }
@@ -1178,250 +1306,6 @@ namespace Order {
 
   }
 
-  public sealed partial class OrderStatusReply : pb::IMessage<OrderStatusReply>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<OrderStatusReply> _parser = new pb::MessageParser<OrderStatusReply>(() => new OrderStatusReply());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<OrderStatusReply> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Order.OrderReflection.Descriptor.MessageTypes[4]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderStatusReply() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderStatusReply(OrderStatusReply other) : this() {
-      orderId_ = other.orderId_;
-      status_ = other.status_;
-      deliveryTick_ = other.deliveryTick_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderStatusReply Clone() {
-      return new OrderStatusReply(this);
-    }
-
-    /// <summary>Field number for the "OrderId" field.</summary>
-    public const int OrderIdFieldNumber = 1;
-    private string orderId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string OrderId {
-      get { return orderId_; }
-      set {
-        orderId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "Status" field.</summary>
-    public const int StatusFieldNumber = 2;
-    private global::Order.OrderStatusEnum status_ = global::Order.OrderStatusEnum.Placed;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Order.OrderStatusEnum Status {
-      get { return status_; }
-      set {
-        status_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "DeliveryTick" field.</summary>
-    public const int DeliveryTickFieldNumber = 3;
-    private int deliveryTick_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int DeliveryTick {
-      get { return deliveryTick_; }
-      set {
-        deliveryTick_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as OrderStatusReply);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(OrderStatusReply other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (OrderId != other.OrderId) return false;
-      if (Status != other.Status) return false;
-      if (DeliveryTick != other.DeliveryTick) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (OrderId.Length != 0) hash ^= OrderId.GetHashCode();
-      if (Status != global::Order.OrderStatusEnum.Placed) hash ^= Status.GetHashCode();
-      if (DeliveryTick != 0) hash ^= DeliveryTick.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (OrderId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrderId);
-      }
-      if (Status != global::Order.OrderStatusEnum.Placed) {
-        output.WriteRawTag(16);
-        output.WriteEnum((int) Status);
-      }
-      if (DeliveryTick != 0) {
-        output.WriteRawTag(24);
-        output.WriteInt32(DeliveryTick);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (OrderId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrderId);
-      }
-      if (Status != global::Order.OrderStatusEnum.Placed) {
-        output.WriteRawTag(16);
-        output.WriteEnum((int) Status);
-      }
-      if (DeliveryTick != 0) {
-        output.WriteRawTag(24);
-        output.WriteInt32(DeliveryTick);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (OrderId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrderId);
-      }
-      if (Status != global::Order.OrderStatusEnum.Placed) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
-      }
-      if (DeliveryTick != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(DeliveryTick);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(OrderStatusReply other) {
-      if (other == null) {
-        return;
-      }
-      if (other.OrderId.Length != 0) {
-        OrderId = other.OrderId;
-      }
-      if (other.Status != global::Order.OrderStatusEnum.Placed) {
-        Status = other.Status;
-      }
-      if (other.DeliveryTick != 0) {
-        DeliveryTick = other.DeliveryTick;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            OrderId = input.ReadString();
-            break;
-          }
-          case 16: {
-            Status = (global::Order.OrderStatusEnum) input.ReadEnum();
-            break;
-          }
-          case 24: {
-            DeliveryTick = input.ReadInt32();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            OrderId = input.ReadString();
-            break;
-          }
-          case 16: {
-            Status = (global::Order.OrderStatusEnum) input.ReadEnum();
-            break;
-          }
-          case 24: {
-            DeliveryTick = input.ReadInt32();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
   public sealed partial class OrderListRequest : pb::IMessage<OrderListRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1434,7 +1318,7 @@ namespace Order {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Order.OrderReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1630,167 +1514,6 @@ namespace Order {
 
   }
 
-  public sealed partial class OrderListReply : pb::IMessage<OrderListReply>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<OrderListReply> _parser = new pb::MessageParser<OrderListReply>(() => new OrderListReply());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<OrderListReply> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Order.OrderReflection.Descriptor.MessageTypes[6]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderListReply() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderListReply(OrderListReply other) : this() {
-      orders_ = other.orders_.Clone();
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public OrderListReply Clone() {
-      return new OrderListReply(this);
-    }
-
-    /// <summary>Field number for the "orders" field.</summary>
-    public const int OrdersFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Order.OrderStatusReply> _repeated_orders_codec
-        = pb::FieldCodec.ForMessage(10, global::Order.OrderStatusReply.Parser);
-    private readonly pbc::RepeatedField<global::Order.OrderStatusReply> orders_ = new pbc::RepeatedField<global::Order.OrderStatusReply>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Order.OrderStatusReply> Orders {
-      get { return orders_; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as OrderListReply);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(OrderListReply other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if(!orders_.Equals(other.orders_)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      hash ^= orders_.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      orders_.WriteTo(output, _repeated_orders_codec);
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      orders_.WriteTo(ref output, _repeated_orders_codec);
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      size += orders_.CalculateSize(_repeated_orders_codec);
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(OrderListReply other) {
-      if (other == null) {
-        return;
-      }
-      orders_.Add(other.orders_);
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            orders_.AddEntriesFrom(input, _repeated_orders_codec);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            orders_.AddEntriesFrom(ref input, _repeated_orders_codec);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
   public sealed partial class OrderUpdateRequest : pb::IMessage<OrderUpdateRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1803,7 +1526,7 @@ namespace Order {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Order.OrderReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2098,6 +1821,886 @@ namespace Order {
           }
           case 40: {
             ColonyTick = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class OrderStatusReply : pb::IMessage<OrderStatusReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrderStatusReply> _parser = new pb::MessageParser<OrderStatusReply>(() => new OrderStatusReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<OrderStatusReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderStatusReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderStatusReply(OrderStatusReply other) : this() {
+      orderId_ = other.orderId_;
+      status_ = other.status_;
+      deliveryTick_ = other.deliveryTick_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderStatusReply Clone() {
+      return new OrderStatusReply(this);
+    }
+
+    /// <summary>Field number for the "OrderId" field.</summary>
+    public const int OrderIdFieldNumber = 1;
+    private string orderId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string OrderId {
+      get { return orderId_; }
+      set {
+        orderId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "Status" field.</summary>
+    public const int StatusFieldNumber = 2;
+    private global::Order.OrderStatusEnum status_ = global::Order.OrderStatusEnum.Placed;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Order.OrderStatusEnum Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "DeliveryTick" field.</summary>
+    public const int DeliveryTickFieldNumber = 3;
+    private int deliveryTick_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int DeliveryTick {
+      get { return deliveryTick_; }
+      set {
+        deliveryTick_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as OrderStatusReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(OrderStatusReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (OrderId != other.OrderId) return false;
+      if (Status != other.Status) return false;
+      if (DeliveryTick != other.DeliveryTick) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (OrderId.Length != 0) hash ^= OrderId.GetHashCode();
+      if (Status != global::Order.OrderStatusEnum.Placed) hash ^= Status.GetHashCode();
+      if (DeliveryTick != 0) hash ^= DeliveryTick.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (OrderId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(OrderId);
+      }
+      if (Status != global::Order.OrderStatusEnum.Placed) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Status);
+      }
+      if (DeliveryTick != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(DeliveryTick);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (OrderId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(OrderId);
+      }
+      if (Status != global::Order.OrderStatusEnum.Placed) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Status);
+      }
+      if (DeliveryTick != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(DeliveryTick);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (OrderId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrderId);
+      }
+      if (Status != global::Order.OrderStatusEnum.Placed) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      if (DeliveryTick != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(DeliveryTick);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(OrderStatusReply other) {
+      if (other == null) {
+        return;
+      }
+      if (other.OrderId.Length != 0) {
+        OrderId = other.OrderId;
+      }
+      if (other.Status != global::Order.OrderStatusEnum.Placed) {
+        Status = other.Status;
+      }
+      if (other.DeliveryTick != 0) {
+        DeliveryTick = other.DeliveryTick;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            OrderId = input.ReadString();
+            break;
+          }
+          case 16: {
+            Status = (global::Order.OrderStatusEnum) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            DeliveryTick = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            OrderId = input.ReadString();
+            break;
+          }
+          case 16: {
+            Status = (global::Order.OrderStatusEnum) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            DeliveryTick = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class OrderReply : pb::IMessage<OrderReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrderReply> _parser = new pb::MessageParser<OrderReply>(() => new OrderReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<OrderReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderReply(OrderReply other) : this() {
+      data_ = other.data_ != null ? other.data_.Clone() : null;
+      status_ = other.status_;
+      unavailable_ = other.unavailable_.Clone();
+      refunded_ = other.refunded_;
+      balance_ = other.balance_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderReply Clone() {
+      return new OrderReply(this);
+    }
+
+    /// <summary>Field number for the "data" field.</summary>
+    public const int DataFieldNumber = 1;
+    private global::Order.OrderStatusReply data_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Order.OrderStatusReply Data {
+      get { return data_; }
+      set {
+        data_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 2;
+    private global::Order.OrderRequestStatus status_ = global::Order.OrderRequestStatus.Rejected;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Order.OrderRequestStatus Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "unavailable" field.</summary>
+    public const int UnavailableFieldNumber = 3;
+    private static readonly pb::FieldCodec<global::Order.OrderItem> _repeated_unavailable_codec
+        = pb::FieldCodec.ForMessage(26, global::Order.OrderItem.Parser);
+    private readonly pbc::RepeatedField<global::Order.OrderItem> unavailable_ = new pbc::RepeatedField<global::Order.OrderItem>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Order.OrderItem> Unavailable {
+      get { return unavailable_; }
+    }
+
+    /// <summary>Field number for the "refunded" field.</summary>
+    public const int RefundedFieldNumber = 4;
+    private int refunded_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Refunded {
+      get { return refunded_; }
+      set {
+        refunded_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "balance" field.</summary>
+    public const int BalanceFieldNumber = 5;
+    private int balance_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Balance {
+      get { return balance_; }
+      set {
+        balance_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as OrderReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(OrderReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Data, other.Data)) return false;
+      if (Status != other.Status) return false;
+      if(!unavailable_.Equals(other.unavailable_)) return false;
+      if (Refunded != other.Refunded) return false;
+      if (Balance != other.Balance) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (data_ != null) hash ^= Data.GetHashCode();
+      if (Status != global::Order.OrderRequestStatus.Rejected) hash ^= Status.GetHashCode();
+      hash ^= unavailable_.GetHashCode();
+      if (Refunded != 0) hash ^= Refunded.GetHashCode();
+      if (Balance != 0) hash ^= Balance.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (data_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Data);
+      }
+      if (Status != global::Order.OrderRequestStatus.Rejected) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Status);
+      }
+      unavailable_.WriteTo(output, _repeated_unavailable_codec);
+      if (Refunded != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Refunded);
+      }
+      if (Balance != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(Balance);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (data_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Data);
+      }
+      if (Status != global::Order.OrderRequestStatus.Rejected) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Status);
+      }
+      unavailable_.WriteTo(ref output, _repeated_unavailable_codec);
+      if (Refunded != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Refunded);
+      }
+      if (Balance != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(Balance);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (data_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Data);
+      }
+      if (Status != global::Order.OrderRequestStatus.Rejected) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      size += unavailable_.CalculateSize(_repeated_unavailable_codec);
+      if (Refunded != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Refunded);
+      }
+      if (Balance != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Balance);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(OrderReply other) {
+      if (other == null) {
+        return;
+      }
+      if (other.data_ != null) {
+        if (data_ == null) {
+          Data = new global::Order.OrderStatusReply();
+        }
+        Data.MergeFrom(other.Data);
+      }
+      if (other.Status != global::Order.OrderRequestStatus.Rejected) {
+        Status = other.Status;
+      }
+      unavailable_.Add(other.unavailable_);
+      if (other.Refunded != 0) {
+        Refunded = other.Refunded;
+      }
+      if (other.Balance != 0) {
+        Balance = other.Balance;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (data_ == null) {
+              Data = new global::Order.OrderStatusReply();
+            }
+            input.ReadMessage(Data);
+            break;
+          }
+          case 16: {
+            Status = (global::Order.OrderRequestStatus) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            unavailable_.AddEntriesFrom(input, _repeated_unavailable_codec);
+            break;
+          }
+          case 32: {
+            Refunded = input.ReadInt32();
+            break;
+          }
+          case 40: {
+            Balance = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (data_ == null) {
+              Data = new global::Order.OrderStatusReply();
+            }
+            input.ReadMessage(Data);
+            break;
+          }
+          case 16: {
+            Status = (global::Order.OrderRequestStatus) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            unavailable_.AddEntriesFrom(ref input, _repeated_unavailable_codec);
+            break;
+          }
+          case 32: {
+            Refunded = input.ReadInt32();
+            break;
+          }
+          case 40: {
+            Balance = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class OrderListReply : pb::IMessage<OrderListReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrderListReply> _parser = new pb::MessageParser<OrderListReply>(() => new OrderListReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<OrderListReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderListReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderListReply(OrderListReply other) : this() {
+      orders_ = other.orders_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderListReply Clone() {
+      return new OrderListReply(this);
+    }
+
+    /// <summary>Field number for the "orders" field.</summary>
+    public const int OrdersFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::Order.OrderStatusReply> _repeated_orders_codec
+        = pb::FieldCodec.ForMessage(10, global::Order.OrderStatusReply.Parser);
+    private readonly pbc::RepeatedField<global::Order.OrderStatusReply> orders_ = new pbc::RepeatedField<global::Order.OrderStatusReply>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Order.OrderStatusReply> Orders {
+      get { return orders_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as OrderListReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(OrderListReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!orders_.Equals(other.orders_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= orders_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      orders_.WriteTo(output, _repeated_orders_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      orders_.WriteTo(ref output, _repeated_orders_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += orders_.CalculateSize(_repeated_orders_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(OrderListReply other) {
+      if (other == null) {
+        return;
+      }
+      orders_.Add(other.orders_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            orders_.AddEntriesFrom(input, _repeated_orders_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            orders_.AddEntriesFrom(ref input, _repeated_orders_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class OrderManifestReply : pb::IMessage<OrderManifestReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrderManifestReply> _parser = new pb::MessageParser<OrderManifestReply>(() => new OrderManifestReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<OrderManifestReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Order.OrderReflection.Descriptor.MessageTypes[9]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderManifestReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderManifestReply(OrderManifestReply other) : this() {
+      items_ = other.items_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public OrderManifestReply Clone() {
+      return new OrderManifestReply(this);
+    }
+
+    /// <summary>Field number for the "items" field.</summary>
+    public const int ItemsFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::Order.DeliveryItem> _repeated_items_codec
+        = pb::FieldCodec.ForMessage(10, global::Order.DeliveryItem.Parser);
+    private readonly pbc::RepeatedField<global::Order.DeliveryItem> items_ = new pbc::RepeatedField<global::Order.DeliveryItem>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Order.DeliveryItem> Items {
+      get { return items_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as OrderManifestReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(OrderManifestReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!items_.Equals(other.items_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= items_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      items_.WriteTo(output, _repeated_items_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      items_.WriteTo(ref output, _repeated_items_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += items_.CalculateSize(_repeated_items_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(OrderManifestReply other) {
+      if (other == null) {
+        return;
+      }
+      items_.Add(other.items_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            items_.AddEntriesFrom(input, _repeated_items_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            items_.AddEntriesFrom(ref input, _repeated_items_codec);
             break;
           }
         }
