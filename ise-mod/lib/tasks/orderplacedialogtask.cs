@@ -109,7 +109,7 @@ namespace ise.lib.tasks
             {
                 using (var db = new LiteDatabase(DBLocation))
                 {
-                    var promise = db.GetCollection<DBInventoryPromise>(PromiseTable).FindById(gc.GetColonyId(pawn.Map));
+                    var promise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(pawn.Map));
 
                     if (promise.InventoryPromiseExpires < GetUTCNow())
                     {
@@ -160,12 +160,12 @@ namespace ise.lib.tasks
             var db = new LiteDatabase(DBLocation);
             try
             {
-                db.GetCollection<DBOrder>(OrderTable).Insert(
+                db.GetCollection<DBOrder>(Tables.Orders).Insert(
                     new DBOrder
                     {
                         Id = reply.Data.OrderId,
                         ColonyId = gc.GetColonyId(pawn.Map),
-                        Status = (int) reply.Data.Status,
+                        Status = reply.Data.Status,
                         PlacedTick = gameTick,
                         DeliveryTick = reply.Data.DeliveryTick
                     });

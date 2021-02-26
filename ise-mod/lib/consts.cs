@@ -15,17 +15,28 @@ namespace ise.lib
     internal static class Constants
     {
         #region Fields
+        internal static class Tables
+        {
+            internal const string ColonyBasket = "colony_basket";
+            internal const string MarketBasket = "market_basket";
+            internal const string Orders = "orders";
+            internal const string OrderItems = "order_items";
+            internal const string MarketCache = "market_cache";
+            internal const string ColonyCache = "colony_cache";
+            internal const string Promises = "promise";
+            internal const string Users = "user_data";
+            internal const string Bindings = "bindings";
+        };
 
-        internal const string ColonyBasketTable = "colony_basket";
-        internal const string MarketBasketTable = "market_basket";
-        internal const string OrderTable = "orders";
-        internal const string MarketCacheTable = "market_cache";
-        internal const string ColonyCacheTable = "colony_cache";
-        internal const string PromiseTable = "promise";
-        internal const string UserTable = "user_data";
-        internal const string BindingsTable = "bindings";
         internal const string ThingDefSilver = "Silver";
-
+        
+        /// <summary>
+        /// This is how often we ask the server to update orders.
+        /// 7500 ticks is about every 3 minutes, or 3 in-game hours.
+        /// </summary>
+        internal const int OrderUpdateTickRate = 7500;
+        
+        
         internal static readonly string DBLocation =
             $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=shared";
 

@@ -38,10 +38,12 @@
         <Compile Include="db\DBMapBind.cs" />
         <Compile Include="db\DBOrder.cs" />
         <Compile Include="db\DBOrderItem.cs" />
+        <Compile Include="db\DBStorageItem.cs" />
         <Compile Include="db\IBaseBind.cs" />
         <Compile Include="db\DBClientBind.cs" />
         <Compile Include="db\DBColonyBind.cs" />
         <Compile Include="db\DBUser.cs" />
+        <Compile Include="db\BaseItem.cs" />
         <Compile Include="extend\lists.cs" />
         <Compile Include="packets\Bank.cs" />
         <Compile Include="packets\Bind.cs" />

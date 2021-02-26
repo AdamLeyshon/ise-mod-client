@@ -37,7 +37,7 @@ namespace ise.lib
             using (var db = new LiteDatabase(DBLocation))
             {
                 Logging.WriteMessage($"Loading from {db}");
-                var col = db.GetCollection<DBUser>(UserTable);
+                var col = db.GetCollection<DBUser>(Tables.Users);
 
                 var userData = steamId.NullOrEmpty()
                     ? col.FindOne(data => data.IsSteamUser == false)
@@ -63,7 +63,7 @@ namespace ise.lib
             using (var db = new LiteDatabase(DBLocation))
             {
                 // Get the collection (or create, if doesn't exist)
-                var col = db.GetCollection<T>(BindingsTable);
+                var col = db.GetCollection<T>(Tables.Bindings);
 
                 var clientBindData = col.FindOne(data => data.ParentId == parentId);
 
@@ -80,7 +80,7 @@ namespace ise.lib
             using (var db = new LiteDatabase(DBLocation))
             {
                 // Get the collection (or create, if doesn't exist)
-                var col = db.GetCollection<T>(BindingsTable);
+                var col = db.GetCollection<T>(Tables.Bindings);
 
                 var bind = new T {ParentId = parentId, BindId = bindId};
                 col.Insert(bind);

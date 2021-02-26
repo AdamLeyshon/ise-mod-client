@@ -12,7 +12,7 @@ using LiteDB;
 
 namespace ise_core.db
 {
-    public class DBCachedTradable
+    public class DBCachedTradable: BaseItem
     {
         #region Properties
 
@@ -30,15 +30,8 @@ namespace ise_core.db
         float Weight = 45;
         */
 
-        public string ThingDef { get; set; }
         [BsonId] public string ItemCode { get; set; }
-        public int Quality { get; set; }
-
-        /// <summary>
-        ///  How many we have in total to trade
-        /// </summary>
-        public int AvailableQuantity { get; set; }
-
+        
         /// <summary>
         /// How many we want to trade
         /// </summary>
@@ -56,12 +49,7 @@ namespace ise_core.db
         /// The price the colony will for for buying
         /// </summary>
         public float WeSellAt { get; set; }
-
-        /// <summary>
-        /// If made of stuff, This is the ThingDef
-        /// </summary>
-        public string Stuff { get; set; }
-
+        
         public float Weight { get; set; }
 
         // Percentage of HP remaining, floored to int

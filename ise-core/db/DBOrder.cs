@@ -24,7 +24,7 @@ namespace ise_core.db
         /// <summary>
         /// The last known status of the order from the server.
         /// </summary>
-        public int Status { get; set; }
+        public OrderStatusEnum Status { get; set; }
         
         /// <summary>
         /// The Game tick when this order was placed.

@@ -17,6 +17,8 @@ using static ise.lib.game.GameInfo;
 
 namespace ise.components
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
+    // ReSharper disable once InconsistentNaming
     public class ISEGameComponent : GameComponent
     {
         #region Fields
@@ -107,6 +109,12 @@ namespace ise.components
             colonyCache.Add(mapId, outputId);
             Logging.WriteMessage($"Colony bind {outputId}");
             return outputId;
+        }
+
+        public override void GameComponentTick()
+        {
+            base.GameComponentTick();
+            
         }
 
         #endregion

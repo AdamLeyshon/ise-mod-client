@@ -115,7 +115,7 @@ namespace ise.lib.tasks
             // Open database (or create if doesn't exist)
             using (var db = new LiteDatabase(DBLocation))
             {
-                inventoryPromise = db.GetCollection<DBInventoryPromise>(PromiseTable).FindById(colonyId);
+                inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(colonyId);
             }
 
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
@@ -151,7 +151,7 @@ namespace ise.lib.tasks
                 {
                     var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
                     GetCache(db, colonyId, CacheType.ColonyBasket).DeleteAll();
-                    db.GetCollection<DBCachedTradable>(MarketBasketTable).DeleteAll();
+                    db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
                     marketCache.DeleteAll();
                     marketCache.InsertBulk(
                         reply.Items.Select(
@@ -159,7 +159,7 @@ namespace ise.lib.tasks
                             {
                                 ItemCode = tradable.ItemCode,
                                 ThingDef = tradable.ThingDef,
-                                AvailableQuantity = tradable.Quantity,
+                                Quantity = tradable.Quantity,
                                 HitPoints = 100,
                                 Quality = tradable.Quality,
                                 Stuff = tradable.Stuff,
@@ -174,7 +174,7 @@ namespace ise.lib.tasks
                                 Category = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).FirstThingCategory.defName
                             }));
                     marketCache.EnsureIndex(mc => mc.ThingDef);
-                    var inventoryCache = db.GetCollection<DBInventoryPromise>(PromiseTable);
+                    var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
                     inventoryCache.DeleteMany(x => x.ColonyId == colonyId);
                     inventoryCache.Insert(new DBInventoryPromise
                     {
@@ -307,7 +307,7 @@ namespace ise.lib.tasks
                             {
                                 ItemCode = matchMarketCacheItem.ItemCode,
                                 ThingDef = matchMarketCacheItem.ThingDef,
-                                AvailableQuantity = 0,
+                                Quantity = 0,
                                 HitPoints = itemHitPointsAsPercentage,
                                 Quality = matchMarketCacheItem.Quality,
                                 Stuff = matchMarketCacheItem.Stuff,
@@ -319,7 +319,7 @@ namespace ise.lib.tasks
                                 TranslatedName = matchMarketCacheItem.TranslatedName,
                                 TranslatedStuff = matchMarketCacheItem.TranslatedStuff
                             };
-                            matchColonyCacheItem.AvailableQuantity += unpackedThing.stackCount;
+                            matchColonyCacheItem.Quantity += unpackedThing.stackCount;
                             colonyCache.Upsert(matchColonyCacheItem);
                         }
                     }
@@ -368,7 +368,7 @@ namespace ise.lib.tasks
                         tradable.TradedQuantity = Mathf.Clamp(
                             matchBasketItem.TradedQuantity,
                             0,
-                            tradable.AvailableQuantity
+                            tradable.Quantity
                         );
                         collection.Upsert(tradable);
                     }

@@ -28,16 +28,16 @@ namespace ise.lib
             switch (cacheType)
             {
                 case CacheType.MarketCache:
-                    tableName = MarketCacheTable;
+                    tableName = Tables.MarketCache;
                     break;
                 case CacheType.ColonyCache:
-                    tableName = ColonyCacheTable;
+                    tableName = Tables.ColonyCache;
                     break;
                 case CacheType.MarketBasket:
-                    tableName = MarketBasketTable;
+                    tableName = Tables.MarketBasket;
                     break;
                 case CacheType.ColonyBasket:
-                    tableName = ColonyBasketTable;
+                    tableName = Tables.ColonyBasket;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cacheType), cacheType, null);
@@ -53,16 +53,16 @@ namespace ise.lib
             switch (cacheType)
             {
                 case CacheType.MarketCache:
-                    tableName = MarketCacheTable;
+                    tableName = Tables.MarketCache;
                     break;
                 case CacheType.ColonyCache:
-                    tableName = ColonyCacheTable;
+                    tableName = Tables.ColonyCache;
                     break;
                 case CacheType.MarketBasket:
-                    tableName = MarketBasketTable;
+                    tableName = Tables.MarketBasket;
                     break;
                 case CacheType.ColonyBasket:
-                    tableName = ColonyBasketTable;
+                    tableName = Tables.ColonyBasket;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cacheType), cacheType, null);

@@ -177,7 +177,7 @@ namespace ise.dialogs
             //absorbInputAroundWindow = true;
             db = new LiteDatabase(DBLocation);
             SetupData();
-            promise = db.GetCollection<DBInventoryPromise>(PromiseTable).FindById(gc.GetColonyId(userPawn.Map));
+            promise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(userPawn.Map));
             BuildQualityTranslationCache();
         }
 
@@ -821,7 +821,7 @@ namespace ise.dialogs
             width -= _gridRowQuantityWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
             var rectQuantityAvailable = new Rect(width, 0f, _gridRowQuantityWidth, tradeGridRow.height);
-            Widgets.Label(rectQuantityAvailable, rowData.AvailableQuantity.ToString());
+            Widgets.Label(rectQuantityAvailable, rowData.Quantity.ToString());
 
             // --------------------------------------------------------
             // Quantity buttons
@@ -846,7 +846,7 @@ namespace ise.dialogs
             rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth * 3, tradeGridRow.height);
             var qty = rowData.TradedQuantity;
             var buffer = rowData.UnityTextBuffer;
-            Widgets.TextFieldNumeric(rectTradeButton, ref qty, ref buffer, 0f, rowData.AvailableQuantity);
+            Widgets.TextFieldNumeric(rectTradeButton, ref qty, ref buffer, 0f, rowData.Quantity);
             if (qty != rowData.TradedQuantity)
                 // Save changes to quantity
                 SetTradeAmount(rowData, qty);
@@ -912,14 +912,14 @@ namespace ise.dialogs
             else
                 qty = step
                     ? tradable.TradedQuantity + 5
-                    : tradable.AvailableQuantity;
+                    : tradable.Quantity;
 
             SetTradeAmount(tradable, qty);
         }
 
         private void SetTradeAmount(DBCachedTradable tradable, int quantity)
         {
-            tradable.TradedQuantity = Mathf.Clamp(quantity, 0, tradable.AvailableQuantity);
+            tradable.TradedQuantity = Mathf.Clamp(quantity, 0, tradable.Quantity);
 
             var basket = uiTradeMode == TradeView.Buy ? cache.MarketBasket : cache.ColonyBasket;
 

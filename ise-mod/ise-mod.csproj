@@ -82,6 +82,8 @@
         <Compile Include="lib\game\gameinfo.cs" />
         <Compile Include="lib\logging.cs" />
         <Compile Include="lib\mods.cs" />
+        <Compile Include="lib\state\managers\account.cs" />
+        <Compile Include="lib\state\managers\order.cs" />
         <Compile Include="lib\tasks\clientbinddialogtask.cs" />
         <Compile Include="lib\tasks\colonybinddialogtask.cs" />
         <Compile Include="lib\tasks\marketdownloaddialogtask.cs" />
