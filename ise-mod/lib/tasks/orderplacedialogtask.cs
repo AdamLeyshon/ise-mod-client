@@ -207,14 +207,41 @@ namespace ise.lib.tasks
                 var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
 
                 // Start with the smallest pile of silver and destroy until we've removed as much as we need to
-                if (Request.AdditionalFunds > 0) RemoveGoods(ThingDefSilver, Request.AdditionalFunds, pawn.Map);
+                if (Request.AdditionalFunds > 0)
+                    RemoveGoods(
+                        ThingDefSilver,
+                        100,
+                        Request.AdditionalFunds,
+                        pawn.Map
+                    );
 
                 foreach (var soldItem in colonyBasket)
-                    RemoveGoods(soldItem.ThingDef, soldItem.TradedQuantity, pawn.Map, soldItem.Quality, soldItem.Stuff);
+                    RemoveGoods(soldItem.ThingDef,
+                        soldItem.HitPoints,
+                        soldItem.TradedQuantity,
+                        pawn.Map,
+                        soldItem.Quality,
+                        soldItem.Stuff
+                    );
             }
         }
 
-        private static void RemoveGoods(string thingDef, int quantity, Map map, int quality = 0, string stuff = null)
+        /// <summary>
+        /// Delete the traded goods from the colony since the order has succeeded.
+        /// </summary>
+        /// <param name="thingDef">Item ThingDef</param>
+        /// <param name="hitPoints">The HP as integer percentage</param>
+        /// <param name="quantity">Quantity to remove</param>
+        /// <param name="map">The map to delete items from</param>
+        /// <param name="quality">Thing numeric quality</param>
+        /// <param name="stuff">ThingDef of Stuff</param>
+        private static void RemoveGoods(
+            string thingDef,
+            int hitPoints,
+            int quantity,
+            Map map,
+            int quality = 0,
+            string stuff = null)
         {
             // Sort the Things, start with smallest stacks first.
             Logging.WriteDebugMessage($"Looking for {thingDef} x {quantity} to remove");
@@ -259,6 +286,10 @@ namespace ise.lib.tasks
             var toRemove = quantity;
             foreach (var stack in thingsToRemove)
             {
+                if (CalculateThingHitPoints(stack) != hitPoints)
+                    continue;
+
+
                 Logging.WriteDebugMessage($"Trying to remove: {stack} x {quantity}");
 
                 var newStack = stack.stackCount > toRemove

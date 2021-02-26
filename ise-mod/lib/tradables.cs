@@ -206,6 +206,16 @@ namespace ise.lib
             return def.category != ThingCategory.Building || def.Minifiable;
         }
 
+        internal static int CalculateThingHitPoints(Thing thing)
+        {
+            if (thing.def.useHitPoints)
+            {
+                return (int) Math.Floor((float) thing.HitPoints / thing.MaxHitPoints * 100.0f);
+            }
+
+            return 100;
+        }
+
         #endregion
     }
 }

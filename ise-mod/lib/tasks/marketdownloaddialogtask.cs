@@ -276,14 +276,11 @@ namespace ise.lib.tasks
                             Logging.WriteDebugMessage(
                                 $"Item Stack HP {unpackedThing.HitPoints}/{unpackedThing.MaxHitPoints}, " +
                                 $"Size: {unpackedThing.stackCount}");
-
-                            // -1 is no damage, Ludeon, why? why not just HitPoints=MaxHitPoints?
-                            if (unpackedThing.HitPoints != -1)
+                            
+                            if (unpackedThing.def.useHitPoints)
                                 // The brackets here are not redundant no matter what Rider/ReSharper suggests
                                 // Removing the casts/brackets causes incorrect percentage computation.
-                                itemHitPointsAsPercentage =
-                                    (int) Math.Floor(unpackedThing.HitPoints /
-                                        (float) unpackedThing.MaxHitPoints * 100f);
+                                itemHitPointsAsPercentage = CalculateThingHitPoints(unpackedThing);
 
                             Logging.WriteDebugMessage($"Item Stack HP {itemHitPointsAsPercentage}%");
 
