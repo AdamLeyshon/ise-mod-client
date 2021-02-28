@@ -28,7 +28,7 @@ namespace ise.buildings
 
         #region Properties
 
-        public bool CanShopOnlineNow =>
+        internal bool CanShopOnlineNow =>
             Spawned &&
             ISEUplink.HasUplink(Map) &&
             !Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) &&
@@ -78,7 +78,7 @@ namespace ise.buildings
             myPawn.jobs.TryTakeOrderedJob(new Job(ISEJobDefOf.ISEShopOnline, (LocalTargetInfo) this));
         }
 
-        public void ShopOnline(Pawn user)
+        internal void ShopOnline(Pawn user)
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
             Find.WindowStack.Add(gc.ClientBindVerified

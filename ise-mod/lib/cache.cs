@@ -15,7 +15,7 @@ using static ise.lib.Constants;
 
 namespace ise.lib
 {
-    public static class Cache
+    internal static class Cache
     {
         #region Methods
 

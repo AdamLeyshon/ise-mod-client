@@ -15,8 +15,27 @@ namespace ise.lib
     internal static class Constants
     {
         #region Fields
+
+        internal const string ThingDefSilver = "Silver";
+
+        /// <summary>
+        ///     This is how often we ask the server to update orders.
+        ///     7500 ticks is about every 3 minutes, or 3 in-game hours.
+        /// </summary>
+        internal const int OrderUpdateTickRate = 7500;
+
+
+        internal static readonly string DBLocation =
+            $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=shared";
+
+        #endregion
+
+        #region Nested type: Tables
+
         internal static class Tables
         {
+            #region Fields
+
             internal const string ColonyBasket = "colony_basket";
             internal const string MarketBasket = "market_basket";
             internal const string Orders = "orders";
@@ -26,19 +45,9 @@ namespace ise.lib
             internal const string Promises = "promise";
             internal const string Users = "user_data";
             internal const string Bindings = "bindings";
-        };
 
-        internal const string ThingDefSilver = "Silver";
-        
-        /// <summary>
-        /// This is how often we ask the server to update orders.
-        /// 7500 ticks is about every 3 minutes, or 3 in-game hours.
-        /// </summary>
-        internal const int OrderUpdateTickRate = 7500;
-        
-        
-        internal static readonly string DBLocation =
-            $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=shared";
+            #endregion
+        }
 
         #endregion
     }

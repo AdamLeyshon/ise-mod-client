@@ -31,8 +31,8 @@ namespace ise.dialogs
             Logging.WriteMessage("Opening Market Download Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
-            pawn = userPawn;
-            task = new MarketDownloadDialogTask(this, pawn);
+            Pawn = userPawn;
+            task = new MarketDownloadDialogTask(this, Pawn);
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace ise.dialogs
         #region IDialog Interface Implementations
 
         public string DialogMessage { get; set; }
-        public Pawn pawn { get; set; }
+        public Pawn Pawn { get; set; }
 
         public void CloseDialog()
         {
@@ -71,7 +71,7 @@ namespace ise.dialogs
             if (!task.Done) return;
 
             // Open market window
-            Find.WindowStack.Add(new DialogTradeUI(pawn));
+            Find.WindowStack.Add(new DialogTradeUI(Pawn));
             CloseDialog();
         }
 

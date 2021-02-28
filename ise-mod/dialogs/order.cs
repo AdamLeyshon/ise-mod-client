@@ -41,8 +41,8 @@ namespace ise.dialogs
             Logging.WriteMessage("Opening Place Order Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
-            pawn = userPawn;
-            task = new OrderPlaceDialogTask(this, pawn, additionalFunds);
+            Pawn = userPawn;
+            task = new OrderPlaceDialogTask(this, Pawn, additionalFunds);
         }
 
         #endregion
@@ -57,7 +57,7 @@ namespace ise.dialogs
         #region IDialog Interface Implementations
 
         public string DialogMessage { get; set; }
-        public Pawn pawn { get; set; }
+        public Pawn Pawn { get; set; }
 
         public void CloseDialog()
         {
@@ -124,7 +124,7 @@ namespace ise.dialogs
         private void TaskComplete()
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
-            var colonyId = gc.GetColonyId(pawn.Map);
+            var colonyId = gc.GetColonyId(Pawn.Map);
             var db = new LiteDatabase(DBLocation);
 
             var orderTask = (OrderPlaceDialogTask) task;

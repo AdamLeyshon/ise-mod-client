@@ -15,22 +15,6 @@ namespace ise_core.db
     public class DBCachedTradable: BaseItem
     {
         #region Properties
-
-        /*
-        message Tradable {
-        string ThingDef = 1;
-        string ItemCode = 5;
-        int32 Quality = 10;
-        int32 Quantity = 15;
-        bool Minified = 20;
-        float BaseValue = 25;
-        float WeBuyAt = 30;
-        float WeSellAt = 35;
-        string Stuff = 40;
-        float Weight = 45;
-        */
-
-        [BsonId] public string ItemCode { get; set; }
         
         /// <summary>
         /// How many we want to trade

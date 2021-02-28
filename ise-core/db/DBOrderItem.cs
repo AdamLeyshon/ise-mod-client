@@ -12,7 +12,7 @@ namespace ise_core.db
 {
     public class DBOrderItem : BaseItem
     {
-        [BsonId]
         public string OrderId { get; set; }
+        
     }
 }

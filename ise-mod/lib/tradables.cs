@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using Tradable;
 using Verse;
@@ -58,6 +59,14 @@ namespace ise.lib
                 }
 
             return thingsToRequestFromMarket;
+        }
+
+
+        internal static float GetValueForThing(string thing, int quality, [CanBeNull] string stuff)
+        {
+            var thingDef = DefDatabase<ThingDef>.GetNamed(thing);
+            var stuffDef = stuff.NullOrEmpty() ? null : DefDatabase<ThingDef>.GetNamed(stuff);
+            return StatDefOf.MarketValue.Worker.GetValue(quality > 2 ? StatRequest.For(thingDef, stuffDef, (QualityCategory) quality) : StatRequest.For(thingDef, stuffDef));
         }
 
         private static IEnumerable<ColonyTradable> ComputeItemsMadeFromStuff(
@@ -208,10 +217,7 @@ namespace ise.lib
 
         internal static int CalculateThingHitPoints(Thing thing)
         {
-            if (thing.def.useHitPoints)
-            {
-                return (int) Math.Floor((float) thing.HitPoints / thing.MaxHitPoints * 100.0f);
-            }
+            if (thing.def.useHitPoints) return (int) Math.Floor((float) thing.HitPoints / thing.MaxHitPoints * 100.0f);
 
             return 100;
         }

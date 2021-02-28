@@ -20,7 +20,7 @@ namespace ise.dialogs
     {
         #region BindUIType enum
 
-        public enum BindUIType
+        internal enum BindUIType
         {
             Client,
             Colony,
@@ -38,20 +38,20 @@ namespace ise.dialogs
 
         #region ctor
 
-        public DialogBind(Pawn userPawn, BindUIType bindTypeEnum)
+        internal DialogBind(Pawn userPawn, BindUIType bindTypeEnum)
         {
             Logging.WriteMessage("Opening Bind Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             BindType = bindTypeEnum;
-            pawn = userPawn;
+            Pawn = userPawn;
             switch (BindType)
             {
                 case BindUIType.Client:
                     task = new ClientBindDialogTask(this);
                     break;
                 case BindUIType.Colony:
-                    task = new ColonyBindDialogTask(this, pawn);
+                    task = new ColonyBindDialogTask(this, Pawn);
                     break;
                 case BindUIType.Account:
                     throw new NotImplementedException();
@@ -64,7 +64,7 @@ namespace ise.dialogs
 
         #region Properties
 
-        public BindUIType BindType { get; set; }
+        internal BindUIType BindType { get; set; }
 
         public override Vector2 InitialSize => new Vector2(300f, 300f);
 
@@ -73,7 +73,7 @@ namespace ise.dialogs
         #region IDialog Interface Implementations
 
         public string DialogMessage { get; set; }
-        public Pawn pawn { get; set; }
+        public Pawn Pawn { get; set; }
 
         public void CloseDialog()
         {
@@ -99,10 +99,10 @@ namespace ise.dialogs
             switch (BindType)
             {
                 case BindUIType.Client:
-                    Find.WindowStack.Add(new DialogBind(pawn, BindUIType.Colony));
+                    Find.WindowStack.Add(new DialogBind(Pawn, BindUIType.Colony));
                     break;
                 case BindUIType.Colony:
-                    Find.WindowStack.Add(new DialogMarketDownload(pawn));
+                    Find.WindowStack.Add(new DialogMarketDownload(Pawn));
                     break;
                 case BindUIType.Account:
                     throw new NotImplementedException();

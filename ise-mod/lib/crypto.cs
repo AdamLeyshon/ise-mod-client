@@ -14,7 +14,7 @@ using System.Text;
 
 namespace ise.lib
 {
-    public static class Crypto
+    internal static class Crypto
     {
         #region Methods
 

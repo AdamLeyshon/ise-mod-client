@@ -9,7 +9,10 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ise.lib;
+using ise.lib.state.managers;
 using ise_core.db;
 using Verse;
 using static ise.lib.User;
@@ -23,9 +26,14 @@ namespace ise.components
     {
         #region Fields
 
+        private const int UpdateTickInterval = 2000;
+        private readonly Dictionary<string, Account> activeAccounts = new Dictionary<string, Account>();
+
         private readonly Dictionary<string, string> colonyCache = new Dictionary<string, string>();
         internal string ClientBind;
+        private int nextUpdateTick;
         private bool spawnToolUsed;
+        private bool firstRunComplete;
 
         #endregion
 
@@ -40,7 +48,7 @@ namespace ise.components
 
         #region Properties
 
-        public bool SpawnToolUsed
+        internal bool SpawnToolUsed
         {
             get => spawnToolUsed;
             private set
@@ -54,7 +62,7 @@ namespace ise.components
         /// <summary>
         ///     Set if the bind has already been verified since game start.
         /// </summary>
-        public bool ClientBindVerified { get; set; }
+        internal bool ClientBindVerified { get; set; }
 
         #endregion
 
@@ -76,28 +84,39 @@ namespace ise.components
 
         private void LoadBinds()
         {
-            ClientBind = LoadBind<DBClientBind>(IseBootStrap.User.UserId);
+            ClientBind = LoadBind<DBClientBind>(IseCentral.User.UserId);
             if (ClientBind.NullOrEmpty())
             {
-                Logging.WriteMessage($"No Client bind for: {IseBootStrap.User.UserId}");
+                Logging.WriteMessage($"No Client bind for: {IseCentral.User.UserId}");
                 return;
             }
 
             Logging.WriteMessage($"Client bind {ClientBind}");
             // Do other stuff
+
+            if (firstRunComplete) return;
+
+            StartAccountTracking();
+
+            var currentTick = Current.Game.tickManager.TicksGame;
+
+            // Set the first tick a little ahead of time so we don't
+            // overburden the game at startup
+            nextUpdateTick = currentTick + 500;
+            firstRunComplete = true;
         }
 
-        internal bool IsValidLocationForIse(Map m)
+        internal bool IsValidLocationForIse(Map map)
         {
             // Can only use ISE where you own the map and it's a settlement with a name
-            var mapID = GetUniqueMapID(m);
+            var mapID = GetUniqueMapID(map);
             Logging.WriteMessage($"Map ID of caller is {mapID}");
-            return GetColonyFaction().HasName && m.Parent.HasName && MapIsSettlementOfPlayer(m);
+            return GetColonyFaction().HasName && map.Parent.HasName && MapIsSettlementOfPlayer(map);
         }
 
-        internal string GetColonyId(Map m)
+        internal string GetColonyId(Map map)
         {
-            var mapId = GetUniqueMapID(m);
+            var mapId = GetUniqueMapID(map);
             if (colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
             outputId = LoadBind<DBColonyBind>(mapId);
             if (outputId.NullOrEmpty())
@@ -113,8 +132,39 @@ namespace ise.components
 
         public override void GameComponentTick()
         {
+            var currentTick = Current.Game.tickManager.TicksGame;
             base.GameComponentTick();
-            
+            if (currentTick < nextUpdateTick) return;
+
+            nextUpdateTick = currentTick + UpdateTickInterval;
+
+            // Update each account async
+            foreach (var t in activeAccounts.Select(activeAccount =>
+                new Task(delegate { activeAccount.Value.UpdateAsync(); })))
+                t.Start();
+        }
+
+        private void StartAccountTracking()
+        {
+            var player = GetColonyFaction();
+            var maps = Current.Game.Maps.Where(map =>
+                map.ParentFaction == player &&
+                MapIsSettlementOfPlayer(map)
+            );
+            foreach (var map in maps)
+            {
+                var colonyId = GetColonyId(map);
+                if (colonyId != null && !activeAccounts.ContainsKey(colonyId))
+                    activeAccounts.Add(colonyId, new Account(colonyId, this));
+            }
+        }
+
+        internal Account GetAccount(string colonyId)
+        {
+            if (activeAccounts.TryGetValue(colonyId, out var account)) return account;
+            account = new Account(colonyId, this);
+            activeAccounts.Add(colonyId, account);
+            return account;
         }
 
         #endregion

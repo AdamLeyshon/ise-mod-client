@@ -12,12 +12,12 @@ using Verse;
 
 namespace ise.dialogs
 {
-    public interface IDialog
+    internal interface IDialog
     {
         #region Properties
 
         string DialogMessage { get; set; }
-        Pawn pawn { get; set; }
+        Pawn Pawn { get; set; }
 
         #endregion
 

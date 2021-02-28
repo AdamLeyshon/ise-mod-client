@@ -118,7 +118,7 @@ namespace ise.lib.tasks
             }
             else
             {
-                var map = Dialog.pawn.Map;
+                var map = Dialog.Pawn.Map;
                 var colonyData = new ColonyData
                 {
                     Name = GameInfo.GetCurrentMapName(map),
@@ -218,7 +218,7 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateMods()
         {
-            Logging.WriteMessage($"Update Colony mods {colonyId}");
+            Logging.WriteMessage($"UpdateAsync Colony mods {colonyId}");
             var request = new ColonyModsSetRequest
             {
                 ClientBindId = gc.ClientBind,
@@ -245,7 +245,7 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateTradables()
         {
-            Logging.WriteMessage($"Update Colony tradables {colonyId}");
+            Logging.WriteMessage($"UpdateAsync Colony tradables {colonyId}");
 
             task = new Task<ColonyTradableSetReply>(delegate
             {

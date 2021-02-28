@@ -107,42 +107,40 @@ namespace ise.lib.tasks
 
             task = new Task<OrderReply>(delegate
             {
-                using (var db = new LiteDatabase(DBLocation))
+                var db = IseCentral.DataCache;
+                var promise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(pawn.Map));
+
+                if (promise.InventoryPromiseExpires < GetUTCNow())
                 {
-                    var promise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(pawn.Map));
-
-                    if (promise.InventoryPromiseExpires < GetUTCNow())
-                    {
-                        state = State.Error;
-                        return null;
-                    }
-
-                    var request = new OrderRequest
-                    {
-                        ColonyId = colonyId,
-                        ClientBindId = gc.ClientBind,
-                        Currency = BankCurrency.Silver,
-                        InventoryPromiseId = promise.InventoryPromiseId,
-                        AdditionalFunds = additionalFunds,
-                        ColonyTick = gameTick,
-                    };
-
-                    var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
-                    var marketBasket = GetCache(db, colonyId, CacheType.MarketBasket).FindAll();
-
-                    request.WantToSell.AddRange(CachedTradablesToOrderItems(colonyBasket));
-                    request.WantToBuy.AddRange(CachedTradablesToOrderItems(marketBasket));
-
-                    Request = request.Clone();
-
-                    return SendAndParseReply(
-                        request,
-                        OrderReply.Parser,
-                        $"{URLPrefix}order/place",
-                        Method.POST,
-                        gc.ClientBind
-                    );
+                    state = State.Error;
+                    return null;
                 }
+
+                var request = new OrderRequest
+                {
+                    ColonyId = colonyId,
+                    ClientBindId = gc.ClientBind,
+                    Currency = BankCurrency.Silver,
+                    InventoryPromiseId = promise.InventoryPromiseId,
+                    AdditionalFunds = additionalFunds,
+                    ColonyTick = gameTick,
+                };
+
+                var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
+                var marketBasket = GetCache(db, colonyId, CacheType.MarketBasket).FindAll();
+
+                request.WantToSell.AddRange(CachedTradablesToOrderItems(colonyBasket));
+                request.WantToBuy.AddRange(CachedTradablesToOrderItems(marketBasket));
+
+                Request = request.Clone();
+
+                return SendAndParseReply(
+                    request,
+                    OrderReply.Parser,
+                    $"{URLPrefix}order/place",
+                    Method.POST,
+                    gc.ClientBind
+                );
             });
             task.Start();
             state = State.Place;
@@ -179,8 +177,11 @@ namespace ise.lib.tasks
                 DropCache(db, colonyId, CacheType.MarketBasket);
                 DropCache(db, colonyId, CacheType.ColonyCache);
                 DropCache(db, colonyId, CacheType.MarketCache);
+
+                // Start tracking the Order Status
+                gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 state = State.Error;
                 return;
@@ -202,32 +203,30 @@ namespace ise.lib.tasks
         private void RemoveTradedGoods(OrderReply reply)
         {
             var colonyId = gc.GetColonyId(pawn.Map);
-            using (var db = new LiteDatabase(DBLocation))
-            {
-                var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
+            var db = IseCentral.DataCache;
+            var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
 
-                // Start with the smallest pile of silver and destroy until we've removed as much as we need to
-                if (Request.AdditionalFunds > 0)
-                    RemoveGoods(
-                        ThingDefSilver,
-                        100,
-                        Request.AdditionalFunds,
-                        pawn.Map
-                    );
+            // Start with the smallest pile of silver and destroy until we've removed as much as we need to
+            if (Request.AdditionalFunds > 0)
+                RemoveGoods(
+                    ThingDefSilver,
+                    100,
+                    Request.AdditionalFunds,
+                    pawn.Map
+                );
 
-                foreach (var soldItem in colonyBasket)
-                    RemoveGoods(soldItem.ThingDef,
-                        soldItem.HitPoints,
-                        soldItem.TradedQuantity,
-                        pawn.Map,
-                        soldItem.Quality,
-                        soldItem.Stuff
-                    );
-            }
+            foreach (var soldItem in colonyBasket)
+                RemoveGoods(soldItem.ThingDef,
+                    soldItem.HitPoints,
+                    soldItem.TradedQuantity,
+                    pawn.Map,
+                    soldItem.Quality,
+                    soldItem.Stuff
+                );
         }
 
         /// <summary>
-        /// Delete the traded goods from the colony since the order has succeeded.
+        ///     Delete the traded goods from the colony since the order has succeeded.
         /// </summary>
         /// <param name="thingDef">Item ThingDef</param>
         /// <param name="hitPoints">The HP as integer percentage</param>

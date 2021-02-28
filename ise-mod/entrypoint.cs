@@ -9,27 +9,36 @@
 #endregion
 
 using ise_core.db;
+using LiteDB;
 using Verse;
 using static ise.lib.User;
+using static ise.lib.Constants;
 
 namespace ise
 {
     [StaticConstructorOnStartup]
-    public class IseBootStrap
+    // ReSharper disable once ClassNeverInstantiated.Global
+    public class IseCentral
     {
         #region Fields
 
-        public static readonly DBUser User;
-        public static DBClientBind ClientBind;
+        internal static readonly DBUser User;
 
         #endregion
 
         #region ctor
 
-        static IseBootStrap()
+        static IseCentral()
         {
+            DataCache = new LiteDatabase(DBLocation);
             User = LoadUserData();
         }
+
+        #endregion
+
+        #region Properties
+
+        internal static LiteDatabase DataCache { get; }
 
         #endregion
     }

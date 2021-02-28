@@ -111,7 +111,7 @@ namespace ise.lib.tasks
             }
             else
             {
-                var request = new BindRequest {SteamId = IseBootStrap.User.UserId};
+                var request = new BindRequest {SteamId = IseCentral.User.UserId};
                 task = SendAndParseReplyAsync(
                     request,
                     BindReply.Parser,
@@ -179,7 +179,7 @@ namespace ise.lib.tasks
                             Logging.WriteMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
                             var gc = Current.Game.GetComponent<ISEGameComponent>();
                             gc.ClientBind = reply.ClientBindId;
-                            SaveBind<DBClientBind>(IseBootStrap.User.UserId, reply.ClientBindId);
+                            SaveBind<DBClientBind>(IseCentral.User.UserId, reply.ClientBindId);
                             StartBindVerify();
                             return;
                         default:
@@ -211,7 +211,7 @@ namespace ise.lib.tasks
             Logging.WriteMessage($"Verifying Client Bind {gc.ClientBind}");
             var request = new ClientBindVerifyRequest
             {
-                SteamId = IseBootStrap.User.UserId,
+                SteamId = IseCentral.User.UserId,
                 ClientBindId = gc.ClientBind
             };
             task = SendAndParseReplyAsync(
@@ -236,6 +236,7 @@ namespace ise.lib.tasks
             else
             {
                 Logging.WriteMessage($"Server accepted Bind {gc.ClientBind}");
+                gc.ClientBindVerified = true;
                 state = State.Done;
             }
         }

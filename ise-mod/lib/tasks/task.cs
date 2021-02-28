@@ -12,7 +12,7 @@ using ise.dialogs;
 
 namespace ise.lib.tasks
 {
-    public interface IDialogTask
+    internal interface IDialogTask
     {
         #region Properties
 
@@ -33,7 +33,7 @@ namespace ise.lib.tasks
     {
         #region ctor
 
-        public AbstractDialogTask(IDialog dialog)
+        internal AbstractDialogTask(IDialog dialog)
         {
             Dialog = dialog;
         }
