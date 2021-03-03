@@ -13,10 +13,14 @@ using System.Linq;
 using ise.components;
 using ise_core.db;
 using Order;
+using RestSharp;
 using Verse;
 using static ise.lib.Constants;
 using static RimWorld.GenDate;
 using static ise.lib.Tradables;
+using static ise_core.rest.api.v1.Constants;
+using static ise_core.rest.Helpers;
+
 
 namespace ise.lib.state.managers
 {
@@ -25,8 +29,9 @@ namespace ise.lib.state.managers
         #region Fields
 
         private const int TicksPerHalfDay = TicksPerDay / 2;
+        private const int TicksUntilDelivery = TicksPerHour * 5;
 
-        internal string OrderId { get; private set; }
+        internal string OrderId { get; }
         private readonly DBOrder backingOrder;
 
         #endregion
@@ -39,6 +44,7 @@ namespace ise.lib.state.managers
             var db = IseCentral.DataCache;
             backingOrder = db.GetCollection<DBOrder>(Tables.Orders).FindById(this.OrderId);
             Status = backingOrder.Status;
+            Logging.WriteDebugMessage($"Order tracker initialised for {OrderId}");
         }
 
         #endregion
@@ -47,7 +53,7 @@ namespace ise.lib.state.managers
 
         internal OrderStatusEnum Status { get; private set; }
         internal bool Busy { get; private set; }
-        internal bool CanRemove { get; private set; }
+        internal bool IsFinished { get; private set; }
 
         #endregion
 
@@ -60,7 +66,10 @@ namespace ise.lib.state.managers
             var currentTick = Current.Game.tickManager.TicksGame;
             var ticksRemaining = backingOrder.DeliveryTick - currentTick;
             Logging.WriteDebugMessage($"Ticking Order {OrderId}, State: {Status}, Ticks remaining: {ticksRemaining}");
-            if (ticksRemaining < TicksPerHalfDay)
+            try
+            {
+                if (ticksRemaining >= TicksPerHalfDay || IsFinished) return;
+
                 // State check
                 switch (backingOrder.Status)
                 {
@@ -69,44 +78,57 @@ namespace ise.lib.state.managers
                     case OrderStatusEnum.Reversed:
                         break;
                     case OrderStatusEnum.Placed:
-                        ProcessStatePlaced(currentTick);
+                        ProcessStatePlaced(currentTick, ticksRemaining);
                         break;
                     case OrderStatusEnum.OutForDelivery:
-                        ProcessStateOutForDelivery(currentTick);
+                        ProcessStateOutForDelivery(currentTick, ticksRemaining);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-            Busy = false;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"An order failed to update: {e}");
+            }
+            finally
+            {
+                Busy = false;
+                Logging.WriteDebugMessage($"Order {OrderId} tick finished");
+            }
         }
 
-        private void ProcessStatePlaced(int currentTick)
+        private void ProcessStatePlaced(int currentTick, int ticksRemaining)
         {
+            if (ticksRemaining < TicksUntilDelivery)
+            {
+                SetOrderState(OrderStatusEnum.OutForDelivery, currentTick);
+            }
         }
 
-        private void ProcessStateOutForDelivery(int currentTick)
+        private void ProcessStateOutForDelivery(int currentTick, int ticksRemaining)
         {
             // Don't do anything until we reach the delivery time.
             if (currentTick < backingOrder.DeliveryTick) return;
 
-            // Do something
+            SetOrderState(OrderStatusEnum.Delivered, currentTick);
+
             DeliverOrder();
+
+            IsFinished = true;
         }
 
         private void DeliverOrder()
         {
             Logging.WriteDebugMessage($"Deliver Order {OrderId}");
             var colonyId = backingOrder.ColonyId;
-            var orderItemCollection = IseCentral.DataCache.GetCollection<DBOrderItem>();
-            var storedItemCollection = IseCentral.DataCache.GetCollection<DBStorageItem>();
+            var orderItemCollection = IseCentral.DataCache.GetCollection<DBOrderItem>(Tables.OrderItems);
+            var storedItemCollection = IseCentral.DataCache.GetCollection<DBStorageItem>(Tables.Delivered);
             storedItemCollection.EnsureIndex(item => item.ColonyId);
             storedItemCollection.EnsureIndex(item => item.ItemCode);
 
             var orderItems = orderItemCollection.Find(item => item.OrderId == OrderId);
-            var deliveryItems = IseCentral.DataCache.GetCollection<DBStorageItem>()
-                .Find(item => item.ColonyId == colonyId).ToList();
-
+            var deliveryItems = storedItemCollection.Find(item => item.ColonyId == colonyId).ToList();
 
             foreach (var orderItem in orderItems)
             {
@@ -138,7 +160,6 @@ namespace ise.lib.state.managers
             var db = IseCentral.DataCache;
 
             var orderItems = db.GetCollection<DBOrderItem>(Tables.OrderItems);
-            orderItems.EnsureIndex(item => item.OrderId);
             orderItems.InsertBulk(
                 orderManifest.Items.Select(
                     orderItem => new DBOrderItem
@@ -152,6 +173,62 @@ namespace ise.lib.state.managers
                     }
                 )
             );
+
+            // Mark the order as downloaded so we don't fetch it again.
+            var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
+            var order = orderCollection.FindById(orderId);
+            if (order == null)
+            {
+                throw new NullReferenceException($"Couldn't find order {orderId} in cache");
+            }
+
+            order.ManifestAvailable = true;
+            orderCollection.Update(order);
+        }
+
+        private void SetOrderState(OrderStatusEnum state, int currentTick)
+        {
+            Logging.WriteDebugMessage($"Marking order {OrderId} as {state}");
+            var colonyId = backingOrder.ColonyId;
+            var db = IseCentral.DataCache;
+            var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
+            var gameComponent = Current.Game.GetComponent<ISEGameComponent>();
+            var request = new OrderUpdateRequest()
+            {
+                ColonyId = colonyId,
+                ClientBindId = gameComponent.ClientBind,
+                ColonyTick = currentTick,
+                OrderId = OrderId,
+                Status = state
+            };
+            try
+            {
+                var result = SendAndParseReply(
+                    request,
+                    OrderStatusReply.Parser,
+                    $"{URLPrefix}order/update",
+                    Method.POST,
+                    request.ClientBindId
+                );
+                if (result.Status != state)
+                {
+                    throw new InvalidOperationException($"Server refused status update to {state}");
+                }
+
+                // Update current order with values from server, just in case
+                // an admin has changed them.
+                backingOrder.PlacedTick = result.PlacedTick;
+                backingOrder.DeliveryTick = result.DeliveryTick;
+                backingOrder.Status = result.Status;
+            }
+            catch (Exception e)
+            {
+                Logging.WriteErrorMessage($"Failed to update order status for {OrderId}");
+                Logging.WriteErrorMessage($"{e}");
+                throw;
+            }
+
+            orderCollection.Update(backingOrder);
         }
 
         #endregion

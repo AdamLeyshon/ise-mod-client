@@ -47,6 +47,7 @@ namespace ise.lib
         internal static void WriteDebugMessage(string message, StackFrame sf = null)
         {
 #if DEBUG
+            if (sf == null) sf = new StackTrace().GetFrame(1);
             WriteMessage(message, sf);
 #endif
         }

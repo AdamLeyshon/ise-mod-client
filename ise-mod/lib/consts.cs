@@ -26,7 +26,7 @@ namespace ise.lib
 
 
         internal static readonly string DBLocation =
-            $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=shared";
+            $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=direct";
 
         #endregion
 
@@ -45,6 +45,7 @@ namespace ise.lib
             internal const string Promises = "promise";
             internal const string Users = "user_data";
             internal const string Bindings = "bindings";
+            internal const string Delivered = "delivered_items";
 
             #endregion
         }

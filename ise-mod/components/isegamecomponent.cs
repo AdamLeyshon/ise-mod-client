@@ -135,13 +135,13 @@ namespace ise.components
             var currentTick = Current.Game.tickManager.TicksGame;
             base.GameComponentTick();
             if (currentTick < nextUpdateTick) return;
-
+            Logging.WriteDebugMessage("Ticking Account Managers");
             nextUpdateTick = currentTick + UpdateTickInterval;
 
-            // Update each account async
-            foreach (var t in activeAccounts.Select(activeAccount =>
-                new Task(delegate { activeAccount.Value.UpdateAsync(); })))
-                t.Start();
+            foreach (var task in activeAccounts.Values.Select(account => new Task(account.UpdateAsync)))
+            {
+                task.Start();
+            }
         }
 
         private void StartAccountTracking()

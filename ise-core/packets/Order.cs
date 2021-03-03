@@ -42,27 +42,27 @@ namespace Order {
             "AiABKAkSCwoDQW55GAMgASgIIokBChJPcmRlclVwZGF0ZVJlcXVlc3QSFAoM",
             "Q2xpZW50QmluZElkGAEgASgJEhAKCENvbG9ueUlkGAIgASgJEg8KB09yZGVy",
             "SWQYAyABKAkSJgoGc3RhdHVzGAQgASgOMhYub3JkZXIuT3JkZXJTdGF0dXNF",
-            "bnVtEhIKCkNvbG9ueVRpY2sYBSABKAUiYQoQT3JkZXJTdGF0dXNSZXBseRIP",
+            "bnVtEhIKCkNvbG9ueVRpY2sYBSABKAUidQoQT3JkZXJTdGF0dXNSZXBseRIP",
             "CgdPcmRlcklkGAEgASgJEiYKBlN0YXR1cxgCIAEoDjIWLm9yZGVyLk9yZGVy",
-            "U3RhdHVzRW51bRIUCgxEZWxpdmVyeVRpY2sYAyABKAUiqAEKCk9yZGVyUmVw",
-            "bHkSJQoEZGF0YRgBIAEoCzIXLm9yZGVyLk9yZGVyU3RhdHVzUmVwbHkSKQoG",
-            "c3RhdHVzGAIgASgOMhkub3JkZXIuT3JkZXJSZXF1ZXN0U3RhdHVzEiUKC3Vu",
-            "YXZhaWxhYmxlGAMgAygLMhAub3JkZXIuT3JkZXJJdGVtEhAKCHJlZnVuZGVk",
-            "GAQgASgFEg8KB2JhbGFuY2UYBSABKAUiOQoOT3JkZXJMaXN0UmVwbHkSJwoG",
-            "b3JkZXJzGAEgAygLMhcub3JkZXIuT3JkZXJTdGF0dXNSZXBseSI4ChJPcmRl",
-            "ck1hbmlmZXN0UmVwbHkSIgoFaXRlbXMYASADKAsyEy5vcmRlci5EZWxpdmVy",
-            "eUl0ZW0qWgoPT3JkZXJTdGF0dXNFbnVtEgoKBlBsYWNlZBAAEhIKDk91dEZv",
-            "ckRlbGl2ZXJ5EAESDQoJRGVsaXZlcmVkEAISCgoGRmFpbGVkEAMSDAoIUmV2",
-            "ZXJzZWQQBCpIChJPcmRlclJlcXVlc3RTdGF0dXMSDAoIUmVqZWN0ZWQQABIP",
-            "CgtBY2NlcHRlZEFsbBABEhMKD0FjY2VwdGVkUGFydGlhbBACMswCCgxPcmRl",
-            "clNlcnZpY2USNgoKUGxhY2VPcmRlchITLm9yZGVyLk9yZGVyUmVxdWVzdBoR",
-            "Lm9yZGVyLk9yZGVyUmVwbHkiABI4CgRMaXN0Ehcub3JkZXIuT3JkZXJMaXN0",
-            "UmVxdWVzdBoVLm9yZGVyLk9yZGVyTGlzdFJlcGx5IgASQwoLT3JkZXJTdGF0",
-            "dXMSGS5vcmRlci5PcmRlclN0YXR1c1JlcXVlc3QaFy5vcmRlci5PcmRlclN0",
-            "YXR1c1JlcGx5IgASPgoGVXBkYXRlEhkub3JkZXIuT3JkZXJVcGRhdGVSZXF1",
-            "ZXN0Ghcub3JkZXIuT3JkZXJTdGF0dXNSZXBseSIAEkUKC0dldE1hbmlmZXN0",
-            "Ehkub3JkZXIuT3JkZXJTdGF0dXNSZXF1ZXN0Ghkub3JkZXIuT3JkZXJNYW5p",
-            "ZmVzdFJlcGx5IgBiBnByb3RvMw=="));
+            "U3RhdHVzRW51bRIUCgxEZWxpdmVyeVRpY2sYAyABKAUSEgoKUGxhY2VkVGlj",
+            "axgEIAEoBSKoAQoKT3JkZXJSZXBseRIlCgRkYXRhGAEgASgLMhcub3JkZXIu",
+            "T3JkZXJTdGF0dXNSZXBseRIpCgZzdGF0dXMYAiABKA4yGS5vcmRlci5PcmRl",
+            "clJlcXVlc3RTdGF0dXMSJQoLdW5hdmFpbGFibGUYAyADKAsyEC5vcmRlci5P",
+            "cmRlckl0ZW0SEAoIcmVmdW5kZWQYBCABKAUSDwoHYmFsYW5jZRgFIAEoBSI5",
+            "Cg5PcmRlckxpc3RSZXBseRInCgZvcmRlcnMYASADKAsyFy5vcmRlci5PcmRl",
+            "clN0YXR1c1JlcGx5IjgKEk9yZGVyTWFuaWZlc3RSZXBseRIiCgVpdGVtcxgB",
+            "IAMoCzITLm9yZGVyLkRlbGl2ZXJ5SXRlbSpaCg9PcmRlclN0YXR1c0VudW0S",
+            "CgoGUGxhY2VkEAASEgoOT3V0Rm9yRGVsaXZlcnkQARINCglEZWxpdmVyZWQQ",
+            "AhIKCgZGYWlsZWQQAxIMCghSZXZlcnNlZBAEKkgKEk9yZGVyUmVxdWVzdFN0",
+            "YXR1cxIMCghSZWplY3RlZBAAEg8KC0FjY2VwdGVkQWxsEAESEwoPQWNjZXB0",
+            "ZWRQYXJ0aWFsEAIyzAIKDE9yZGVyU2VydmljZRI2CgpQbGFjZU9yZGVyEhMu",
+            "b3JkZXIuT3JkZXJSZXF1ZXN0GhEub3JkZXIuT3JkZXJSZXBseSIAEjgKBExp",
+            "c3QSFy5vcmRlci5PcmRlckxpc3RSZXF1ZXN0GhUub3JkZXIuT3JkZXJMaXN0",
+            "UmVwbHkiABJDCgtPcmRlclN0YXR1cxIZLm9yZGVyLk9yZGVyU3RhdHVzUmVx",
+            "dWVzdBoXLm9yZGVyLk9yZGVyU3RhdHVzUmVwbHkiABI+CgZVcGRhdGUSGS5v",
+            "cmRlci5PcmRlclVwZGF0ZVJlcXVlc3QaFy5vcmRlci5PcmRlclN0YXR1c1Jl",
+            "cGx5IgASRQoLR2V0TWFuaWZlc3QSGS5vcmRlci5PcmRlclN0YXR1c1JlcXVl",
+            "c3QaGS5vcmRlci5PcmRlck1hbmlmZXN0UmVwbHkiAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Bank.BankReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Order.OrderStatusEnum), typeof(global::Order.OrderRequestStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -73,7 +73,7 @@ namespace Order {
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderManifestRequest), global::Order.OrderManifestRequest.Parser, new[]{ "ClientBindId", "ColonyId", "OrderId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderListRequest), global::Order.OrderListRequest.Parser, new[]{ "ClientBindId", "ColonyId", "Any" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderUpdateRequest), global::Order.OrderUpdateRequest.Parser, new[]{ "ClientBindId", "ColonyId", "OrderId", "Status", "ColonyTick" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderStatusReply), global::Order.OrderStatusReply.Parser, new[]{ "OrderId", "Status", "DeliveryTick" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderStatusReply), global::Order.OrderStatusReply.Parser, new[]{ "OrderId", "Status", "DeliveryTick", "PlacedTick" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderReply), global::Order.OrderReply.Parser, new[]{ "Data", "Status", "Unavailable", "Refunded", "Balance" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderListReply), global::Order.OrderListReply.Parser, new[]{ "Orders" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderManifestReply), global::Order.OrderManifestReply.Parser, new[]{ "Items" }, null, null, null, null)
@@ -2182,6 +2182,7 @@ namespace Order {
       orderId_ = other.orderId_;
       status_ = other.status_;
       deliveryTick_ = other.deliveryTick_;
+      placedTick_ = other.placedTick_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2223,6 +2224,17 @@ namespace Order {
       }
     }
 
+    /// <summary>Field number for the "PlacedTick" field.</summary>
+    public const int PlacedTickFieldNumber = 4;
+    private int placedTick_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int PlacedTick {
+      get { return placedTick_; }
+      set {
+        placedTick_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as OrderStatusReply);
@@ -2239,6 +2251,7 @@ namespace Order {
       if (OrderId != other.OrderId) return false;
       if (Status != other.Status) return false;
       if (DeliveryTick != other.DeliveryTick) return false;
+      if (PlacedTick != other.PlacedTick) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2248,6 +2261,7 @@ namespace Order {
       if (OrderId.Length != 0) hash ^= OrderId.GetHashCode();
       if (Status != global::Order.OrderStatusEnum.Placed) hash ^= Status.GetHashCode();
       if (DeliveryTick != 0) hash ^= DeliveryTick.GetHashCode();
+      if (PlacedTick != 0) hash ^= PlacedTick.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2276,6 +2290,10 @@ namespace Order {
         output.WriteRawTag(24);
         output.WriteInt32(DeliveryTick);
       }
+      if (PlacedTick != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(PlacedTick);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2297,6 +2315,10 @@ namespace Order {
         output.WriteRawTag(24);
         output.WriteInt32(DeliveryTick);
       }
+      if (PlacedTick != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(PlacedTick);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2314,6 +2336,9 @@ namespace Order {
       }
       if (DeliveryTick != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(DeliveryTick);
+      }
+      if (PlacedTick != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PlacedTick);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2334,6 +2359,9 @@ namespace Order {
       }
       if (other.DeliveryTick != 0) {
         DeliveryTick = other.DeliveryTick;
+      }
+      if (other.PlacedTick != 0) {
+        PlacedTick = other.PlacedTick;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2361,6 +2389,10 @@ namespace Order {
             DeliveryTick = input.ReadInt32();
             break;
           }
+          case 32: {
+            PlacedTick = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -2385,6 +2417,10 @@ namespace Order {
           }
           case 24: {
             DeliveryTick = input.ReadInt32();
+            break;
+          }
+          case 32: {
+            PlacedTick = input.ReadInt32();
             break;
           }
         }

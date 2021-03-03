@@ -64,6 +64,11 @@ Task("CopyDLLs")
   //CopyFile(mod_source_path +  $"/bin/{configuration}/MiniSentrySDK.dll", mod_path+"/Assemblies/2MiniSentrySDK.dll");
   CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.dll", mod_path+"/Assemblies/98ise-core.dll");
   CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.dll", mod_path+"/Assemblies/99ise-mod.dll");
+  if(configuration == "Debug")
+  {
+    CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.pdb", mod_path+"/Assemblies/98ise-core.pdb");
+    CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.pdb", mod_path+"/Assemblies/99ise-mod.pdb");
+  };
 });
 
 Task("GetGitVersion")

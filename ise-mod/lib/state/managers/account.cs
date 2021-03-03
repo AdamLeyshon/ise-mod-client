@@ -8,6 +8,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using ise.components;
 using ise_core.db;
 using Order;
 using RestSharp;
+using Steamworks;
 using Verse;
 using static ise.lib.Constants;
 using static ise_core.rest.Helpers;
@@ -30,6 +32,7 @@ namespace ise.lib.state.managers
         private readonly Dictionary<string, Order> activeOrders;
         private readonly ISEGameComponent gameComponent;
         private int nextUpdate;
+        private bool busy;
 
         #endregion
 
@@ -40,6 +43,7 @@ namespace ise.lib.state.managers
             Logging.WriteDebugMessage($"Starting Account manager for {colonyBindId}");
             accountId = colonyBindId;
             gameComponent = gc;
+            busy = false;
             activeOrders = new Dictionary<string, Order>();
             nextUpdate = 0; // UpdateAsync on next rare tick call.
 
@@ -54,9 +58,14 @@ namespace ise.lib.state.managers
         private void FlushOrders()
         {
             var db = IseCentral.DataCache;
-            var orders = db.GetCollection<DBOrder>(Tables.Orders).Find(o => o.ColonyId == accountId);
-            var orderItems = db.GetCollection<DBOrderItem>(Tables.OrderItems);
-            foreach (var dbOrder in orders) orderItems.DeleteMany(item => item.OrderId == dbOrder.Id);
+            var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
+            var orders = orderCollection.Find(o => o.ColonyId == accountId);
+            var itemCollection = db.GetCollection<DBOrderItem>(Tables.OrderItems);
+            foreach (var dbOrder in orders) itemCollection.DeleteMany(item => item.OrderId == dbOrder.Id);
+            orderCollection.DeleteMany(item => item.ColonyId == accountId);
+            itemCollection.EnsureIndex(item => item.OrderId);
+            itemCollection.EnsureIndex(item => item.ItemCode);
+            orderCollection.EnsureIndex(order => order.Id);
         }
 
         internal void AddOrder(string orderId)
@@ -64,8 +73,10 @@ namespace ise.lib.state.managers
             var db = IseCentral.DataCache;
             if (db.GetCollection<DBOrder>(Tables.Orders).FindById(orderId) == null)
                 throw new KeyNotFoundException($"Unable to load order {orderId} from Database");
-
-            activeOrders.Add(orderId, new Order(orderId));
+            if (!activeOrders.ContainsKey(orderId))
+            {
+                activeOrders.Add(orderId, new Order(orderId));
+            }
         }
 
         /// <summary>
@@ -75,66 +86,110 @@ namespace ise.lib.state.managers
         /// </summary>
         internal async void UpdateAsync()
         {
+            if (busy) return;
             var currentTick = Current.Game.tickManager.TicksGame;
-            var orderManifestsToFetch = new List<string>();
-            if (currentTick < nextUpdate) return;
-            nextUpdate = currentTick + OrderUpdateTickRate;
-
-            // Get order list
-            var orders = GetOrderList().Orders;
-            var db = IseCentral.DataCache;
-            var dbOrders = db.GetCollection<DBOrder>(Tables.Orders);
-            foreach (var statusReply in orders
-                .Where(sr => sr.Status == OrderStatusEnum.Placed || sr.Status == OrderStatusEnum.OutForDelivery
-                )
-            )
+            try
             {
-                // If no existing order, create one, we'll download the items after.
-                var dbOrder = dbOrders.FindById(statusReply.OrderId);
-                if (dbOrder == null)
+                busy = true;
+                var ordersToProcess = new List<string>();
+                var db = IseCentral.DataCache;
+                var dbOrders = db.GetCollection<DBOrder>(Tables.Orders);
+                var tasks = new List<Task>();
+
+                // Get order list if we've passed the update date.
+                if (currentTick >= nextUpdate)
                 {
-                    dbOrder = new DBOrder
+                    nextUpdate = currentTick + OrderUpdateTickRate;
+                    
+                    // Download list of orders from server
+                    Logging.WriteDebugMessage($"Synchronising orders with server");
+                    var orders = GetOrderList().Orders;
+                    Logging.WriteDebugMessage($"Got {orders.Count} orders to process from server");
+                    
+                    // Find orders in a valid state.
+                    foreach (var statusReply in orders
+                        .Where(sr => sr.Status == OrderStatusEnum.Placed || sr.Status == OrderStatusEnum.OutForDelivery
+                        )
+                    )
                     {
-                        Id = statusReply.OrderId
-                    };
-                    // Need to get items for this order.
-                    orderManifestsToFetch.Add(statusReply.OrderId);
+                        // If no existing order, create one, we'll download the items after.
+                        var dbOrder = dbOrders.FindById(statusReply.OrderId) ?? new DBOrder
+                        {
+                            Id = statusReply.OrderId,
+                            ManifestAvailable = false,
+                            PlacedTick = statusReply.PlacedTick,
+                            ColonyId = accountId,
+                        };
+                        dbOrder.Status = statusReply.Status;
+                        dbOrder.DeliveryTick = statusReply.DeliveryTick;
+                        Logging.WriteDebugMessage($"Added/Updated Order {dbOrder.Id}");
+                        dbOrders.Upsert(dbOrder);
+                    }
+
+                    // Need to get items for these orders.
+                    ordersToProcess.AddRange(dbOrders.Find(order => !order.ManifestAvailable)
+                        .Select(order => order.Id));
+                    Logging.WriteDebugMessage($"Need to get {ordersToProcess.Count} Manifests");
+
+                    tasks.AddRange(ordersToProcess.Select(order =>
+                        Task.Run(() => Order.PopulateOrderItems(order, GetOrderManifest(order)))));
+                    foreach (var task in tasks)
+                    {
+                        await task;
+                        if (task.IsFaulted)
+                        {
+                            throw new InvalidOperationException($"Failed to get or process manifest: {task.Exception}");
+                        }
+                    }
                 }
 
-                dbOrder.Status = statusReply.Status;
-                dbOrder.DeliveryTick = statusReply.DeliveryTick;
-                dbOrders.Upsert(dbOrder);
-            }
+                tasks.Clear();
+                ordersToProcess.Clear();
 
-            var tasks = new List<Task>();
-            foreach (var t in orderManifestsToFetch)
-            {
-                var task = new Task(delegate { Order.PopulateOrderItems(t, GetOrderManifest(t)); }
-                );
-                task.Start();
-                tasks.Add(task);
-                activeOrders.Add(t, new Order(t));
-            }
-
-            foreach (var task in tasks) await task;
-
-            var toRemove = new List<string>();
-            foreach (var order in activeOrders.Values.Where(order => !order.Busy))
-            {
-                if (order.CanRemove)
+                // Spawn order trackers for any orders that don't have one but have the manifest downloaded.
+                foreach (var orderId in dbOrders.Find(order => order.ManifestAvailable).Select(order => order.Id))
                 {
-                    toRemove.Add(order.OrderId);
-                    continue;
+                    if (!activeOrders.ContainsKey(orderId))
+                    {
+                        activeOrders.Add(orderId, new Order(orderId));
+                    }
                 }
 
-                var task = new Task(delegate { order.Update(); });
-                task.Start();
-            }
+                foreach (var order in activeOrders.Values.Where(order => !order.Busy))
+                {
+                    if (order.IsFinished)
+                    {
+                        // If the order is done, don't tick it, just remove it
+                        // from the active order list after iteration.
+                        ordersToProcess.Add(order.OrderId);
+                        continue;
+                    }
 
-            // Remove dead orders
-            foreach (var orderId in toRemove)
+                    tasks.Add(Task.Run(() => order.Update()));
+                }
+
+                foreach (var task in tasks)
+                {
+                    await task;
+                    if (!task.IsFaulted) continue;
+                    throw new InvalidOperationException($"An order failed to update: {task.Exception}");
+                }
+
+                // Remove dead orders collected above.
+                foreach (var orderId in ordersToProcess)
+                {
+                    activeOrders.Remove(orderId);
+                }
+            }
+            catch (Exception e)
             {
-                activeOrders.Remove(orderId);
+                Logging.WriteErrorMessage($"Failed to process orders for account {accountId}");
+                Logging.WriteErrorMessage($"{e}");
+            }
+            finally
+            {
+                Logging.WriteDebugMessage($"Finished Account Manager Update for {accountId}");
+                busy = false; // Set not busy in case we have a chance to recover.
             }
         }
 
@@ -148,14 +203,22 @@ namespace ise.lib.state.managers
                 ClientBindId = gameComponent.ClientBind,
                 Any = false
             };
-
-            return SendAndParseReply(
-                request,
-                OrderListReply.Parser,
-                $"{URLPrefix}order/list",
-                Method.POST,
-                request.ClientBindId
-            );
+            try
+            {
+                return SendAndParseReply(
+                    request,
+                    OrderListReply.Parser,
+                    $"{URLPrefix}order/list",
+                    Method.POST,
+                    request.ClientBindId
+                );
+            }
+            catch (Exception e)
+            {
+                Logging.WriteErrorMessage($"Failed to download order list for {accountId}");
+                Logging.WriteErrorMessage($"{e}");
+                throw;
+            }
         }
 
         private OrderManifestReply GetOrderManifest(string orderId)
@@ -168,16 +231,23 @@ namespace ise.lib.state.managers
                 OrderId = orderId
             };
 
-            return SendAndParseReply(
-                request,
-                OrderManifestReply.Parser,
-                $"{URLPrefix}order/manifest",
-                Method.POST,
-                request.ClientBindId
-            );
+            try
+            {
+                return SendAndParseReply(
+                    request,
+                    OrderManifestReply.Parser,
+                    $"{URLPrefix}order/manifest",
+                    Method.POST,
+                    request.ClientBindId
+                );
+            }
+            catch (Exception e)
+            {
+                Logging.WriteErrorMessage($"Failed to download manifest for {orderId}");
+                Logging.WriteErrorMessage($"{e}");
+                throw;
+            }
         }
-
-
 
         #endregion
     }
