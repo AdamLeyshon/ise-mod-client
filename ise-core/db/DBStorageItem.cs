@@ -6,12 +6,17 @@
 // ise-core, DBStorageItem.cs, Created 2021-02-26
 #endregion
 
+using System;
 using LiteDB;
+using LiteDB.Engine;
 
 namespace ise_core.db
 {
     public class DBStorageItem : BaseItem
     {
+        [BsonId(autoId:true)]
+        public Guid StoredItemID { get; set; }
+        
         /// <summary>
         /// Delivered items are linked to the colony.
         /// </summary>
@@ -22,5 +27,11 @@ namespace ise_core.db
         // So we calculate it at when written to DB and
         // Multiply by quantity.
         public int Value { get; set; }
+        
+        /// <summary>
+        ///     We hide the base implementation to ensure the ItemCode
+        ///     is not used as the Unique ID. Let LiteDB create one itself.
+        /// </summary>
+        public new string ItemCode { get; set; }
     }
 }

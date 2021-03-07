@@ -44,6 +44,7 @@
         <Compile Include="db\DBColonyBind.cs" />
         <Compile Include="db\DBUser.cs" />
         <Compile Include="db\BaseItem.cs" />
+        <Compile Include="extend\enums.cs" />
         <Compile Include="extend\lists.cs" />
         <Compile Include="packets\Bank.cs" />
         <Compile Include="packets\Bind.cs" />

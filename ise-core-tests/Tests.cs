@@ -12,7 +12,7 @@ using NUnit.Framework.Internal;
 using Order;
 using RestSharp;
 using Tradable;
-using static ise_core.extend.IEnumHelpers;
+using static ise_core.extend.ListHelpers;
 
 namespace ise_core_tests
 {

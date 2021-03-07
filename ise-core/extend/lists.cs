@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace ise_core.extend
 {
-    public static class IEnumHelpers
+    public static class ListHelpers
     {
         #region Methods
 
