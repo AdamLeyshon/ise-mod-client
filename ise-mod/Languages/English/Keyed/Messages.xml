@@ -24,4 +24,14 @@
 	<ISEServerMaintenanceMode>The server is in maintenance mode, Please try again later.</ISEServerMaintenanceMode>
 	<ISEOutOfDate>This mod version is out of date. You'll need to update before trading.</ISEOutOfDate>
 	<ISEActivateIncorrect>The token should be 8 characters long.</ISEActivateIncorrect>
+	<ISEMaterialiserCosmicEvent>Can't use, Cosmic Event in progress</ISEMaterialiserCosmicEvent>
+	<ISEMaterialiserTooCold>Can't use, Too cold ({0})</ISEMaterialiserTooCold>
+	<ISEMaterialiserStopped>Stopped</ISEMaterialiserStopped>
+	<ISEMaterialiserNoWork>No Work</ISEMaterialiserNoWork>
+	<ISEMaterialiserWorking>Materialising {0}</ISEMaterialiserWorking>
+	<ISEMaterialiserSpeed>Speed setting: {0}</ISEMaterialiserSpeed>
+	<ISEMaterialiserSpeedLow>Low</ISEMaterialiserSpeedLow>
+	<ISEMaterialiserSpeedMedium>Medium</ISEMaterialiserSpeedMedium>
+	<ISEMaterialiserSpeedFast>High</ISEMaterialiserSpeedFast>
+	<ISEMaterialiserDownloadingData>Waiting for more data</ISEMaterialiserDownloadingData>
 </LanguageData>

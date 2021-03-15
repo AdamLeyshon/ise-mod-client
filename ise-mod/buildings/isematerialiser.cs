@@ -40,7 +40,7 @@ namespace ise.buildings
         public enum WorkStatus
         {
             NoPower,
-            SolarFlare,
+            CosmicEvent,
             TooCold,
             Stopped,
             NoWork,
@@ -53,15 +53,15 @@ namespace ise.buildings
 
         private const int WattsPerItem = 50;
         private const int StandbyPower = 25;
-        private const int TicksBetweenProgress = 1000;
+        private const int TicksBetweenProgress = 100;
 
         private CompPowerTrader compPowerTrader;
-        private Guid currentItemDbId;
-        private int quantityToMaterialise = 0;
+        private string currentItemDbId;
+
         private ISEGameComponent gameComponent;
         private Map currentMap;
         private int nextProgressTick = 0;
-        
+
         #endregion
 
         #region Properties
@@ -73,7 +73,9 @@ namespace ise.buildings
 
         private WorkStatus MaterialiserStatus { get; set; }
 
-        private int Progress { get; set; }
+        private int ProgressPercent { get; set; }
+        private int ProgressValue { get; set; }
+        private int TotalValue { get; set; }
 
         private Thing CurrentItem { get; set; }
 
@@ -85,6 +87,7 @@ namespace ise.buildings
         {
             base.SpawnSetup(map, respawningAfterLoad);
             compPowerTrader = GetComp<CompPowerTrader>();
+            Speed = ProcessSpeed.Medium;
             gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             currentMap = map;
         }
@@ -96,7 +99,7 @@ namespace ise.buildings
             // Add button to cycle to next speed.
             var action = new Command_Action
             {
-                defaultLabel = "Next Speed", action = delegate { Speed = Speed.Next(); }
+                defaultLabel = $"Next Speed ({Speed.Next()}", action = delegate { Speed = Speed.Next(); }
             };
             yield return action;
 
@@ -108,55 +111,9 @@ namespace ise.buildings
             yield return action;
         }
 
-        public override void TickRare()
-        {
-            base.TickRare();
-
-            // Set initial state
-            MaterialiserStatus = WorkStatus.Working;
-
-            // Check local conditions
-            if (AmbientTemperature < 5) MaterialiserStatus = WorkStatus.TooCold;
-            if (!Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
-                MaterialiserStatus = WorkStatus.SolarFlare;
-            if (!compPowerTrader.PowerOn) MaterialiserStatus = WorkStatus.NoPower;
-
-            // Check if we have work to do,
-            if (CurrentItem == null)
-                if (!DequeueItem())
-                    MaterialiserStatus = WorkStatus.NoWork;
-
-            // If we can't work, reset progress if any.
-            if (MaterialiserStatus != WorkStatus.Working)
-            {
-                Progress = Progress >= 50 ? 50 : 0;
-                compPowerTrader.Props.basePowerConsumption = StandbyPower;
-                return;
-            }
-
-            // If we have work, determine how much power to do based on speed.
-            switch (Speed)
-            {
-                case ProcessSpeed.Stop:
-                    compPowerTrader.Props.basePowerConsumption = StandbyPower;
-                    break;
-                case ProcessSpeed.Low:
-                    compPowerTrader.Props.basePowerConsumption = WattsPerItem;
-                    break;
-                case ProcessSpeed.Medium:
-                    compPowerTrader.Props.basePowerConsumption = WattsPerItem * 2;
-                    break;
-                case ProcessSpeed.High:
-                    compPowerTrader.Props.basePowerConsumption = WattsPerItem * 4;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
         public override void Tick()
         {
-            if(Current.Game.tickManager.TicksGame < nextProgressTick) return;
+            if (Current.Game.tickManager.TicksGame < nextProgressTick) return;
             UpdateProgress();
             nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
         }
@@ -170,26 +127,39 @@ namespace ise.buildings
                 .FindOne(item => item.ColonyId == colonyId);
 
             if (nextItem == null) return false;
-
+            var thingDef = DefDatabase<ThingDef>.GetNamed(nextItem.ThingDef);
             currentItemDbId = nextItem.StoredItemID;
-            CurrentItem = ThingMaker.MakeThing(
-                DefDatabase<ThingDef>.GetNamed(nextItem.ThingDef),
+            CurrentItem = ThingMaker.MakeThing(thingDef,
                 nextItem.Stuff.NullOrEmpty() ? null : DefDatabase<ThingDef>.GetNamed(nextItem.Stuff)
             );
+
             if (nextItem.Quality > 0)
                 // Only set quality if we can.
                 if (CurrentItem.def.HasComp(typeof(CompQuality)))
                 {
-                    // Fix some strange errors with the games tale generation
-                    // by forcing these items not to have any art assigned.
-                    var art = CurrentItem.TryGetComp<CompArt>();
-                    if (art != null) ((ThingWithComps) CurrentItem).AllComps.Remove(art);
-                    CurrentItem.TryGetComp<CompQuality>().SetQuality((QualityCategory) nextItem.Quality,
-                        ArtGenerationContext.Outsider);
+                    // Test allowing art. Ordering too many things with Art could cause issues though.
+                    // var art = CurrentItem.TryGetComp<CompArt>();
+                    // if (art != null) ((ThingWithComps) CurrentItem).AllComps.Remove(art);
+                    CurrentItem.TryGetComp<CompQuality>().SetQuality(
+                        (QualityCategory) nextItem.Quality,
+                        ArtGenerationContext.Outsider
+                    );
                 }
 
-            CurrentItem.stackCount = nextItem.Quantity;
-            quantityToMaterialise = nextItem.Quantity;
+            ProgressPercent = 0;
+            ProgressValue = 0;
+
+            if (thingDef.Minifiable)
+            {
+                CurrentItem.stackCount = 1;
+                CurrentItem = CurrentItem.MakeMinified();
+                TotalValue = nextItem.Value / nextItem.Quantity;
+            }
+            else
+            {
+                CurrentItem.stackCount = nextItem.Quantity;
+                TotalValue = nextItem.Value;
+            }
 
             if (Autorun) Speed = LastSpeed;
 
@@ -198,6 +168,52 @@ namespace ise.buildings
 
         private void UpdateProgress()
         {
+            // Set initial state
+            MaterialiserStatus = WorkStatus.Working;
+
+            // Check local conditions
+            if (AmbientTemperature < 5) MaterialiserStatus = WorkStatus.TooCold;
+            if (Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
+                MaterialiserStatus = WorkStatus.CosmicEvent;
+            if (Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.EMIField))
+                MaterialiserStatus = WorkStatus.CosmicEvent;
+            if (!compPowerTrader.PowerOn) MaterialiserStatus = WorkStatus.NoPower;
+
+            // If we can't work, reset progress if any.
+            if (MaterialiserStatus != WorkStatus.Working)
+            {
+                ProgressPercent = ProgressPercent >= 50 ? 50 : 0;
+                compPowerTrader.PowerOutput = 0f - StandbyPower;
+                return;
+            }
+
+            // If we have work, determine how much power to do based on speed.
+            var consumePower = StandbyPower;
+            switch (Speed)
+            {
+                case ProcessSpeed.Stop:
+                    break;
+                case ProcessSpeed.Low:
+                    consumePower = WattsPerItem;
+                    break;
+                case ProcessSpeed.Medium:
+                    consumePower = WattsPerItem * 2;
+                    break;
+                case ProcessSpeed.High:
+                    consumePower = WattsPerItem * 4;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            compPowerTrader.PowerOutput = 0f - consumePower;
+
+            // Check if we have work to do,
+            if (CurrentItem == null && (Autorun || Speed != ProcessSpeed.Stop))
+            {
+                if (!DequeueItem()) MaterialiserStatus = WorkStatus.NoWork;
+            }
+
             if (CurrentItem == null || MaterialiserStatus != WorkStatus.Working) return;
 
             int amount;
@@ -206,23 +222,27 @@ namespace ise.buildings
                 case ProcessSpeed.Stop:
                     return;
                 case ProcessSpeed.Low:
-                    amount = 1;
+                    amount = 10;
                     break;
                 case ProcessSpeed.Medium:
-                    amount = 2;
+                    amount = 20;
                     break;
                 case ProcessSpeed.High:
-                    amount = 3;
+                    amount = 30;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            Progress += amount;
+            ProgressValue += amount;
+            ProgressPercent = (int) (Math.Floor(((double) ProgressValue / TotalValue) * 100));
+            Logging.WriteDebugMessage($"Materialiser Progress {ProgressValue}");
 
-            if (Progress < 100) return;
+            if (ProgressValue < TotalValue) return;
 
-            Progress = 0;
+            ProgressPercent = 0;
+            ProgressValue = 0;
+            TotalValue = 0;
             LastSpeed = Speed;
 
             MarkItemComplete();
@@ -242,10 +262,9 @@ namespace ise.buildings
                 Logging.WriteErrorMessage("Item we were trying to make has been removed from the database!");
                 CurrentItem = null;
                 return;
-                
             }
 
-            thisItem.Quantity -= quantityToMaterialise;
+            thisItem.Quantity -= CurrentItem.stackCount;
 
             try
             {
@@ -259,9 +278,10 @@ namespace ise.buildings
             {
                 Logging.WriteErrorMessage($"Failed to place {CurrentItem.Label} on the map!");
                 Speed = ProcessSpeed.Stop;
-                Progress = 99;
+                ProgressPercent = 0;
+                ProgressValue = 0;
             }
-            
+
             if (thisItem.Quantity <= 0)
             {
                 collection.Delete(thisItem.StoredItemID);
@@ -270,7 +290,6 @@ namespace ise.buildings
             {
                 collection.Upsert(thisItem);
             }
-
         }
 
         public override string GetInspectString()
@@ -284,8 +303,8 @@ namespace ise.buildings
                 case WorkStatus.NoPower:
                     stringBuilder.AppendLine("NoPower".Translate());
                     break;
-                case WorkStatus.SolarFlare:
-                    stringBuilder.AppendLine("CannotUseSolarFlare".Translate());
+                case WorkStatus.CosmicEvent:
+                    stringBuilder.AppendLine("ISEMaterialiserCosmicEvent".Translate());
                     break;
                 case WorkStatus.TooCold:
                     stringBuilder.AppendLine("ISEMaterialiserTooCold".Translate(AmbientTemperature));
@@ -300,7 +319,9 @@ namespace ise.buildings
                 case WorkStatus.Working:
                     if (CurrentItem != null)
                     {
-                        stringBuilder.AppendLine("ISEMaterialiserWorking".Translate(CurrentItem.LabelCap, Progress));
+                        stringBuilder.AppendLine(
+                            $"{"ISEMaterialiserWorking".Translate(CurrentItem.LabelCap)}, " +
+                            $"{ProgressPercent}%");
                         string speed;
                         switch (Speed)
                         {

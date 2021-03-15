@@ -125,8 +125,7 @@ namespace ise.dialogs
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
             var colonyId = gc.GetColonyId(Pawn.Map);
-            var db = new LiteDatabase(DBLocation);
-
+            
             var orderTask = (OrderPlaceDialogTask) task;
             switch (orderTask.Reply.Status)
             {
@@ -137,7 +136,7 @@ namespace ise.dialogs
                                     "that your mod is up to date.";
                     break;
                 case OrderRequestStatus.AcceptedAll:
-                    db.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
+                    IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
 
                     DialogMessage = "Your order was successfully placed and your payment, \r\n" +
                                     "has been processed.\r\n\r\n" +
@@ -146,7 +145,7 @@ namespace ise.dialogs
                                     "Thank you for using Interstellar Express";
                     break;
                 case OrderRequestStatus.AcceptedPartial:
-                    db.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
+                    IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
                     var message = "Your order was successfully placed and your payment, \r\n" +
                                   "has been processed.\r\n\r\n" +
                                   "However, some of the items you requested were not in stock\r\n" +
@@ -156,7 +155,7 @@ namespace ise.dialogs
                                   "Thank you for using Interstellar Express\r\n\r\n" +
                                   "The items we were unable to deliver are:\r\n";
 
-                    var cache = GetCache(db, colonyId, CacheType.MarketCache);
+                    var cache = GetCache(colonyId, CacheType.MarketCache);
                     foreach (var orderItem in orderTask.Reply.Unavailable)
                     {
                         var def = DefDatabase<ThingDef>.GetNamed(cache.FindById(orderItem.ItemCode).ThingDef);

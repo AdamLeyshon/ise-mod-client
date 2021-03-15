@@ -20,7 +20,7 @@ using static RimWorld.GenDate;
 using static ise.lib.Tradables;
 using static ise_core.rest.api.v1.Constants;
 using static ise_core.rest.Helpers;
-
+using static ise.lib.Crypto;
 
 namespace ise.lib.state.managers
 {
@@ -136,6 +136,7 @@ namespace ise.lib.state.managers
                                (storageItem => storageItem.ItemCode == orderItem.ItemCode) ??
                            new DBStorageItem
                            {
+                               StoredItemID = GetShaHash($"{colonyId}{orderItem.ItemCode}"),
                                ItemCode = orderItem.ItemCode,
                                ThingDef = orderItem.ThingDef,
                                Stuff = orderItem.Stuff,

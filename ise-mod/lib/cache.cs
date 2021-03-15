@@ -20,7 +20,6 @@ namespace ise.lib
         #region Methods
 
         internal static ILiteCollection<DBCachedTradable> GetCache(
-            ILiteDatabase db,
             string colonyId,
             CacheType cacheType)
         {
@@ -44,10 +43,10 @@ namespace ise.lib
             }
 
             // Get the collection (or create, if doesn't exist)
-            return db.GetCollection<DBCachedTradable>($"{tableName}_{colonyId}");
+            return IseCentral.DataCache.GetCollection<DBCachedTradable>($"{tableName}_{colonyId}");
         }
 
-        internal static void DropCache(ILiteDatabase db, string colonyId, CacheType cacheType)
+        internal static void DropCache(string colonyId, CacheType cacheType)
         {
             string tableName;
             switch (cacheType)
@@ -68,7 +67,7 @@ namespace ise.lib
                     throw new ArgumentOutOfRangeException(nameof(cacheType), cacheType, null);
             }
 
-            db.DropCollection($"{tableName}_{colonyId}");
+            IseCentral.DataCache.DropCollection($"{tableName}_{colonyId}");
         }
 
         #endregion

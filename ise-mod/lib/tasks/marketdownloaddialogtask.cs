@@ -147,8 +147,8 @@ namespace ise.lib.tasks
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
-                var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
-                GetCache(db, colonyId, CacheType.ColonyBasket).DeleteAll();
+                var marketCache = GetCache(colonyId, CacheType.MarketCache);
+                GetCache(colonyId, CacheType.ColonyBasket).DeleteAll();
                 db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
                 marketCache.DeleteAll();
                 marketCache.InsertBulk(
@@ -203,8 +203,8 @@ namespace ise.lib.tasks
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
-                var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
-                var colonyCache = GetCache(db, colonyId, CacheType.ColonyCache);
+                var marketCache = GetCache(colonyId, CacheType.MarketCache);
+                var colonyCache = GetCache(colonyId, CacheType.ColonyCache);
 
                 // Clear colony cache
 
@@ -335,11 +335,11 @@ namespace ise.lib.tasks
         private void RestoreBasket()
         {
             var db = IseCentral.DataCache;
-            var marketCache = GetCache(db, colonyId, CacheType.MarketCache);
-            var marketBasket = GetCache(db, colonyId, CacheType.MarketBasket);
+            var marketCache = GetCache(colonyId, CacheType.MarketCache);
+            var marketBasket = GetCache(colonyId, CacheType.MarketBasket);
 
-            var colonyCache = GetCache(db, colonyId, CacheType.ColonyCache);
-            var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket);
+            var colonyCache = GetCache(colonyId, CacheType.ColonyCache);
+            var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket);
 
             marketCache.EnsureIndex(cc => cc.ItemCode);
             colonyCache.EnsureIndex(cc => cc.ItemCode);

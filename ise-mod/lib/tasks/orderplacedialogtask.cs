@@ -126,8 +126,8 @@ namespace ise.lib.tasks
                     ColonyTick = gameTick,
                 };
 
-                var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
-                var marketBasket = GetCache(db, colonyId, CacheType.MarketBasket).FindAll();
+                var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket).FindAll();
+                var marketBasket = GetCache(colonyId, CacheType.MarketBasket).FindAll();
 
                 request.WantToSell.AddRange(CachedTradablesToOrderItems(colonyBasket));
                 request.WantToBuy.AddRange(CachedTradablesToOrderItems(marketBasket));
@@ -155,10 +155,9 @@ namespace ise.lib.tasks
             }
 
             Reply = reply.Clone();
-            var db = new LiteDatabase(DBLocation);
             try
             {
-                db.GetCollection<DBOrder>(Tables.Orders).Insert(
+                IseCentral.DataCache.GetCollection<DBOrder>(Tables.Orders).Insert(
                     new DBOrder
                     {
                         Id = reply.Data.OrderId,
@@ -172,11 +171,11 @@ namespace ise.lib.tasks
 
                 // Clear all cache and promises
                 var colonyId = gc.GetColonyId(pawn.Map);
-                db.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
-                DropCache(db, colonyId, CacheType.ColonyBasket);
-                DropCache(db, colonyId, CacheType.MarketBasket);
-                DropCache(db, colonyId, CacheType.ColonyCache);
-                DropCache(db, colonyId, CacheType.MarketCache);
+                IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
+                DropCache(colonyId, CacheType.ColonyBasket);
+                DropCache(colonyId, CacheType.MarketBasket);
+                DropCache(colonyId, CacheType.ColonyCache);
+                DropCache(colonyId, CacheType.MarketCache);
 
                 // Start tracking the Order Status
                 gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
@@ -204,7 +203,7 @@ namespace ise.lib.tasks
         {
             var colonyId = gc.GetColonyId(pawn.Map);
             var db = IseCentral.DataCache;
-            var colonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket).FindAll();
+            var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket).FindAll();
 
             // Start with the smallest pile of silver and destroy until we've removed as much as we need to
             if (Request.AdditionalFunds > 0)

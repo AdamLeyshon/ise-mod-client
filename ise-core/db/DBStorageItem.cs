@@ -14,8 +14,8 @@ namespace ise_core.db
 {
     public class DBStorageItem : BaseItem
     {
-        [BsonId(autoId:true)]
-        public Guid StoredItemID { get; set; }
+        [BsonId]
+        public string StoredItemID { get; set; }
         
         /// <summary>
         /// Delivered items are linked to the colony.
@@ -24,8 +24,7 @@ namespace ise_core.db
         
         // We store this so we don't have to work it out
         // each time the colony needs to update wealth
-        // So we calculate it at when written to DB and
-        // Multiply by quantity.
+        // So we calculate it at when written to DB
         public int Value { get; set; }
         
         /// <summary>

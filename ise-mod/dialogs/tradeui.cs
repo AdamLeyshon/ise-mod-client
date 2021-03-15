@@ -150,7 +150,6 @@ namespace ise.dialogs
         private static float _uiControlHeight = 25f;
 
         private static readonly ThingCategoryDef DefaultCategory = ThingCategoryDef.Named("ResourcesRaw");
-        private readonly LiteDatabase db;
         private readonly Pawn pawn;
         private readonly DBInventoryPromise promise;
         private bool basketItemsOnly;
@@ -175,9 +174,8 @@ namespace ise.dialogs
             forcePause = true;
             pawn = userPawn;
             //absorbInputAroundWindow = true;
-            db = new LiteDatabase(DBLocation);
             SetupData();
-            promise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(userPawn.Map));
+            promise = IseCentral.DataCache.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(userPawn.Map));
             BuildQualityTranslationCache();
         }
 
@@ -197,10 +195,10 @@ namespace ise.dialogs
             var colonyId = gc.GetColonyId(pawn.Map);
             cache = new ItemCache
             {
-                Colony = GetCache(db, colonyId, CacheType.ColonyCache),
-                ColonyBasket = GetCache(db, colonyId, CacheType.ColonyBasket),
-                Market = GetCache(db, colonyId, CacheType.MarketCache),
-                MarketBasket = GetCache(db, colonyId, CacheType.MarketBasket),
+                Colony = GetCache(colonyId, CacheType.ColonyCache),
+                ColonyBasket = GetCache(colonyId, CacheType.ColonyBasket),
+                Market = GetCache(colonyId, CacheType.MarketCache),
+                MarketBasket = GetCache(colonyId, CacheType.MarketBasket),
                 CurrentItems = null
             };
         }
@@ -974,12 +972,7 @@ namespace ise.dialogs
 
             Find.WindowStack.Add(new FloatMenu(list));
         }
-
-        public override void PreClose()
-        {
-            db?.Dispose();
-        }
-
+        
         private void PromptForRootCategory()
         {
             void Confirm()
