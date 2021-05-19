@@ -266,9 +266,12 @@ namespace ise.dialogs
 
             // Text filter
             if (!filterText.NullOrEmpty())
+            {
+                var searchString = filterText.ToLowerInvariant();
                 items = items.Where(x => x.TranslatedName
                     .ToLowerInvariant()
-                    .Contains(filterText.ToLowerInvariant()));
+                    .Contains(searchString));
+            }
 
             cache.CurrentItems = items
                 .OrderBy(x => x.TranslatedName)

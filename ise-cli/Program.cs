@@ -183,10 +183,11 @@ namespace ise_cli
 
         private static void ColonyCreate()
         {
-            var bind = "0IFEmQt8MWmmoK38qn";
+            Console.Write("Enter Client Bind ID:");
+            var clientBindId = Console.ReadLine();
             var send = new ColonyCreateRequest
             {
-                ClientBindId = bind,
+                ClientBindId = clientBindId,
                 Data = new ColonyData
                 {
                     Name = "Test",
@@ -201,7 +202,7 @@ namespace ise_cli
 
             try
             {
-                RestWrapperSendAndReply(send, ColonyData.Parser, "/api/v1/colony/", Method.POST, bind);
+                RestWrapperSendAndReply(send, ColonyData.Parser, "/api/v1/colony/", Method.POST, clientBindId);
             }
             catch (Exception)
             {

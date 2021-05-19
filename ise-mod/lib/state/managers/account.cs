@@ -100,12 +100,12 @@ namespace ise.lib.state.managers
                 if (currentTick >= nextUpdate)
                 {
                     nextUpdate = currentTick + OrderUpdateTickRate;
-                    
+
                     // Download list of orders from server
                     Logging.WriteDebugMessage($"Synchronising orders with server");
                     var orders = GetOrderList().Orders;
                     Logging.WriteDebugMessage($"Got {orders.Count} orders to process from server");
-                    
+
                     // Find orders in a valid state.
                     foreach (var statusReply in orders
                         .Where(sr => sr.Status == OrderStatusEnum.Placed || sr.Status == OrderStatusEnum.OutForDelivery
@@ -196,22 +196,9 @@ namespace ise.lib.state.managers
         private OrderListReply GetOrderList()
         {
             Logging.WriteDebugMessage($"Fetching order list for {accountId}");
-
-            var request = new OrderListRequest
-            {
-                ColonyId = accountId,
-                ClientBindId = gameComponent.ClientBind,
-                Any = false
-            };
             try
             {
-                return SendAndParseReply(
-                    request,
-                    OrderListReply.Parser,
-                    $"{URLPrefix}order/list",
-                    Method.POST,
-                    request.ClientBindId
-                );
+                return ise_core.rest.api.v1.Order.GetOrderList(gameComponent.ClientBind, accountId);
             }
             catch (Exception e)
             {
@@ -224,22 +211,9 @@ namespace ise.lib.state.managers
         private OrderManifestReply GetOrderManifest(string orderId)
         {
             Logging.WriteDebugMessage($"Fetching manifest for {orderId}");
-            var request = new OrderManifestRequest
-            {
-                ColonyId = accountId,
-                ClientBindId = gameComponent.ClientBind,
-                OrderId = orderId
-            };
-
             try
             {
-                return SendAndParseReply(
-                    request,
-                    OrderManifestReply.Parser,
-                    $"{URLPrefix}order/manifest",
-                    Method.POST,
-                    request.ClientBindId
-                );
+                return ise_core.rest.api.v1.Order.GetOrderManifest(gameComponent.ClientBind, accountId, orderId);
             }
             catch (Exception e)
             {

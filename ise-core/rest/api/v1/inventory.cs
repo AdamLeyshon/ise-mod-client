@@ -8,8 +8,8 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Inventory;
-using ise_core.rest;
 using RestSharp;
 using static ise_core.rest.api.v1.Constants;
 
@@ -21,10 +21,22 @@ namespace ise_core.rest.api.v1
 
         public static InventoryReply GetInventory(string clientBindId, string colonyId)
         {
-            var request = new InventoryRequest {ClientBindId = clientBindId, ColonyId = colonyId};
+            var task = GetInventoryAsync(clientBindId, colonyId);
+            task.Start();
+            task.Wait();
+            return task.Result;
+        }
 
-            return Helpers.SendAndParseReply(request, InventoryReply.Parser,
-                $"{URLPrefix}inventory/", Method.POST, clientBindId);
+        public static Task<InventoryReply> GetInventoryAsync(string clientBindId, string colonyId)
+        {
+            var request = new InventoryRequest {ColonyId = colonyId, ClientBindId = clientBindId};
+            return Helpers.SendAndParseReplyAsync(
+                request,
+                InventoryReply.Parser,
+                $"{URLPrefix}inventory/",
+                Method.POST,
+                clientBindId
+            );
         }
 
         #endregion

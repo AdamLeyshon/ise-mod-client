@@ -111,12 +111,9 @@ namespace ise.lib.tasks
 
         private void StartDownload()
         {
-            DBInventoryPromise inventoryPromise;
-            // Open database (or create if doesn't exist)
             var db = IseCentral.DataCache;
-            inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(colonyId);
-
-
+            var inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(colonyId);
+            
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
                 // No need to download, promise is still valid
@@ -124,15 +121,7 @@ namespace ise.lib.tasks
             }
             else
             {
-                var request = new InventoryRequest {ColonyId = colonyId, ClientBindId = gc.ClientBind};
-                Logging.WriteMessage("Asking server for Inventory");
-                task = SendAndParseReplyAsync(
-                    request,
-                    InventoryReply.Parser,
-                    $"{URLPrefix}inventory/",
-                    Method.POST,
-                    gc.ClientBind
-                );
+                task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(gc.ClientBind, colonyId);
                 task.Start();
                 state = State.Request;
             }

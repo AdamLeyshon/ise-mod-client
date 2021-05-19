@@ -15,7 +15,7 @@ namespace ise_core.rest.api.v1
         #region Fields
 
         public const string URLPrefix = "/api/v1/";
-        public const string Server = "https://ise-local.thecodecache.net:443";
+        public const string Server = "https://ise-local.thecodecache.net";
 
         #endregion
     }

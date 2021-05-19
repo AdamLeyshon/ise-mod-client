@@ -31,6 +31,12 @@ namespace ise_core.rest
             return (long) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
+        public struct TaskOrReply<T>
+        {
+            public Task<T> Task;
+            public T Reply;
+        }
+
         public static RestClient CreateRestClient()
         {
             var client = new RestClient(Server)

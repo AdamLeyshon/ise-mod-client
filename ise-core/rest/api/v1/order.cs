@@ -9,6 +9,7 @@
 #endregion
 
 using System.Collections.Generic;
+using Bank;
 using ise_core.rest;
 using Order;
 using RestSharp;
@@ -33,7 +34,25 @@ namespace ise_core.rest.api.v1
             var request = new OrderStatusRequest {ClientBindId = clientBindId, ColonyId = colonyId, OrderId = orderId};
 
             return Helpers.SendAndParseReply(request, OrderStatusReply.Parser,
-                $"{URLPrefix}order/status", Method.POST, clientBindId);
+                $"{URLPrefix}order/", Method.POST, clientBindId);
+        }
+
+        public static OrderManifestReply GetOrderManifest(string clientBindId, string colonyId, string orderId)
+        {
+            var request = new OrderManifestRequest
+            {
+                ColonyId = colonyId,
+                ClientBindId = clientBindId,
+                OrderId = orderId
+            };
+            
+            return Helpers.SendAndParseReply(
+                request,
+                OrderManifestReply.Parser,
+                $"{URLPrefix}order/manifest",
+                Method.POST,
+                request.ClientBindId
+            );
         }
 
         public static OrderStatusReply SetOrderStatus(string clientBindId, string colonyId, string orderId)
@@ -54,19 +73,32 @@ namespace ise_core.rest.api.v1
             string promise,
             int tick,
             IEnumerable<OrderItem> wantToBuy,
-            IEnumerable<OrderItem> wantToSell)
+            IEnumerable<OrderItem> wantToSell, 
+            BankCurrency currency = BankCurrency.Utc,
+            int additionalFunds = 0)
         {
             var orderRequest = new OrderRequest
             {
-                ClientBindId = clientBindId, ColonyId = colonyId,
-                InventoryPromiseId = promise, ColonyTick = tick,
+                ClientBindId = clientBindId, 
+                ColonyId = colonyId,
+                InventoryPromiseId = promise, 
+                ColonyTick = tick,
+                Currency = currency,
+                AdditionalFunds =  additionalFunds
             };
 
-            orderRequest.WantToBuy.AddRange(wantToBuy);
-            orderRequest.WantToSell.AddRange(wantToSell);
+            if (wantToBuy != null)
+            {
+                orderRequest.WantToBuy.AddRange(wantToBuy);
+            }
+
+            if (wantToSell != null)
+            {
+                orderRequest.WantToSell.AddRange(wantToSell);
+            }
 
             return Helpers.SendAndParseReply(orderRequest, OrderReply.Parser,
-                $"{URLPrefix}order/", Method.POST, clientBindId);
+                $"{URLPrefix}order/place", Method.POST, clientBindId);
         }
 
         #endregion

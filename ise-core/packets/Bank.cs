@@ -24,17 +24,17 @@ namespace Bank {
     static BankReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgpiYW5rLnByb3RvEgRiYW5rImgKCEJhbmtEYXRhEiwKB2JhbGFuY2UYASAD",
-            "KAsyGy5iYW5rLkJhbmtEYXRhLkJhbGFuY2VFbnRyeRouCgxCYWxhbmNlRW50",
-            "cnkSCwoDa2V5GAEgASgFEg0KBXZhbHVlGAIgASgFOgI4ASI4Cg5CYW5rR2V0",
-            "UmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29sb255SWQYAiAB",
-            "KAkqFwoMQ3VycmVuY3lFbnVtEgcKA1VUQxAAKhoKDEJhbmtDdXJyZW5jeRIK",
-            "CgZTaWx2ZXIQADI8CgtCYW5rU2VydmljZRItCgNHZXQSFC5iYW5rLkJhbmtH",
-            "ZXRSZXF1ZXN0Gg4uYmFuay5CYW5rRGF0YSIAYgZwcm90bzM="));
+            "CgpiYW5rLnByb3RvEgRiYW5rInIKDUJhbmtEYXRhUmVwbHkSMQoHYmFsYW5j",
+            "ZRgBIAMoCzIgLmJhbmsuQmFua0RhdGFSZXBseS5CYWxhbmNlRW50cnkaLgoM",
+            "QmFsYW5jZUVudHJ5EgsKA2tleRgBIAEoBRINCgV2YWx1ZRgCIAEoBToCOAEi",
+            "OAoOQmFua0dldFJlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJEhAKCENv",
+            "bG9ueUlkGAIgASgJKhcKDEJhbmtDdXJyZW5jeRIHCgNVVEMQADJBCgtCYW5r",
+            "U2VydmljZRIyCgNHZXQSFC5iYW5rLkJhbmtHZXRSZXF1ZXN0GhMuYmFuay5C",
+            "YW5rRGF0YVJlcGx5IgBiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Bank.CurrencyEnum), typeof(global::Bank.BankCurrency), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Bank.BankData), global::Bank.BankData.Parser, new[]{ "Balance" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Bank.BankCurrency), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Bank.BankDataReply), global::Bank.BankDataReply.Parser, new[]{ "Balance" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Bank.BankGetRequest), global::Bank.BankGetRequest.Parser, new[]{ "ClientBindId", "ColonyId" }, null, null, null, null)
           }));
     }
@@ -42,29 +42,25 @@ namespace Bank {
 
   }
   #region Enums
-  public enum CurrencyEnum {
+  public enum BankCurrency {
     /// <summary>
     /// Universal Trade Credits ᛊ
     /// </summary>
     [pbr::OriginalName("UTC")] Utc = 0,
   }
 
-  public enum BankCurrency {
-    [pbr::OriginalName("Silver")] Silver = 0,
-  }
-
   #endregion
 
   #region Messages
-  public sealed partial class BankData : pb::IMessage<BankData>
+  public sealed partial class BankDataReply : pb::IMessage<BankDataReply>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<BankData> _parser = new pb::MessageParser<BankData>(() => new BankData());
+    private static readonly pb::MessageParser<BankDataReply> _parser = new pb::MessageParser<BankDataReply>(() => new BankDataReply());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<BankData> Parser { get { return _parser; } }
+    public static pb::MessageParser<BankDataReply> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -77,21 +73,21 @@ namespace Bank {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BankData() {
+    public BankDataReply() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BankData(BankData other) : this() {
+    public BankDataReply(BankDataReply other) : this() {
       balance_ = other.balance_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BankData Clone() {
-      return new BankData(this);
+    public BankDataReply Clone() {
+      return new BankDataReply(this);
     }
 
     /// <summary>Field number for the "balance" field.</summary>
@@ -106,11 +102,11 @@ namespace Bank {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as BankData);
+      return Equals(other as BankDataReply);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(BankData other) {
+    public bool Equals(BankDataReply other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -169,7 +165,7 @@ namespace Bank {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(BankData other) {
+    public void MergeFrom(BankDataReply other) {
       if (other == null) {
         return;
       }

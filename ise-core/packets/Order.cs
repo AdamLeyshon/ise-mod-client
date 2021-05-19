@@ -811,7 +811,7 @@ namespace Order {
 
     /// <summary>Field number for the "Currency" field.</summary>
     public const int CurrencyFieldNumber = 7;
-    private global::Bank.BankCurrency currency_ = global::Bank.BankCurrency.Silver;
+    private global::Bank.BankCurrency currency_ = global::Bank.BankCurrency.Utc;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Bank.BankCurrency Currency {
       get { return currency_; }
@@ -864,7 +864,7 @@ namespace Order {
       hash ^= wantToSell_.GetHashCode();
       hash ^= wantToBuy_.GetHashCode();
       if (InventoryPromiseId.Length != 0) hash ^= InventoryPromiseId.GetHashCode();
-      if (Currency != global::Bank.BankCurrency.Silver) hash ^= Currency.GetHashCode();
+      if (Currency != global::Bank.BankCurrency.Utc) hash ^= Currency.GetHashCode();
       if (AdditionalFunds != 0) hash ^= AdditionalFunds.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -900,7 +900,7 @@ namespace Order {
         output.WriteRawTag(50);
         output.WriteString(InventoryPromiseId);
       }
-      if (Currency != global::Bank.BankCurrency.Silver) {
+      if (Currency != global::Bank.BankCurrency.Utc) {
         output.WriteRawTag(56);
         output.WriteEnum((int) Currency);
       }
@@ -935,7 +935,7 @@ namespace Order {
         output.WriteRawTag(50);
         output.WriteString(InventoryPromiseId);
       }
-      if (Currency != global::Bank.BankCurrency.Silver) {
+      if (Currency != global::Bank.BankCurrency.Utc) {
         output.WriteRawTag(56);
         output.WriteEnum((int) Currency);
       }
@@ -966,7 +966,7 @@ namespace Order {
       if (InventoryPromiseId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(InventoryPromiseId);
       }
-      if (Currency != global::Bank.BankCurrency.Silver) {
+      if (Currency != global::Bank.BankCurrency.Utc) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Currency);
       }
       if (AdditionalFunds != 0) {
@@ -997,7 +997,7 @@ namespace Order {
       if (other.InventoryPromiseId.Length != 0) {
         InventoryPromiseId = other.InventoryPromiseId;
       }
-      if (other.Currency != global::Bank.BankCurrency.Silver) {
+      if (other.Currency != global::Bank.BankCurrency.Utc) {
         Currency = other.Currency;
       }
       if (other.AdditionalFunds != 0) {

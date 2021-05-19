@@ -194,23 +194,9 @@ namespace ise.lib.state.managers
             var db = IseCentral.DataCache;
             var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
             var gameComponent = Current.Game.GetComponent<ISEGameComponent>();
-            var request = new OrderUpdateRequest()
-            {
-                ColonyId = colonyId,
-                ClientBindId = gameComponent.ClientBind,
-                ColonyTick = currentTick,
-                OrderId = OrderId,
-                Status = state
-            };
             try
             {
-                var result = SendAndParseReply(
-                    request,
-                    OrderStatusReply.Parser,
-                    $"{URLPrefix}order/update",
-                    Method.POST,
-                    request.ClientBindId
-                );
+                var result = ise_core.rest.api.v1.Order.SetOrderStatus(gameComponent.ClientBind, colonyId, OrderId);
                 if (result.Status != state)
                 {
                     throw new InvalidOperationException($"Server refused status update to {state}");

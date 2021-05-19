@@ -247,23 +247,13 @@ namespace ise.lib.tasks
         {
             Logging.WriteMessage($"UpdateAsync Colony tradables {colonyId}");
 
-            task = new Task<ColonyTradableSetReply>(delegate
-            {
-                var request = new ColonyTradableSetRequest
-                {
-                    ClientBindId = gc.ClientBind,
-                    ColonyId = colonyId,
-                };
-                request.Item.AddRange(Tradables.GetAllTradables());
-
-                return SendAndParseReply(
-                    request,
-                    ColonyTradableSetReply.Parser,
-                    $"{URLPrefix}colony/tradables",
-                    Method.POST,
-                    gc.ClientBind
-                );
-            });
+            task = new Task<bool>(() =>
+                ise_core.rest.api.v1.Colony.SetTradablesList(
+                    gc.ClientBind,
+                    colonyId,
+                    Tradables.GetAllTradables()
+                )
+            );
 
             task.Start();
             state = State.UpdateTradables;

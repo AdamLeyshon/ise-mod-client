@@ -59,7 +59,6 @@ namespace ise.lib.tasks
         #region Properties
 
         public OrderReply Reply { get; private set; }
-        public OrderRequest Request { get; private set; }
 
         #endregion
 
@@ -116,30 +115,18 @@ namespace ise.lib.tasks
                     return null;
                 }
 
-                var request = new OrderRequest
-                {
-                    ColonyId = colonyId,
-                    ClientBindId = gc.ClientBind,
-                    Currency = BankCurrency.Silver,
-                    InventoryPromiseId = promise.InventoryPromiseId,
-                    AdditionalFunds = additionalFunds,
-                    ColonyTick = gameTick,
-                };
-
                 var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket).FindAll();
                 var marketBasket = GetCache(colonyId, CacheType.MarketBasket).FindAll();
 
-                request.WantToSell.AddRange(CachedTradablesToOrderItems(colonyBasket));
-                request.WantToBuy.AddRange(CachedTradablesToOrderItems(marketBasket));
-
-                Request = request.Clone();
-
-                return SendAndParseReply(
-                    request,
-                    OrderReply.Parser,
-                    $"{URLPrefix}order/place",
-                    Method.POST,
-                    gc.ClientBind
+                return ise_core.rest.api.v1.Order.PlaceOrder(
+                    gc.ClientBind,
+                    colonyId,
+                    promise.InventoryPromiseId,
+                    gameTick,
+                    CachedTradablesToOrderItems(marketBasket),
+                    CachedTradablesToOrderItems(colonyBasket),
+                    currency: BankCurrency.Utc,
+                    additionalFunds: additionalFunds
                 );
             });
             task.Start();
@@ -202,15 +189,14 @@ namespace ise.lib.tasks
         private void RemoveTradedGoods(OrderReply reply)
         {
             var colonyId = gc.GetColonyId(pawn.Map);
-            var db = IseCentral.DataCache;
             var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket).FindAll();
 
             // Start with the smallest pile of silver and destroy until we've removed as much as we need to
-            if (Request.AdditionalFunds > 0)
+            if (additionalFunds > 0)
                 RemoveGoods(
                     ThingDefSilver,
                     100,
-                    Request.AdditionalFunds,
+                    additionalFunds,
                     pawn.Map
                 );
 
@@ -286,7 +272,6 @@ namespace ise.lib.tasks
             {
                 if (CalculateThingHitPoints(stack) != hitPoints)
                     continue;
-
 
                 Logging.WriteDebugMessage($"Trying to remove: {stack} x {quantity}");
 
