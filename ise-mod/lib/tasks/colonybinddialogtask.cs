@@ -86,7 +86,7 @@ namespace ise.lib.tasks
                 case State.UpdateTradables:
                     Dialog.DialogMessage = "Updating Colony Tradables";
                     if (task != null && task.IsCompleted)
-                        ProcessColonyTradablesReply(((Task<ColonyTradableSetReply>) task).Result);
+                        ProcessColonyTradablesReply(((Task<bool>) task).Result);
 
                     break;
                 case State.Done:
@@ -247,19 +247,17 @@ namespace ise.lib.tasks
         {
             Logging.WriteMessage($"UpdateAsync Colony tradables {colonyId}");
 
-            task = new Task<bool>(() =>
-                ise_core.rest.api.v1.Colony.SetTradablesList(
-                    gc.ClientBind,
-                    colonyId,
-                    Tradables.GetAllTradables()
-                )
-            );
+            task = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
+                gc.ClientBind,
+                colonyId,
+                Tradables.GetAllTradables()
+            ));
 
             task.Start();
             state = State.UpdateTradables;
         }
 
-        private void ProcessColonyTradablesReply(ColonyTradableSetReply reply)
+        private void ProcessColonyTradablesReply(bool reply)
         {
             Logging.WriteMessage("Server accepted colony tradables");
             state = State.Done;

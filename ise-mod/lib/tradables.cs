@@ -66,7 +66,9 @@ namespace ise.lib
         {
             var thingDef = DefDatabase<ThingDef>.GetNamed(thing);
             var stuffDef = stuff.NullOrEmpty() ? null : DefDatabase<ThingDef>.GetNamed(stuff);
-            return StatDefOf.MarketValue.Worker.GetValue(quality > 2 ? StatRequest.For(thingDef, stuffDef, (QualityCategory) quality) : StatRequest.For(thingDef, stuffDef));
+            return StatDefOf.MarketValue.Worker.GetValue(quality > 2
+                ? StatRequest.For(thingDef, stuffDef, (QualityCategory) quality)
+                : StatRequest.For(thingDef, stuffDef));
         }
 
         private static IEnumerable<ColonyTradable> ComputeItemsMadeFromStuff(
@@ -146,7 +148,9 @@ namespace ise.lib
                     {
                         ThingDef = thing.defName,
                         Minified = thing.Minifiable,
-                        BaseValue = StatDefOf.MarketValue.Worker.GetValue(StatRequest.For(thing, null)),
+                        BaseValue = (float) Math.Round(
+                            StatDefOf.MarketValue.Worker.GetValue(StatRequest.For(thing, null)), 2,
+                            MidpointRounding.AwayFromZero),
                         Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null))
                     }
                 );

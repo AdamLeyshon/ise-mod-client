@@ -48,27 +48,15 @@ namespace ise_core.rest.api.v1
 
         public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables)
         {
-            var task = SetTradablesListAsync(clientBindId, colonyId, tradables);
-            task.Start();
-            task.Wait();
-            return !task.IsFaulted;
-        }
-
-        public static Task<ColonyTradableSetReply> SetTradablesListAsync(
-            string clientBindId,
-            string colonyId,
-            IEnumerable<ColonyTradable> tradables)
-        {
             var request = new ColonyTradableSetRequest()
                 {ClientBindId = clientBindId, ColonyId = colonyId};
 
             request.Item.AddRange(tradables);
-            return Helpers.SendAndParseReplyAsync(
+            return Helpers.SendNoReply(
                 request,
-                ColonyTradableSetReply.Parser,
                 $"/api/v1/colony/tradables",
                 Method.POST,
-                clientBindId);
+                clientBindId).IsSuccessful;
         }
 
         #endregion

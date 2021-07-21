@@ -24,6 +24,8 @@ namespace ise.lib
             CacheType cacheType)
         {
             string tableName;
+            // Replace hyphens in UUID with underscore
+            colonyId = colonyId.Replace("-", "_");
             switch (cacheType)
             {
                 case CacheType.MarketCache:
@@ -49,6 +51,7 @@ namespace ise.lib
         internal static void DropCache(string colonyId, CacheType cacheType)
         {
             string tableName;
+            colonyId = colonyId.Replace("-", "_");
             switch (cacheType)
             {
                 case CacheType.MarketCache:
