@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, colonybinddialogtask.cs, Created 2021-02-11
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, colonybinddialogtask.cs 2021-02-11
+// #endregion
 
 #endregion
 
@@ -26,17 +28,6 @@ namespace ise.lib.tasks
 {
     internal class ColonyBindDialogTask : AbstractDialogTask
     {
-        #region Fields
-
-        private readonly ISEGameComponent gc;
-        private readonly Pawn pawn;
-        private string colonyId;
-
-        private State state;
-        private Task task;
-
-        #endregion
-
         #region ctor
 
         public ColonyBindDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
@@ -46,6 +37,33 @@ namespace ise.lib.tasks
             pawn = userPawn;
             colonyId = gc.GetColonyId(pawn.Map);
         }
+
+        #endregion
+
+        #region Nested type: State
+
+        private enum State
+        {
+            Start,
+            Create,
+            GetDetails,
+            UpdateData,
+            UpdateMods,
+            UpdateTradables,
+            Done,
+            Error
+        }
+
+        #endregion
+
+        #region Fields
+
+        private readonly ISEGameComponent gc;
+        private readonly Pawn pawn;
+        private string colonyId;
+
+        private State state;
+        private Task task;
 
         #endregion
 
@@ -64,29 +82,29 @@ namespace ise.lib.tasks
                     break;
                 case State.Create:
                     Dialog.DialogMessage = "Registering Colony";
-                    if (task != null && task.IsCompleted) ProcessColonyCreateReply(((Task<ColonyData>) task).Result);
+                    if (task != null && task.IsCompleted) ProcessColonyCreateReply(((Task<ColonyData>)task).Result);
 
                     break;
                 case State.GetDetails:
                     Dialog.DialogMessage = "Checking Details";
-                    if (task != null && task.IsCompleted) ProcessGetColonyDataReply(((Task<ColonyData>) task).Result);
+                    if (task != null && task.IsCompleted) ProcessGetColonyDataReply(((Task<ColonyData>)task).Result);
 
                     break;
                 case State.UpdateData:
                     Dialog.DialogMessage = "Updating Colony Details";
-                    if (task != null && task.IsCompleted) ProcessUpdateColonyReply(((Task<ColonyData>) task).Result);
+                    if (task != null && task.IsCompleted) ProcessUpdateColonyReply(((Task<ColonyData>)task).Result);
 
                     break;
                 case State.UpdateMods:
                     Dialog.DialogMessage = "Updating Colony Mods";
                     if (task != null && task.IsCompleted)
-                        ProcessColonyModsUpdateReply(((Task<ColonyModsSetReply>) task).Result);
+                        ProcessColonyModsUpdateReply(((Task<ColonyModsSetReply>)task).Result);
 
                     break;
                 case State.UpdateTradables:
                     Dialog.DialogMessage = "Updating Colony Tradables";
                     if (task != null && task.IsCompleted)
-                        ProcessColonyTradablesReply(((Task<bool>) task).Result);
+                        ProcessColonyTradablesReply(((Task<bool>)task).Result);
 
                     break;
                 case State.Done:
@@ -132,7 +150,7 @@ namespace ise.lib.tasks
                     Location = map.info.Tile.ToString()
                 };
 
-                var request = new ColonyCreateRequest {ClientBindId = gc.ClientBind, Data = colonyData};
+                var request = new ColonyCreateRequest { ClientBindId = gc.ClientBind, Data = colonyData };
 
                 task = SendAndParseReplyAsync(
                     request,
@@ -164,7 +182,7 @@ namespace ise.lib.tasks
             var request = new ColonyGetRequest
             {
                 ClientBindId = gc.ClientBind,
-                ColonyId = colonyId,
+                ColonyId = colonyId
             };
             task = SendAndParseReplyAsync(
                 request,
@@ -186,7 +204,7 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdate()
         {
-            Logging.WriteMessage($"Updating Colony Details for {gc.GetColonyId(pawn.Map)}");
+            Logging.WriteDebugMessage($"Updating Colony Details for {gc.GetColonyId(pawn.Map)}");
             var request = new ColonyUpdateRequest
             {
                 ClientBindId = gc.ClientBind,
@@ -195,7 +213,7 @@ namespace ise.lib.tasks
                     ColonyId = colonyId,
                     Tick = Current.Game.tickManager.TicksGame,
                     UsedDevMode = gc.SpawnToolUsed,
-                    GameVersion = VersionControl.CurrentVersionStringWithRev,
+                    GameVersion = VersionControl.CurrentVersionStringWithRev
                 }
             };
 
@@ -212,17 +230,17 @@ namespace ise.lib.tasks
 
         private void ProcessUpdateColonyReply(ColonyData reply)
         {
-            Logging.WriteMessage("Server accepted colony update");
+            Logging.WriteDebugMessage("Server accepted colony update");
             StartColonyUpdateMods();
         }
 
         private void StartColonyUpdateMods()
         {
-            Logging.WriteMessage($"UpdateAsync Colony mods {colonyId}");
+            Logging.WriteDebugMessage($"UpdateAsync Colony mods {colonyId}");
             var request = new ColonyModsSetRequest
             {
                 ClientBindId = gc.ClientBind,
-                ColonyId = colonyId,
+                ColonyId = colonyId
             };
             request.ModName.AddRange(Mods.GetModList());
 
@@ -239,13 +257,13 @@ namespace ise.lib.tasks
 
         private void ProcessColonyModsUpdateReply(ColonyModsSetReply reply)
         {
-            Logging.WriteMessage("Server accepted colony mods");
+            Logging.WriteDebugMessage("Server accepted colony mods");
             StartColonyUpdateTradables();
         }
 
         private void StartColonyUpdateTradables()
         {
-            Logging.WriteMessage($"UpdateAsync Colony tradables {colonyId}");
+            Logging.WriteDebugMessage($"UpdateAsync Colony tradables {colonyId}");
 
             task = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
                 gc.ClientBind,
@@ -259,24 +277,8 @@ namespace ise.lib.tasks
 
         private void ProcessColonyTradablesReply(bool reply)
         {
-            Logging.WriteMessage("Server accepted colony tradables");
+            Logging.WriteDebugMessage("Server accepted colony tradables");
             state = State.Done;
-        }
-
-        #endregion
-
-        #region Nested type: State
-
-        private enum State
-        {
-            Start,
-            Create,
-            GetDetails,
-            UpdateData,
-            UpdateMods,
-            UpdateTradables,
-            Done,
-            Error,
         }
 
         #endregion

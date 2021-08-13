@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, iseuplink.cs, Created 2021-02-10
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, iseuplink.cs 2021-02-10
+// #endregion
 
 #endregion
 
@@ -17,9 +19,9 @@ namespace ise.buildings
     {
         #region Methods
 
-        internal static bool HasUplink(Map map)
+        internal static bool HasBuilding(Map map)
         {
-            // If we've got multiple uplinks, only one needs to be powered to have comms
+            // If we've got multiple buildings, only one needs to be powered to be true
             var buildingList = map.listerThings.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("ISEUplink"));
             foreach (var uplinkThing in buildingList)
             {

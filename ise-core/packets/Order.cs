@@ -24,47 +24,47 @@ namespace Order {
     static OrderReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtvcmRlci5wcm90bxIFb3JkZXIaCmJhbmsucHJvdG8iPwoJT3JkZXJJdGVt",
-            "EhAKCEl0ZW1Db2RlGAEgASgJEhAKCFF1YW50aXR5GAIgASgFEg4KBkhlYWx0",
-            "aBgDIAEoAiJ2CgxEZWxpdmVyeUl0ZW0SEAoISXRlbUNvZGUYASABKAkSEAoI",
-            "VGhpbmdEZWYYAiABKAkSEAoIUXVhbnRpdHkYAyABKAUSDwoHUXVhbGl0eRgE",
-            "IAEoBRINCgVTdHVmZhgFIAEoCRIQCghNaW5pZmllZBgGIAEoCCLwAQoMT3Jk",
-            "ZXJSZXF1ZXN0EhQKDENsaWVudEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgC",
-            "IAEoCRISCgpDb2xvbnlUaWNrGAMgASgFEiQKCldhbnRUb1NlbGwYBCADKAsy",
-            "EC5vcmRlci5PcmRlckl0ZW0SIwoJV2FudFRvQnV5GAUgAygLMhAub3JkZXIu",
-            "T3JkZXJJdGVtEhoKEkludmVudG9yeVByb21pc2VJZBgGIAEoCRIkCghDdXJy",
-            "ZW5jeRgHIAEoDjISLmJhbmsuQmFua0N1cnJlbmN5EhcKD0FkZGl0aW9uYWxG",
-            "dW5kcxgIIAEoBSJNChJPcmRlclN0YXR1c1JlcXVlc3QSFAoMQ2xpZW50Qmlu",
-            "ZElkGAEgASgJEhAKCENvbG9ueUlkGAIgASgJEg8KB09yZGVySWQYAyABKAki",
-            "TwoUT3JkZXJNYW5pZmVzdFJlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJ",
-            "EhAKCENvbG9ueUlkGAIgASgJEg8KB09yZGVySWQYAyABKAkiRwoQT3JkZXJM",
-            "aXN0UmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29sb255SWQY",
-            "AiABKAkSCwoDQW55GAMgASgIIokBChJPcmRlclVwZGF0ZVJlcXVlc3QSFAoM",
-            "Q2xpZW50QmluZElkGAEgASgJEhAKCENvbG9ueUlkGAIgASgJEg8KB09yZGVy",
-            "SWQYAyABKAkSJgoGc3RhdHVzGAQgASgOMhYub3JkZXIuT3JkZXJTdGF0dXNF",
-            "bnVtEhIKCkNvbG9ueVRpY2sYBSABKAUidQoQT3JkZXJTdGF0dXNSZXBseRIP",
-            "CgdPcmRlcklkGAEgASgJEiYKBlN0YXR1cxgCIAEoDjIWLm9yZGVyLk9yZGVy",
-            "U3RhdHVzRW51bRIUCgxEZWxpdmVyeVRpY2sYAyABKAUSEgoKUGxhY2VkVGlj",
-            "axgEIAEoBSKoAQoKT3JkZXJSZXBseRIlCgRkYXRhGAEgASgLMhcub3JkZXIu",
-            "T3JkZXJTdGF0dXNSZXBseRIpCgZzdGF0dXMYAiABKA4yGS5vcmRlci5PcmRl",
-            "clJlcXVlc3RTdGF0dXMSJQoLdW5hdmFpbGFibGUYAyADKAsyEC5vcmRlci5P",
-            "cmRlckl0ZW0SEAoIcmVmdW5kZWQYBCABKAUSDwoHYmFsYW5jZRgFIAEoBSI5",
-            "Cg5PcmRlckxpc3RSZXBseRInCgZvcmRlcnMYASADKAsyFy5vcmRlci5PcmRl",
-            "clN0YXR1c1JlcGx5IjgKEk9yZGVyTWFuaWZlc3RSZXBseRIiCgVpdGVtcxgB",
-            "IAMoCzITLm9yZGVyLkRlbGl2ZXJ5SXRlbSpaCg9PcmRlclN0YXR1c0VudW0S",
-            "CgoGUGxhY2VkEAASEgoOT3V0Rm9yRGVsaXZlcnkQARINCglEZWxpdmVyZWQQ",
-            "AhIKCgZGYWlsZWQQAxIMCghSZXZlcnNlZBAEKkgKEk9yZGVyUmVxdWVzdFN0",
-            "YXR1cxIMCghSZWplY3RlZBAAEg8KC0FjY2VwdGVkQWxsEAESEwoPQWNjZXB0",
-            "ZWRQYXJ0aWFsEAIyzAIKDE9yZGVyU2VydmljZRI2CgpQbGFjZU9yZGVyEhMu",
-            "b3JkZXIuT3JkZXJSZXF1ZXN0GhEub3JkZXIuT3JkZXJSZXBseSIAEjgKBExp",
-            "c3QSFy5vcmRlci5PcmRlckxpc3RSZXF1ZXN0GhUub3JkZXIuT3JkZXJMaXN0",
-            "UmVwbHkiABJDCgtPcmRlclN0YXR1cxIZLm9yZGVyLk9yZGVyU3RhdHVzUmVx",
-            "dWVzdBoXLm9yZGVyLk9yZGVyU3RhdHVzUmVwbHkiABI+CgZVcGRhdGUSGS5v",
-            "cmRlci5PcmRlclVwZGF0ZVJlcXVlc3QaFy5vcmRlci5PcmRlclN0YXR1c1Jl",
-            "cGx5IgASRQoLR2V0TWFuaWZlc3QSGS5vcmRlci5PcmRlclN0YXR1c1JlcXVl",
-            "c3QaGS5vcmRlci5PcmRlck1hbmlmZXN0UmVwbHkiAGIGcHJvdG8z"));
+            "CgtvcmRlci5wcm90bxIFb3JkZXIaDGNvbW1vbi5wcm90byI/CglPcmRlckl0",
+            "ZW0SEAoISXRlbUNvZGUYASABKAkSEAoIUXVhbnRpdHkYAiABKAUSDgoGSGVh",
+            "bHRoGAMgASgCInYKDERlbGl2ZXJ5SXRlbRIQCghJdGVtQ29kZRgBIAEoCRIQ",
+            "CghUaGluZ0RlZhgCIAEoCRIQCghRdWFudGl0eRgDIAEoBRIPCgdRdWFsaXR5",
+            "GAQgASgFEg0KBVN0dWZmGAUgASgJEhAKCE1pbmlmaWVkGAYgASgIIvIBCgxP",
+            "cmRlclJlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJEhAKCENvbG9ueUlk",
+            "GAIgASgJEhIKCkNvbG9ueVRpY2sYAyABKAUSJAoKV2FudFRvU2VsbBgEIAMo",
+            "CzIQLm9yZGVyLk9yZGVySXRlbRIjCglXYW50VG9CdXkYBSADKAsyEC5vcmRl",
+            "ci5PcmRlckl0ZW0SGgoSSW52ZW50b3J5UHJvbWlzZUlkGAYgASgJEiYKCEN1",
+            "cnJlbmN5GAcgASgOMhQuY29tbW9uLkN1cnJlbmN5RW51bRIXCg9BZGRpdGlv",
+            "bmFsRnVuZHMYCCABKAUiTQoST3JkZXJTdGF0dXNSZXF1ZXN0EhQKDENsaWVu",
+            "dEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCRIPCgdPcmRlcklkGAMg",
+            "ASgJIk8KFE9yZGVyTWFuaWZlc3RSZXF1ZXN0EhQKDENsaWVudEJpbmRJZBgB",
+            "IAEoCRIQCghDb2xvbnlJZBgCIAEoCRIPCgdPcmRlcklkGAMgASgJIkcKEE9y",
+            "ZGVyTGlzdFJlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJEhAKCENvbG9u",
+            "eUlkGAIgASgJEgsKA0FueRgDIAEoCCKJAQoST3JkZXJVcGRhdGVSZXF1ZXN0",
+            "EhQKDENsaWVudEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCRIPCgdP",
+            "cmRlcklkGAMgASgJEiYKBnN0YXR1cxgEIAEoDjIWLm9yZGVyLk9yZGVyU3Rh",
+            "dHVzRW51bRISCgpDb2xvbnlUaWNrGAUgASgFInUKEE9yZGVyU3RhdHVzUmVw",
+            "bHkSDwoHT3JkZXJJZBgBIAEoCRImCgZTdGF0dXMYAiABKA4yFi5vcmRlci5P",
+            "cmRlclN0YXR1c0VudW0SFAoMRGVsaXZlcnlUaWNrGAMgASgFEhIKClBsYWNl",
+            "ZFRpY2sYBCABKAUiqAEKCk9yZGVyUmVwbHkSJQoEZGF0YRgBIAEoCzIXLm9y",
+            "ZGVyLk9yZGVyU3RhdHVzUmVwbHkSKQoGc3RhdHVzGAIgASgOMhkub3JkZXIu",
+            "T3JkZXJSZXF1ZXN0U3RhdHVzEiUKC3VuYXZhaWxhYmxlGAMgAygLMhAub3Jk",
+            "ZXIuT3JkZXJJdGVtEhAKCHJlZnVuZGVkGAQgASgFEg8KB2JhbGFuY2UYBSAB",
+            "KAUiOQoOT3JkZXJMaXN0UmVwbHkSJwoGb3JkZXJzGAEgAygLMhcub3JkZXIu",
+            "T3JkZXJTdGF0dXNSZXBseSI4ChJPcmRlck1hbmlmZXN0UmVwbHkSIgoFaXRl",
+            "bXMYASADKAsyEy5vcmRlci5EZWxpdmVyeUl0ZW0qWgoPT3JkZXJTdGF0dXNF",
+            "bnVtEgoKBlBsYWNlZBAAEhIKDk91dEZvckRlbGl2ZXJ5EAESDQoJRGVsaXZl",
+            "cmVkEAISCgoGRmFpbGVkEAMSDAoIUmV2ZXJzZWQQBCpIChJPcmRlclJlcXVl",
+            "c3RTdGF0dXMSDAoIUmVqZWN0ZWQQABIPCgtBY2NlcHRlZEFsbBABEhMKD0Fj",
+            "Y2VwdGVkUGFydGlhbBACMswCCgxPcmRlclNlcnZpY2USNgoKUGxhY2VPcmRl",
+            "chITLm9yZGVyLk9yZGVyUmVxdWVzdBoRLm9yZGVyLk9yZGVyUmVwbHkiABI4",
+            "CgRMaXN0Ehcub3JkZXIuT3JkZXJMaXN0UmVxdWVzdBoVLm9yZGVyLk9yZGVy",
+            "TGlzdFJlcGx5IgASQwoLT3JkZXJTdGF0dXMSGS5vcmRlci5PcmRlclN0YXR1",
+            "c1JlcXVlc3QaFy5vcmRlci5PcmRlclN0YXR1c1JlcGx5IgASPgoGVXBkYXRl",
+            "Ehkub3JkZXIuT3JkZXJVcGRhdGVSZXF1ZXN0Ghcub3JkZXIuT3JkZXJTdGF0",
+            "dXNSZXBseSIAEkUKC0dldE1hbmlmZXN0Ehkub3JkZXIuT3JkZXJTdGF0dXNS",
+            "ZXF1ZXN0Ghkub3JkZXIuT3JkZXJNYW5pZmVzdFJlcGx5IgBiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Bank.BankReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Common.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Order.OrderStatusEnum), typeof(global::Order.OrderRequestStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.OrderItem), global::Order.OrderItem.Parser, new[]{ "ItemCode", "Quantity", "Health" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Order.DeliveryItem), global::Order.DeliveryItem.Parser, new[]{ "ItemCode", "ThingDef", "Quantity", "Quality", "Stuff", "Minified" }, null, null, null, null),
@@ -108,19 +108,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderItem> _parser = new pb::MessageParser<OrderItem>(() => new OrderItem());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderItem> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderItem() {
       OnConstruction();
     }
@@ -128,6 +132,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderItem(OrderItem other) : this() {
       itemCode_ = other.itemCode_;
       quantity_ = other.quantity_;
@@ -136,6 +141,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderItem Clone() {
       return new OrderItem(this);
     }
@@ -144,6 +150,7 @@ namespace Order {
     public const int ItemCodeFieldNumber = 1;
     private string itemCode_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ItemCode {
       get { return itemCode_; }
       set {
@@ -155,6 +162,7 @@ namespace Order {
     public const int QuantityFieldNumber = 2;
     private int quantity_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Quantity {
       get { return quantity_; }
       set {
@@ -170,6 +178,7 @@ namespace Order {
     /// Remaining percentage hitpoints of this item
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float Health {
       get { return health_; }
       set {
@@ -178,11 +187,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderItem);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderItem other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -197,6 +208,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ItemCode.Length != 0) hash ^= ItemCode.GetHashCode();
@@ -209,11 +221,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -238,6 +252,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ItemCode.Length != 0) {
         output.WriteRawTag(10);
@@ -258,6 +273,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ItemCode.Length != 0) {
@@ -276,6 +292,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderItem other) {
       if (other == null) {
         return;
@@ -293,6 +310,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -322,6 +340,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -356,19 +375,23 @@ namespace Order {
     private static readonly pb::MessageParser<DeliveryItem> _parser = new pb::MessageParser<DeliveryItem>(() => new DeliveryItem());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<DeliveryItem> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public DeliveryItem() {
       OnConstruction();
     }
@@ -376,6 +399,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public DeliveryItem(DeliveryItem other) : this() {
       itemCode_ = other.itemCode_;
       thingDef_ = other.thingDef_;
@@ -387,6 +411,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public DeliveryItem Clone() {
       return new DeliveryItem(this);
     }
@@ -395,6 +420,7 @@ namespace Order {
     public const int ItemCodeFieldNumber = 1;
     private string itemCode_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ItemCode {
       get { return itemCode_; }
       set {
@@ -406,6 +432,7 @@ namespace Order {
     public const int ThingDefFieldNumber = 2;
     private string thingDef_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ThingDef {
       get { return thingDef_; }
       set {
@@ -417,6 +444,7 @@ namespace Order {
     public const int QuantityFieldNumber = 3;
     private int quantity_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Quantity {
       get { return quantity_; }
       set {
@@ -428,6 +456,7 @@ namespace Order {
     public const int QualityFieldNumber = 4;
     private int quality_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Quality {
       get { return quality_; }
       set {
@@ -439,6 +468,7 @@ namespace Order {
     public const int StuffFieldNumber = 5;
     private string stuff_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Stuff {
       get { return stuff_; }
       set {
@@ -450,6 +480,7 @@ namespace Order {
     public const int MinifiedFieldNumber = 6;
     private bool minified_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Minified {
       get { return minified_; }
       set {
@@ -458,11 +489,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as DeliveryItem);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(DeliveryItem other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -480,6 +513,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ItemCode.Length != 0) hash ^= ItemCode.GetHashCode();
@@ -495,11 +529,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -536,6 +572,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ItemCode.Length != 0) {
         output.WriteRawTag(10);
@@ -568,6 +605,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ItemCode.Length != 0) {
@@ -595,6 +633,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(DeliveryItem other) {
       if (other == null) {
         return;
@@ -621,6 +660,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -662,6 +702,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -708,19 +749,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderRequest> _parser = new pb::MessageParser<OrderRequest>(() => new OrderRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderRequest() {
       OnConstruction();
     }
@@ -728,6 +773,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderRequest(OrderRequest other) : this() {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
@@ -741,6 +787,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderRequest Clone() {
       return new OrderRequest(this);
     }
@@ -749,6 +796,7 @@ namespace Order {
     public const int ClientBindIdFieldNumber = 1;
     private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ClientBindId {
       get { return clientBindId_; }
       set {
@@ -760,6 +808,7 @@ namespace Order {
     public const int ColonyIdFieldNumber = 2;
     private string colonyId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ColonyId {
       get { return colonyId_; }
       set {
@@ -771,6 +820,7 @@ namespace Order {
     public const int ColonyTickFieldNumber = 3;
     private int colonyTick_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int ColonyTick {
       get { return colonyTick_; }
       set {
@@ -784,6 +834,7 @@ namespace Order {
         = pb::FieldCodec.ForMessage(34, global::Order.OrderItem.Parser);
     private readonly pbc::RepeatedField<global::Order.OrderItem> wantToSell_ = new pbc::RepeatedField<global::Order.OrderItem>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Order.OrderItem> WantToSell {
       get { return wantToSell_; }
     }
@@ -794,6 +845,7 @@ namespace Order {
         = pb::FieldCodec.ForMessage(42, global::Order.OrderItem.Parser);
     private readonly pbc::RepeatedField<global::Order.OrderItem> wantToBuy_ = new pbc::RepeatedField<global::Order.OrderItem>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Order.OrderItem> WantToBuy {
       get { return wantToBuy_; }
     }
@@ -802,6 +854,7 @@ namespace Order {
     public const int InventoryPromiseIdFieldNumber = 6;
     private string inventoryPromiseId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string InventoryPromiseId {
       get { return inventoryPromiseId_; }
       set {
@@ -811,9 +864,10 @@ namespace Order {
 
     /// <summary>Field number for the "Currency" field.</summary>
     public const int CurrencyFieldNumber = 7;
-    private global::Bank.BankCurrency currency_ = global::Bank.BankCurrency.Utc;
+    private global::Common.CurrencyEnum currency_ = global::Common.CurrencyEnum.Utc;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Bank.BankCurrency Currency {
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Common.CurrencyEnum Currency {
       get { return currency_; }
       set {
         currency_ = value;
@@ -824,6 +878,7 @@ namespace Order {
     public const int AdditionalFundsFieldNumber = 8;
     private int additionalFunds_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int AdditionalFunds {
       get { return additionalFunds_; }
       set {
@@ -832,11 +887,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -856,6 +913,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
@@ -864,7 +922,7 @@ namespace Order {
       hash ^= wantToSell_.GetHashCode();
       hash ^= wantToBuy_.GetHashCode();
       if (InventoryPromiseId.Length != 0) hash ^= InventoryPromiseId.GetHashCode();
-      if (Currency != global::Bank.BankCurrency.Utc) hash ^= Currency.GetHashCode();
+      if (Currency != global::Common.CurrencyEnum.Utc) hash ^= Currency.GetHashCode();
       if (AdditionalFunds != 0) hash ^= AdditionalFunds.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -873,11 +931,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -900,7 +960,7 @@ namespace Order {
         output.WriteRawTag(50);
         output.WriteString(InventoryPromiseId);
       }
-      if (Currency != global::Bank.BankCurrency.Utc) {
+      if (Currency != global::Common.CurrencyEnum.Utc) {
         output.WriteRawTag(56);
         output.WriteEnum((int) Currency);
       }
@@ -916,6 +976,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
@@ -935,7 +996,7 @@ namespace Order {
         output.WriteRawTag(50);
         output.WriteString(InventoryPromiseId);
       }
-      if (Currency != global::Bank.BankCurrency.Utc) {
+      if (Currency != global::Common.CurrencyEnum.Utc) {
         output.WriteRawTag(56);
         output.WriteEnum((int) Currency);
       }
@@ -950,6 +1011,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ClientBindId.Length != 0) {
@@ -966,7 +1028,7 @@ namespace Order {
       if (InventoryPromiseId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(InventoryPromiseId);
       }
-      if (Currency != global::Bank.BankCurrency.Utc) {
+      if (Currency != global::Common.CurrencyEnum.Utc) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Currency);
       }
       if (AdditionalFunds != 0) {
@@ -979,6 +1041,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderRequest other) {
       if (other == null) {
         return;
@@ -997,7 +1060,7 @@ namespace Order {
       if (other.InventoryPromiseId.Length != 0) {
         InventoryPromiseId = other.InventoryPromiseId;
       }
-      if (other.Currency != global::Bank.BankCurrency.Utc) {
+      if (other.Currency != global::Common.CurrencyEnum.Utc) {
         Currency = other.Currency;
       }
       if (other.AdditionalFunds != 0) {
@@ -1007,6 +1070,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -1042,7 +1106,7 @@ namespace Order {
             break;
           }
           case 56: {
-            Currency = (global::Bank.BankCurrency) input.ReadEnum();
+            Currency = (global::Common.CurrencyEnum) input.ReadEnum();
             break;
           }
           case 64: {
@@ -1056,6 +1120,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -1088,7 +1153,7 @@ namespace Order {
             break;
           }
           case 56: {
-            Currency = (global::Bank.BankCurrency) input.ReadEnum();
+            Currency = (global::Common.CurrencyEnum) input.ReadEnum();
             break;
           }
           case 64: {
@@ -1110,19 +1175,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderStatusRequest> _parser = new pb::MessageParser<OrderStatusRequest>(() => new OrderStatusRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderStatusRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderStatusRequest() {
       OnConstruction();
     }
@@ -1130,6 +1199,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderStatusRequest(OrderStatusRequest other) : this() {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
@@ -1138,6 +1208,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderStatusRequest Clone() {
       return new OrderStatusRequest(this);
     }
@@ -1146,6 +1217,7 @@ namespace Order {
     public const int ClientBindIdFieldNumber = 1;
     private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ClientBindId {
       get { return clientBindId_; }
       set {
@@ -1157,6 +1229,7 @@ namespace Order {
     public const int ColonyIdFieldNumber = 2;
     private string colonyId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ColonyId {
       get { return colonyId_; }
       set {
@@ -1168,6 +1241,7 @@ namespace Order {
     public const int OrderIdFieldNumber = 3;
     private string orderId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OrderId {
       get { return orderId_; }
       set {
@@ -1176,11 +1250,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderStatusRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderStatusRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -1195,6 +1271,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
@@ -1207,11 +1284,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -1236,6 +1315,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
@@ -1256,6 +1336,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ClientBindId.Length != 0) {
@@ -1274,6 +1355,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderStatusRequest other) {
       if (other == null) {
         return;
@@ -1291,6 +1373,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -1320,6 +1403,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -1354,19 +1438,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderManifestRequest> _parser = new pb::MessageParser<OrderManifestRequest>(() => new OrderManifestRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderManifestRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderManifestRequest() {
       OnConstruction();
     }
@@ -1374,6 +1462,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderManifestRequest(OrderManifestRequest other) : this() {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
@@ -1382,6 +1471,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderManifestRequest Clone() {
       return new OrderManifestRequest(this);
     }
@@ -1390,6 +1480,7 @@ namespace Order {
     public const int ClientBindIdFieldNumber = 1;
     private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ClientBindId {
       get { return clientBindId_; }
       set {
@@ -1401,6 +1492,7 @@ namespace Order {
     public const int ColonyIdFieldNumber = 2;
     private string colonyId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ColonyId {
       get { return colonyId_; }
       set {
@@ -1412,6 +1504,7 @@ namespace Order {
     public const int OrderIdFieldNumber = 3;
     private string orderId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OrderId {
       get { return orderId_; }
       set {
@@ -1420,11 +1513,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderManifestRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderManifestRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -1439,6 +1534,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
@@ -1451,11 +1547,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -1480,6 +1578,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
@@ -1500,6 +1599,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ClientBindId.Length != 0) {
@@ -1518,6 +1618,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderManifestRequest other) {
       if (other == null) {
         return;
@@ -1535,6 +1636,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -1564,6 +1666,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -1598,19 +1701,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderListRequest> _parser = new pb::MessageParser<OrderListRequest>(() => new OrderListRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderListRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderListRequest() {
       OnConstruction();
     }
@@ -1618,6 +1725,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderListRequest(OrderListRequest other) : this() {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
@@ -1626,6 +1734,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderListRequest Clone() {
       return new OrderListRequest(this);
     }
@@ -1634,6 +1743,7 @@ namespace Order {
     public const int ClientBindIdFieldNumber = 1;
     private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ClientBindId {
       get { return clientBindId_; }
       set {
@@ -1645,6 +1755,7 @@ namespace Order {
     public const int ColonyIdFieldNumber = 2;
     private string colonyId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ColonyId {
       get { return colonyId_; }
       set {
@@ -1656,6 +1767,7 @@ namespace Order {
     public const int AnyFieldNumber = 3;
     private bool any_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Any {
       get { return any_; }
       set {
@@ -1664,11 +1776,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderListRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderListRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -1683,6 +1797,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
@@ -1695,11 +1810,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -1724,6 +1841,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
@@ -1744,6 +1862,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ClientBindId.Length != 0) {
@@ -1762,6 +1881,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderListRequest other) {
       if (other == null) {
         return;
@@ -1779,6 +1899,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -1808,6 +1929,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -1842,19 +1964,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderUpdateRequest> _parser = new pb::MessageParser<OrderUpdateRequest>(() => new OrderUpdateRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderUpdateRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderUpdateRequest() {
       OnConstruction();
     }
@@ -1862,6 +1988,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderUpdateRequest(OrderUpdateRequest other) : this() {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
@@ -1872,6 +1999,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderUpdateRequest Clone() {
       return new OrderUpdateRequest(this);
     }
@@ -1880,6 +2008,7 @@ namespace Order {
     public const int ClientBindIdFieldNumber = 1;
     private string clientBindId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ClientBindId {
       get { return clientBindId_; }
       set {
@@ -1891,6 +2020,7 @@ namespace Order {
     public const int ColonyIdFieldNumber = 2;
     private string colonyId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ColonyId {
       get { return colonyId_; }
       set {
@@ -1902,6 +2032,7 @@ namespace Order {
     public const int OrderIdFieldNumber = 3;
     private string orderId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OrderId {
       get { return orderId_; }
       set {
@@ -1913,6 +2044,7 @@ namespace Order {
     public const int StatusFieldNumber = 4;
     private global::Order.OrderStatusEnum status_ = global::Order.OrderStatusEnum.Placed;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Order.OrderStatusEnum Status {
       get { return status_; }
       set {
@@ -1924,6 +2056,7 @@ namespace Order {
     public const int ColonyTickFieldNumber = 5;
     private int colonyTick_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int ColonyTick {
       get { return colonyTick_; }
       set {
@@ -1932,11 +2065,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderUpdateRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderUpdateRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -1953,6 +2088,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
@@ -1967,11 +2103,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -2004,6 +2142,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (ClientBindId.Length != 0) {
         output.WriteRawTag(10);
@@ -2032,6 +2171,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ClientBindId.Length != 0) {
@@ -2056,6 +2196,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderUpdateRequest other) {
       if (other == null) {
         return;
@@ -2079,6 +2220,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -2116,6 +2258,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -2158,19 +2301,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderStatusReply> _parser = new pb::MessageParser<OrderStatusReply>(() => new OrderStatusReply());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderStatusReply> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderStatusReply() {
       OnConstruction();
     }
@@ -2178,6 +2325,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderStatusReply(OrderStatusReply other) : this() {
       orderId_ = other.orderId_;
       status_ = other.status_;
@@ -2187,6 +2335,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderStatusReply Clone() {
       return new OrderStatusReply(this);
     }
@@ -2195,6 +2344,7 @@ namespace Order {
     public const int OrderIdFieldNumber = 1;
     private string orderId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OrderId {
       get { return orderId_; }
       set {
@@ -2206,6 +2356,7 @@ namespace Order {
     public const int StatusFieldNumber = 2;
     private global::Order.OrderStatusEnum status_ = global::Order.OrderStatusEnum.Placed;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Order.OrderStatusEnum Status {
       get { return status_; }
       set {
@@ -2217,6 +2368,7 @@ namespace Order {
     public const int DeliveryTickFieldNumber = 3;
     private int deliveryTick_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int DeliveryTick {
       get { return deliveryTick_; }
       set {
@@ -2228,6 +2380,7 @@ namespace Order {
     public const int PlacedTickFieldNumber = 4;
     private int placedTick_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int PlacedTick {
       get { return placedTick_; }
       set {
@@ -2236,11 +2389,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderStatusReply);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderStatusReply other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -2256,6 +2411,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (OrderId.Length != 0) hash ^= OrderId.GetHashCode();
@@ -2269,11 +2425,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -2302,6 +2460,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (OrderId.Length != 0) {
         output.WriteRawTag(10);
@@ -2326,6 +2485,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (OrderId.Length != 0) {
@@ -2347,6 +2507,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderStatusReply other) {
       if (other == null) {
         return;
@@ -2367,6 +2528,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -2400,6 +2562,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -2438,19 +2601,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderReply> _parser = new pb::MessageParser<OrderReply>(() => new OrderReply());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderReply> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderReply() {
       OnConstruction();
     }
@@ -2458,6 +2625,7 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderReply(OrderReply other) : this() {
       data_ = other.data_ != null ? other.data_.Clone() : null;
       status_ = other.status_;
@@ -2468,6 +2636,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderReply Clone() {
       return new OrderReply(this);
     }
@@ -2476,6 +2645,7 @@ namespace Order {
     public const int DataFieldNumber = 1;
     private global::Order.OrderStatusReply data_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Order.OrderStatusReply Data {
       get { return data_; }
       set {
@@ -2487,6 +2657,7 @@ namespace Order {
     public const int StatusFieldNumber = 2;
     private global::Order.OrderRequestStatus status_ = global::Order.OrderRequestStatus.Rejected;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Order.OrderRequestStatus Status {
       get { return status_; }
       set {
@@ -2500,6 +2671,7 @@ namespace Order {
         = pb::FieldCodec.ForMessage(26, global::Order.OrderItem.Parser);
     private readonly pbc::RepeatedField<global::Order.OrderItem> unavailable_ = new pbc::RepeatedField<global::Order.OrderItem>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Order.OrderItem> Unavailable {
       get { return unavailable_; }
     }
@@ -2508,6 +2680,7 @@ namespace Order {
     public const int RefundedFieldNumber = 4;
     private int refunded_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Refunded {
       get { return refunded_; }
       set {
@@ -2519,6 +2692,7 @@ namespace Order {
     public const int BalanceFieldNumber = 5;
     private int balance_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Balance {
       get { return balance_; }
       set {
@@ -2527,11 +2701,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderReply);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderReply other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -2548,6 +2724,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (data_ != null) hash ^= Data.GetHashCode();
@@ -2562,11 +2739,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -2596,6 +2775,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (data_ != null) {
         output.WriteRawTag(10);
@@ -2621,6 +2801,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (data_ != null) {
@@ -2643,6 +2824,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderReply other) {
       if (other == null) {
         return;
@@ -2667,6 +2849,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -2707,6 +2890,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -2752,19 +2936,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderListReply> _parser = new pb::MessageParser<OrderListReply>(() => new OrderListReply());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderListReply> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderListReply() {
       OnConstruction();
     }
@@ -2772,12 +2960,14 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderListReply(OrderListReply other) : this() {
       orders_ = other.orders_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderListReply Clone() {
       return new OrderListReply(this);
     }
@@ -2788,16 +2978,19 @@ namespace Order {
         = pb::FieldCodec.ForMessage(10, global::Order.OrderStatusReply.Parser);
     private readonly pbc::RepeatedField<global::Order.OrderStatusReply> orders_ = new pbc::RepeatedField<global::Order.OrderStatusReply>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Order.OrderStatusReply> Orders {
       get { return orders_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderListReply);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderListReply other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -2810,6 +3003,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       hash ^= orders_.GetHashCode();
@@ -2820,11 +3014,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -2838,6 +3034,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       orders_.WriteTo(ref output, _repeated_orders_codec);
       if (_unknownFields != null) {
@@ -2847,6 +3044,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       size += orders_.CalculateSize(_repeated_orders_codec);
@@ -2857,6 +3055,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderListReply other) {
       if (other == null) {
         return;
@@ -2866,6 +3065,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -2887,6 +3087,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
@@ -2913,19 +3114,23 @@ namespace Order {
     private static readonly pb::MessageParser<OrderManifestReply> _parser = new pb::MessageParser<OrderManifestReply>(() => new OrderManifestReply());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OrderManifestReply> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Order.OrderReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderManifestReply() {
       OnConstruction();
     }
@@ -2933,12 +3138,14 @@ namespace Order {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderManifestReply(OrderManifestReply other) : this() {
       items_ = other.items_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrderManifestReply Clone() {
       return new OrderManifestReply(this);
     }
@@ -2949,16 +3156,19 @@ namespace Order {
         = pb::FieldCodec.ForMessage(10, global::Order.DeliveryItem.Parser);
     private readonly pbc::RepeatedField<global::Order.DeliveryItem> items_ = new pbc::RepeatedField<global::Order.DeliveryItem>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Order.DeliveryItem> Items {
       get { return items_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OrderManifestReply);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OrderManifestReply other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -2971,6 +3181,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       hash ^= items_.GetHashCode();
@@ -2981,11 +3192,13 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
@@ -2999,6 +3212,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       items_.WriteTo(ref output, _repeated_items_codec);
       if (_unknownFields != null) {
@@ -3008,6 +3222,7 @@ namespace Order {
     #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       size += items_.CalculateSize(_repeated_items_codec);
@@ -3018,6 +3233,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OrderManifestReply other) {
       if (other == null) {
         return;
@@ -3027,6 +3243,7 @@ namespace Order {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       input.ReadRawMessage(this);
@@ -3048,6 +3265,7 @@ namespace Order {
 
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {

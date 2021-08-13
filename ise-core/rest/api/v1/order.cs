@@ -1,16 +1,17 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, order.cs, Created 2021-02-09
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-core, order.cs 2021-02-09
+// #endregion
 
 #endregion
 
 using System.Collections.Generic;
-using Bank;
-using ise_core.rest;
+using Common;
 using Order;
 using RestSharp;
 using static ise_core.rest.api.v1.Constants;
@@ -23,7 +24,7 @@ namespace ise_core.rest.api.v1
 
         public static OrderListReply GetOrderList(string clientBindId, string colonyId)
         {
-            var request = new OrderListRequest {ClientBindId = clientBindId, ColonyId = colonyId};
+            var request = new OrderListRequest { ClientBindId = clientBindId, ColonyId = colonyId };
 
             return Helpers.SendAndParseReply(request, OrderListReply.Parser,
                 $"{URLPrefix}order/list", Method.POST, clientBindId);
@@ -31,7 +32,8 @@ namespace ise_core.rest.api.v1
 
         public static OrderStatusReply GetOrderStatus(string clientBindId, string colonyId, string orderId)
         {
-            var request = new OrderStatusRequest {ClientBindId = clientBindId, ColonyId = colonyId, OrderId = orderId};
+            var request = new OrderStatusRequest
+                { ClientBindId = clientBindId, ColonyId = colonyId, OrderId = orderId };
 
             return Helpers.SendAndParseReply(request, OrderStatusReply.Parser,
                 $"{URLPrefix}order/", Method.POST, clientBindId);
@@ -45,7 +47,7 @@ namespace ise_core.rest.api.v1
                 ClientBindId = clientBindId,
                 OrderId = orderId
             };
-            
+
             return Helpers.SendAndParseReply(
                 request,
                 OrderManifestReply.Parser,
@@ -55,12 +57,14 @@ namespace ise_core.rest.api.v1
             );
         }
 
-        public static OrderStatusReply SetOrderStatus(string clientBindId, string colonyId, string orderId)
+        public static OrderStatusReply SetOrderStatus(OrderStatusEnum status, string clientBindId, string colonyId,
+            string orderId, int tick)
         {
             var request = new OrderUpdateRequest
             {
                 ClientBindId = clientBindId, ColonyId = colonyId, OrderId = orderId,
-                Status = OrderStatusEnum.OutForDelivery
+                Status = status,
+                ColonyTick = tick
             };
 
             return Helpers.SendAndParseReply(request, OrderStatusReply.Parser,
@@ -73,29 +77,23 @@ namespace ise_core.rest.api.v1
             string promise,
             int tick,
             IEnumerable<OrderItem> wantToBuy,
-            IEnumerable<OrderItem> wantToSell, 
-            BankCurrency currency = BankCurrency.Utc,
+            IEnumerable<OrderItem> wantToSell,
+            CurrencyEnum currency = CurrencyEnum.Utc,
             int additionalFunds = 0)
         {
             var orderRequest = new OrderRequest
             {
-                ClientBindId = clientBindId, 
+                ClientBindId = clientBindId,
                 ColonyId = colonyId,
-                InventoryPromiseId = promise, 
+                InventoryPromiseId = promise,
                 ColonyTick = tick,
                 Currency = currency,
-                AdditionalFunds =  additionalFunds
+                AdditionalFunds = additionalFunds
             };
 
-            if (wantToBuy != null)
-            {
-                orderRequest.WantToBuy.AddRange(wantToBuy);
-            }
+            if (wantToBuy != null) orderRequest.WantToBuy.AddRange(wantToBuy);
 
-            if (wantToSell != null)
-            {
-                orderRequest.WantToSell.AddRange(wantToSell);
-            }
+            if (wantToSell != null) orderRequest.WantToSell.AddRange(wantToSell);
 
             return Helpers.SendAndParseReply(orderRequest, OrderReply.Parser,
                 $"{URLPrefix}order/place", Method.POST, clientBindId);

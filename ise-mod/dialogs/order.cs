@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, order.cs, Created 2021-02-18
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, order.cs 2021-02-18
+// #endregion
 
 #endregion
 
@@ -13,36 +15,25 @@ using ise.components;
 using ise.lib;
 using ise.lib.tasks;
 using ise_core.db;
-using LiteDB;
 using Order;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using static ise.lib.Constants;
 using static ise.lib.Cache;
 
 namespace ise.dialogs
 {
     public class DialogOrder : Window, IDialog
     {
-        #region Fields
-
-        private readonly IDialogTask task;
-        private Vector2 messageScrollbar = Vector2.zero;
-        private bool processedReply;
-        private Vector2 textWidth;
-
-        #endregion
-
         #region ctor
 
         public DialogOrder(Pawn userPawn, int additionalFunds)
         {
-            Logging.WriteMessage("Opening Place Order Dialog");
+            Logging.WriteDebugMessage("Opening Place Order Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             Pawn = userPawn;
-            task = new OrderPlaceDialogTask(this, Pawn, additionalFunds);
+            _task = new OrderPlaceDialogTask(this, Pawn, additionalFunds);
         }
 
         #endregion
@@ -51,6 +42,15 @@ namespace ise.dialogs
 
         public override Vector2 InitialSize =>
             new Vector2(300f, 300f);
+
+        #endregion
+
+        #region Fields
+
+        private readonly IDialogTask _task;
+        private Vector2 _messageScrollbar = Vector2.zero;
+        private bool _processedReply;
+        private Vector2 _textWidth;
 
         #endregion
 
@@ -74,19 +74,19 @@ namespace ise.dialogs
             const float padding = 6f;
             const float buttonHeight = 25f;
             const float buttonWidth = 100f;
-            if (!task.Done)
+            if (!_task.Done)
             {
-                textWidth = Text.CalcSize(DialogMessage);
-                label = new Rect((inRect.width - textWidth.x) / 2f, (inRect.height - textWidth.y) / 2f,
-                    textWidth.x, textWidth.y);
+                _textWidth = Text.CalcSize(DialogMessage);
+                label = new Rect((inRect.width - _textWidth.x) / 2f, (inRect.height - _textWidth.y) / 2f,
+                    _textWidth.x, _textWidth.y);
                 Widgets.Label(label, DialogMessage);
-                task.Update();
+                _task.Update();
                 return;
             }
 
-            if (!processedReply)
+            if (!_processedReply)
             {
-                var orderTask = (OrderPlaceDialogTask) task;
+                var orderTask = (OrderPlaceDialogTask)_task;
                 if (orderTask.Reply?.Data == null)
                 {
                     Close();
@@ -115,7 +115,7 @@ namespace ise.dialogs
                 padding,
                 inRect.width - padding * 2,
                 inRect.height - buttonHeight - padding * 2);
-            Widgets.LabelScrollable(label, DialogMessage, ref messageScrollbar, longLabel: false);
+            Widgets.LabelScrollable(label, DialogMessage, ref _messageScrollbar, longLabel: false);
 
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
@@ -125,8 +125,8 @@ namespace ise.dialogs
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
             var colonyId = gc.GetColonyId(Pawn.Map);
-            
-            var orderTask = (OrderPlaceDialogTask) task;
+
+            var orderTask = (OrderPlaceDialogTask)_task;
             switch (orderTask.Reply.Status)
             {
                 case OrderRequestStatus.Rejected:
@@ -168,7 +168,7 @@ namespace ise.dialogs
                     throw new ArgumentOutOfRangeException();
             }
 
-            processedReply = true;
+            _processedReply = true;
         }
 
         #endregion

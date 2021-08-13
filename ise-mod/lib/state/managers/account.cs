@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, account.cs, Created 2021-02-26
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, account.cs 2021-02-26
+// #endregion
 
 #endregion
 
@@ -12,11 +14,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Colony;
 using ise.components;
 using ise_core.db;
 using Order;
 using RestSharp;
-using Steamworks;
+using RimWorld;
 using Verse;
 using static ise.lib.Constants;
 using static ise_core.rest.Helpers;
@@ -26,46 +29,75 @@ namespace ise.lib.state.managers
 {
     internal class Account
     {
-        #region Fields
-
-        private readonly string accountId;
-        private readonly Dictionary<string, Order> activeOrders;
-        private readonly ISEGameComponent gameComponent;
-        private int nextUpdate;
-        private bool busy;
-
-        #endregion
-
         #region ctor
 
         internal Account(string colonyBindId, ISEGameComponent gc)
         {
             Logging.WriteDebugMessage($"Starting Account manager for {colonyBindId}");
-            accountId = colonyBindId;
-            gameComponent = gc;
-            busy = false;
-            activeOrders = new Dictionary<string, Order>();
-            nextUpdate = 0; // UpdateAsync on next rare tick call.
+            _accountId = colonyBindId;
+            _gameComponent = gc;
+            _busy = false;
+            _activeOrders = new Dictionary<string, Order>();
+            _nextUpdate = 0; // UpdateAsync on next rare tick call.
 
             // Delete old orders from DB, new list will be pulled on next update.
-            FlushOrders();
+            FlushOrders(Current.Game.tickManager.TicksGame);
         }
+
+        #endregion
+
+        #region Fields
+
+        private readonly string _accountId;
+        private readonly Dictionary<string, Order> _activeOrders;
+        private readonly ISEGameComponent _gameComponent;
+        private int _nextUpdate;
+        private bool _busy;
 
         #endregion
 
         #region Methods
 
-        private void FlushOrders()
+        private void FlushOrders(int currentTick)
         {
             var db = IseCentral.DataCache;
             var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
-            var orders = orderCollection.Find(o => o.ColonyId == accountId);
+            var orders = orderCollection.Find(o => o.ColonyId == _accountId);
             var itemCollection = db.GetCollection<DBOrderItem>(Tables.OrderItems);
-            foreach (var dbOrder in orders) itemCollection.DeleteMany(item => item.OrderId == dbOrder.Id);
-            orderCollection.DeleteMany(item => item.ColonyId == accountId);
+
             itemCollection.EnsureIndex(item => item.OrderId);
             itemCollection.EnsureIndex(item => item.ItemCode);
             orderCollection.EnsureIndex(order => order.Id);
+
+            var ordersToProcess = new List<string>();
+            Logging.WriteDebugMessage("Deleting delivered orders from the future");
+
+            var dbOrders = orders.ToList();
+            ordersToProcess.AddRange(
+                dbOrders.Where(order => order.DeliveryTick > currentTick).Select(order => order.Id));
+
+            var dbDeliveredItems = IseCentral.DataCache.GetCollection<DBStorageItem>(Tables.Delivered);
+
+            foreach (var orderId in ordersToProcess)
+            {
+                // Get the order manifest
+                var orderItems = itemCollection.Find(m => m.OrderId == orderId);
+                foreach (var orderItem in orderItems)
+                {
+                    // Find the items that were delivered
+                    var storedItem = dbDeliveredItems.FindOne(item =>
+                        item.ColonyId == _accountId && item.ItemCode == orderItem.ItemCode);
+
+                    // Reverse the transaction
+                    storedItem.Quantity -= orderItem.Quantity;
+                    if (storedItem.Quantity <= 0)
+                        // Delete the item if there's none left
+                        dbDeliveredItems.Delete(storedItem.StoredItemID);
+                }
+            }
+
+            foreach (var dbOrder in dbOrders) itemCollection.DeleteMany(item => item.OrderId == dbOrder.Id);
+            orderCollection.DeleteMany(item => item.ColonyId == _accountId);
         }
 
         internal void AddOrder(string orderId)
@@ -73,10 +105,7 @@ namespace ise.lib.state.managers
             var db = IseCentral.DataCache;
             if (db.GetCollection<DBOrder>(Tables.Orders).FindById(orderId) == null)
                 throw new KeyNotFoundException($"Unable to load order {orderId} from Database");
-            if (!activeOrders.ContainsKey(orderId))
-            {
-                activeOrders.Add(orderId, new Order(orderId));
-            }
+            if (!_activeOrders.ContainsKey(orderId)) _activeOrders.Add(orderId, new Order(orderId));
         }
 
         /// <summary>
@@ -86,23 +115,27 @@ namespace ise.lib.state.managers
         /// </summary>
         internal async void UpdateAsync()
         {
-            if (busy) return;
+            if (_busy) return;
             var currentTick = Current.Game.tickManager.TicksGame;
             try
             {
-                busy = true;
+                _busy = true;
                 var ordersToProcess = new List<string>();
                 var db = IseCentral.DataCache;
                 var dbOrders = db.GetCollection<DBOrder>(Tables.Orders);
                 var tasks = new List<Task>();
 
                 // Get order list if we've passed the update date.
-                if (currentTick >= nextUpdate)
+                if (currentTick >= _nextUpdate)
                 {
-                    nextUpdate = currentTick + OrderUpdateTickRate;
+                    _nextUpdate = currentTick + OrderUpdateTickRate;
+
+                    // Update the server with our current tick, so that any orders can be rolled back as required.
+                    Logging.WriteDebugMessage("Synchronising colony data with server");
+                    UpdateColonyStatus(currentTick);
 
                     // Download list of orders from server
-                    Logging.WriteDebugMessage($"Synchronising orders with server");
+                    Logging.WriteDebugMessage("Synchronising orders with server");
                     var orders = GetOrderList().Orders;
                     Logging.WriteDebugMessage($"Got {orders.Count} orders to process from server");
 
@@ -118,7 +151,7 @@ namespace ise.lib.state.managers
                             Id = statusReply.OrderId,
                             ManifestAvailable = false,
                             PlacedTick = statusReply.PlacedTick,
-                            ColonyId = accountId,
+                            ColonyId = _accountId
                         };
                         dbOrder.Status = statusReply.Status;
                         dbOrder.DeliveryTick = statusReply.DeliveryTick;
@@ -127,7 +160,8 @@ namespace ise.lib.state.managers
                     }
 
                     // Need to get items for these orders.
-                    ordersToProcess.AddRange(dbOrders.Find(order => !order.ManifestAvailable)
+                    ordersToProcess.AddRange(dbOrders
+                        .Find(order => !order.ManifestAvailable && order.ColonyId == _accountId)
                         .Select(order => order.Id));
                     Logging.WriteDebugMessage($"Need to get {ordersToProcess.Count} Manifests");
 
@@ -137,9 +171,7 @@ namespace ise.lib.state.managers
                     {
                         await task;
                         if (task.IsFaulted)
-                        {
                             throw new InvalidOperationException($"Failed to get or process manifest: {task.Exception}");
-                        }
                     }
                 }
 
@@ -147,15 +179,14 @@ namespace ise.lib.state.managers
                 ordersToProcess.Clear();
 
                 // Spawn order trackers for any orders that don't have one but have the manifest downloaded.
+                // Also refresh the backing data, since the server may have changed it.
                 foreach (var orderId in dbOrders.Find(order => order.ManifestAvailable).Select(order => order.Id))
-                {
-                    if (!activeOrders.ContainsKey(orderId))
-                    {
-                        activeOrders.Add(orderId, new Order(orderId));
-                    }
-                }
+                    if (!_activeOrders.ContainsKey(orderId))
+                        _activeOrders.Add(orderId, new Order(orderId));
+                    else
+                        _activeOrders[orderId].RefreshBackingData();
 
-                foreach (var order in activeOrders.Values.Where(order => !order.Busy))
+                foreach (var order in _activeOrders.Values.Where(order => !order.Busy))
                 {
                     if (order.IsFinished)
                     {
@@ -176,33 +207,53 @@ namespace ise.lib.state.managers
                 }
 
                 // Remove dead orders collected above.
-                foreach (var orderId in ordersToProcess)
-                {
-                    activeOrders.Remove(orderId);
-                }
+                foreach (var orderId in ordersToProcess) _activeOrders.Remove(orderId);
             }
             catch (Exception e)
             {
-                Logging.WriteErrorMessage($"Failed to process orders for account {accountId}");
+                Logging.WriteErrorMessage($"Failed to process orders for account {_accountId}");
                 Logging.WriteErrorMessage($"{e}");
             }
             finally
             {
-                Logging.WriteDebugMessage($"Finished Account Manager Update for {accountId}");
-                busy = false; // Set not busy in case we have a chance to recover.
+                Logging.WriteDebugMessage($"Finished Account Manager Update for {_accountId}");
+                _busy = false; // Set not busy in case we have a chance to recover.
             }
+        }
+
+        private void UpdateColonyStatus(int currentTick)
+        {
+            var request = new ColonyUpdateRequest
+            {
+                ClientBindId = _gameComponent.ClientBind,
+                Data = new ColonyData
+                {
+                    ColonyId = _accountId,
+                    Tick = currentTick,
+                    UsedDevMode = _gameComponent.SpawnToolUsed,
+                    GameVersion = VersionControl.CurrentVersionStringWithRev
+                }
+            };
+
+            SendAndParseReply(
+                request,
+                ColonyData.Parser,
+                $"{URLPrefix}colony/",
+                Method.PATCH,
+                _gameComponent.ClientBind
+            );
         }
 
         private OrderListReply GetOrderList()
         {
-            Logging.WriteDebugMessage($"Fetching order list for {accountId}");
+            Logging.WriteDebugMessage($"Fetching order list for {_accountId}");
             try
             {
-                return ise_core.rest.api.v1.Order.GetOrderList(gameComponent.ClientBind, accountId);
+                return ise_core.rest.api.v1.Order.GetOrderList(_gameComponent.ClientBind, _accountId);
             }
             catch (Exception e)
             {
-                Logging.WriteErrorMessage($"Failed to download order list for {accountId}");
+                Logging.WriteErrorMessage($"Failed to download order list for {_accountId}");
                 Logging.WriteErrorMessage($"{e}");
                 throw;
             }
@@ -213,7 +264,7 @@ namespace ise.lib.state.managers
             Logging.WriteDebugMessage($"Fetching manifest for {orderId}");
             try
             {
-                return ise_core.rest.api.v1.Order.GetOrderManifest(gameComponent.ClientBind, accountId, orderId);
+                return ise_core.rest.api.v1.Order.GetOrderManifest(_gameComponent.ClientBind, _accountId, orderId);
             }
             catch (Exception e)
             {
@@ -222,6 +273,8 @@ namespace ise.lib.state.managers
                 throw;
             }
         }
+
+        public IEnumerable<Order> GetActiveOrders => _activeOrders.Values;
 
         #endregion
     }

@@ -1,8 +1,9 @@
 #addin nuget:?package=SharpZipLib&version=1.3.1
-#addin nuget:?package=Cake.Compression&version=0.2.4
-#addin Cake.Incubator&version=5.1.0
+#addin nuget:?package=Cake.Compression&version=0.2.6
+#addin Cake.Incubator&version=6.0.0
 #tool nuget:?package=GitVersion.CommandLine&version=5.3.7
-#addin Cake.FileHelpers&version=3.3.0
+#addin Cake.FileHelpers&version=4.0.1
+#tool nuget:?package=Cake.CoreCLR&version=1.1.0
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,12 +13,12 @@ var configuration = Argument("configuration", "Release");
 var modname = "ISE";
 var mod_source_path = "./ise-mod";
 var version = "1.0";
-var mod_base_path = "./mod_package";
-var mod_path = $"./{mod_base_path}/{modname} [{version}]";
+var mod_base_path = "mod_package";
+var mod_path = $"{mod_base_path}/{modname}";
 var git_hash = "";
 var asm_version = "";
-var steam_folder = @"E:\Games\Steam\steamapps\common\RimWorld\Mods";
-var local_game_folder = @"F:\Games\RimWorld12\Mods";
+var steam_folder = @"F:\Games\Steam\steamapps\common\RimWorld\Mods";
+var local_game_folder = @"G:\Games\RimWorld12\Mods";
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -88,13 +89,12 @@ Task("GetAsmVersion")
 Task("UpdateXML")
 .IsDependentOn("GetGitVersion")
 .IsDependentOn("GetAsmVersion")
+.IsDependentOn("CopyDataFolders")
 .Does(() => {
-  ReplaceRegexInFiles($"{mod_path}/About/About.xml",
-                      "@SHAHASH@",
-                      git_hash);
-  ReplaceRegexInFiles($"{mod_path}/About/Version.xml",
-                      "@Version@",
-                      asm_version);
+  ReplaceTextInFiles($"{mod_path}/About/About.xml", "!!GITCOMMIT!!", git_hash);
+
+  ReplaceTextInFiles($"{mod_path}/About/Version.xml", "!!VERSION!!", asm_version);
+
 });
 
 Task("Compile")

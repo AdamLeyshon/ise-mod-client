@@ -1,19 +1,18 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, colony.cs, Created 2021-02-09
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-core, colony.cs 2021-02-09
+// #endregion
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using Colony;
-using ise_core.rest;
 using RestSharp;
 using Tradable;
 using static ise_core.rest.api.v1.Constants;
@@ -28,7 +27,7 @@ namespace ise_core.rest.api.v1
         {
             var request = new ColonyUpdateRequest
             {
-                ClientBindId = clientBindId, Data = new ColonyData {ColonyId = colonyId, Tick = tick}
+                ClientBindId = clientBindId, Data = new ColonyData { ColonyId = colonyId, Tick = tick }
             };
 
             var reply = Helpers.SendNoReply(request,
@@ -39,7 +38,7 @@ namespace ise_core.rest.api.v1
 
         public static bool SetModList(string clientBindId, string colonyId, IEnumerable<string> modList)
         {
-            var request = new ColonyModsSetRequest {ClientBindId = clientBindId, ColonyId = colonyId};
+            var request = new ColonyModsSetRequest { ClientBindId = clientBindId, ColonyId = colonyId };
             request.ModName.AddRange(modList);
             var reply = Helpers.SendNoReply(request,
                 $"{URLPrefix}colony/mods", Method.POST, clientBindId);
@@ -48,13 +47,12 @@ namespace ise_core.rest.api.v1
 
         public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables)
         {
-            var request = new ColonyTradableSetRequest()
-                {ClientBindId = clientBindId, ColonyId = colonyId};
+            var request = new ColonyTradableSetRequest { ClientBindId = clientBindId, ColonyId = colonyId };
 
             request.Item.AddRange(tradables);
             return Helpers.SendNoReply(
                 request,
-                $"/api/v1/colony/tradables",
+                "/api/v1/colony/tradables",
                 Method.POST,
                 clientBindId).IsSuccessful;
         }

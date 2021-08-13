@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-	<ISEShopOnline>Shop Online with InterStellar Express</ISEShopOnline>
+	<ISEShopMenuOption>Browse Marketplace</ISEShopMenuOption>
+	<ISEWithdrawMenuOption>Withdraw funds</ISEWithdrawMenuOption>
 	<ISENeedBaseName>Base name has been set or Map not owned by Player</ISENeedBaseName>
 	<ISENeedUplink>You must construct the uplink before using the console.</ISENeedUplink>
+	<ISENeedMaterialiser>You must construct the materialiser before using the console.</ISENeedMaterialiser>
 	<ISEUnavailable>InterStellar Express is Unavailable</ISEUnavailable>
 	<ISEOrderArrived>Your InterStellar Express order has arrived!</ISEOrderArrived>
 	<ISEOrderFailed>Looks like some items failed to materialise, Please file a report.</ISEOrderFailed>
@@ -18,7 +20,7 @@
 	<ISESendingThingList>Sending Supported Thing List</ISESendingThingList>
 	<ISESendingModList>Sending Supported Mods</ISESendingModList>
 	<ISEGetMarketData>Getting Market Data</ISEGetMarketData>
-	<ISEBadResponse>The server did not respond or gave an invalid response, It might be down or you might be out of date.\n\nPlease check the Discord, the Ludeon forum or the Steam Workshop for updates and news.</ISEBadResponse>
+	<ISEBadResponse>The server did not respond or gave an invalid response, It might be down or you might be out of date.\nPlease check the Discord, the Ludeon forum or the Steam Workshop for updates and news.</ISEBadResponse>
 	<ISEActivateOK>The server accepted the token.\n\nPlease don't use Developer mode or you could end up banned again!</ISEActivateOK>
 	<ISEActivateFail>The server did not accepted the token, Please check your token was correct.</ISEActivateFail>
 	<ISEServerMaintenanceMode>The server is in maintenance mode, Please try again later.</ISEServerMaintenanceMode>
@@ -30,8 +32,16 @@
 	<ISEMaterialiserNoWork>No Work</ISEMaterialiserNoWork>
 	<ISEMaterialiserWorking>Materialising {0}</ISEMaterialiserWorking>
 	<ISEMaterialiserSpeed>Speed setting: {0}</ISEMaterialiserSpeed>
+	<ISEMaterialiserSpeedStop>Stop</ISEMaterialiserSpeedStop>
 	<ISEMaterialiserSpeedLow>Low</ISEMaterialiserSpeedLow>
 	<ISEMaterialiserSpeedMedium>Medium</ISEMaterialiserSpeedMedium>
 	<ISEMaterialiserSpeedFast>High</ISEMaterialiserSpeedFast>
+	<ISEMaterialiserSpeedHyper>Hyper!</ISEMaterialiserSpeedHyper>
+	<ISEMaterialiserSpeedInsane>Insane!</ISEMaterialiserSpeedInsane>
 	<ISEMaterialiserDownloadingData>Waiting for more data</ISEMaterialiserDownloadingData>
+	<ISEMaterialiserCanOnlyBuildOne>You can only build one per map</ISEMaterialiserCanOnlyBuildOne>
+	<ISEWithdrawStatement>You have {amount} available,\nhow much do you want to withdraw?</ISEWithdrawStatement>
+	<ISEWithdrawInvalidAmount>The amount you want to withdraw is not valid,\nYou must enter a value between 1 and the available balance</ISEWithdrawInvalidAmount>
+	<ISEWithdrawFailure>We were not able to process this transaction, please try again later</ISEWithdrawFailure>
+	<ISEWithdrawComplete>Thank you for banking with us, your funds are on the way.</ISEWithdrawComplete>
 </LanguageData>

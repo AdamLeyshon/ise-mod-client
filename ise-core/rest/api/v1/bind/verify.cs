@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, verify.cs, Created 2021-02-09
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-core, verify.cs 2021-02-09
+// #endregion
 
 #endregion
 
@@ -20,7 +22,7 @@ namespace ise_core.rest.api.v1.bind
 
         internal static bool BindVerify(string steamId, string clientBindId)
         {
-            var request = new ClientBindVerifyRequest {SteamId = steamId, ClientBindId = clientBindId};
+            var request = new ClientBindVerifyRequest { SteamId = steamId, ClientBindId = clientBindId };
             var reply = Helpers.SendAndParseReply(request, ClientBindVerifyReply.Parser,
                 $"{URLPrefix}binder/bind_verify", Method.POST);
             return reply.Valid;

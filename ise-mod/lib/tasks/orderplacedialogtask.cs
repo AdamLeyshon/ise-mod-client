@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, orderplacedialogtask.cs, Created 2021-02-18
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, orderplacedialogtask.cs 2021-02-18
+// #endregion
 
 #endregion
 
@@ -12,46 +14,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bank;
+using Common;
 using ise.components;
 using ise.dialogs;
 using ise_core.db;
-using LiteDB;
 using Order;
-using RestSharp;
 using RimWorld;
 using Verse;
 using static ise.lib.Constants;
 using static ise.lib.Tradables;
 using static ise_core.rest.Helpers;
-using static ise_core.rest.api.v1.Constants;
 using static ise.lib.Cache;
 
 namespace ise.lib.tasks
 {
     internal class OrderPlaceDialogTask : AbstractDialogTask
     {
-        #region Fields
-
-        private readonly int additionalFunds;
-        private readonly int gameTick;
-        private readonly ISEGameComponent gc;
-        private readonly Pawn pawn;
-
-        private State state;
-        private Task task;
-
-        #endregion
-
         #region ctor
 
         public OrderPlaceDialogTask(IDialog dialog, Pawn userPawn, int additionalFunds) : base(dialog)
         {
-            state = State.Start;
-            gc = Current.Game.GetComponent<ISEGameComponent>();
-            pawn = userPawn;
-            this.additionalFunds = additionalFunds;
-            gameTick = Current.Game.tickManager.TicksGame;
+            _state = State.Start;
+            _gc = Current.Game.GetComponent<ISEGameComponent>();
+            _pawn = userPawn;
+            _additionalFunds = additionalFunds;
+            _gameTick = Current.Game.tickManager.TicksGame;
         }
 
         #endregion
@@ -62,14 +49,38 @@ namespace ise.lib.tasks
 
         #endregion
 
+        #region Nested type: State
+
+        private enum State
+        {
+            Start,
+            Place,
+            Done,
+            Error
+        }
+
+        #endregion
+
+        #region Fields
+
+        private readonly int _additionalFunds;
+        private readonly int _gameTick;
+        private readonly ISEGameComponent _gc;
+        private readonly Pawn _pawn;
+
+        private State _state;
+        private Task _task;
+
+        #endregion
+
         #region Methods
 
         public override void Update()
         {
             // Handle task errors first.
-            if (task != null && task.IsFaulted) LogTaskError();
+            if (_task != null && _task.IsFaulted) LogTaskError();
 
-            switch (state)
+            switch (_state)
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
@@ -77,8 +88,7 @@ namespace ise.lib.tasks
                     break;
                 case State.Place:
                     Dialog.DialogMessage = "Placing order";
-                    if (task != null && task.IsCompleted) ProcessOrderRequestReply(((Task<OrderReply>) task).Result);
-
+                    if (_task != null && _task.IsCompleted) ProcessOrderRequestReply(((Task<OrderReply>)_task).Result);
                     break;
                 case State.Done:
                     Dialog.DialogMessage = "Order was placed";
@@ -95,23 +105,24 @@ namespace ise.lib.tasks
 
         private void LogTaskError()
         {
-            state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
-            task = null;
+            _state = State.Error;
+            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            _task = null;
         }
 
         private void StartOrder()
         {
-            var colonyId = gc.GetColonyId(pawn.Map);
+            var colonyId = _gc.GetColonyId(_pawn.Map);
 
-            task = new Task<OrderReply>(delegate
+            _task = new Task<OrderReply>(delegate
             {
                 var db = IseCentral.DataCache;
-                var promise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(pawn.Map));
+                var promise = db.GetCollection<DBInventoryPromise>(Tables.Promises)
+                    .FindById(_gc.GetColonyId(_pawn.Map));
 
                 if (promise.InventoryPromiseExpires < GetUTCNow())
                 {
-                    state = State.Error;
+                    _state = State.Error;
                     return null;
                 }
 
@@ -119,25 +130,25 @@ namespace ise.lib.tasks
                 var marketBasket = GetCache(colonyId, CacheType.MarketBasket).FindAll();
 
                 return ise_core.rest.api.v1.Order.PlaceOrder(
-                    gc.ClientBind,
+                    _gc.ClientBind,
                     colonyId,
                     promise.InventoryPromiseId,
-                    gameTick,
+                    _gameTick,
                     CachedTradablesToOrderItems(marketBasket),
                     CachedTradablesToOrderItems(colonyBasket),
-                    currency: BankCurrency.Utc,
-                    additionalFunds: additionalFunds
+                    CurrencyEnum.Utc,
+                    _additionalFunds
                 );
             });
-            task.Start();
-            state = State.Place;
+            _task.Start();
+            _state = State.Place;
         }
 
         private void ProcessOrderRequestReply(OrderReply reply)
         {
             if (reply == null || reply.Status == OrderRequestStatus.Rejected)
             {
-                state = State.Error;
+                _state = State.Error;
                 return;
             }
 
@@ -148,16 +159,16 @@ namespace ise.lib.tasks
                     new DBOrder
                     {
                         Id = reply.Data.OrderId,
-                        ColonyId = gc.GetColonyId(pawn.Map),
+                        ColonyId = _gc.GetColonyId(_pawn.Map),
                         Status = reply.Data.Status,
-                        PlacedTick = gameTick,
+                        PlacedTick = _gameTick,
                         DeliveryTick = reply.Data.DeliveryTick
                     });
 
                 RemoveTradedGoods(reply);
 
                 // Clear all cache and promises
-                var colonyId = gc.GetColonyId(pawn.Map);
+                var colonyId = _gc.GetColonyId(_pawn.Map);
                 IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
                 DropCache(colonyId, CacheType.ColonyBasket);
                 DropCache(colonyId, CacheType.MarketBasket);
@@ -165,15 +176,15 @@ namespace ise.lib.tasks
                 DropCache(colonyId, CacheType.MarketCache);
 
                 // Start tracking the Order Status
-                gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
+                _gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
             }
             catch (Exception)
             {
-                state = State.Error;
+                _state = State.Error;
                 return;
             }
 
-            state = State.Done;
+            _state = State.Done;
         }
 
         private static IEnumerable<OrderItem> CachedTradablesToOrderItems(IEnumerable<DBCachedTradable> cts)
@@ -188,23 +199,23 @@ namespace ise.lib.tasks
 
         private void RemoveTradedGoods(OrderReply reply)
         {
-            var colonyId = gc.GetColonyId(pawn.Map);
+            var colonyId = _gc.GetColonyId(_pawn.Map);
             var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket).FindAll();
 
             // Start with the smallest pile of silver and destroy until we've removed as much as we need to
-            if (additionalFunds > 0)
+            if (_additionalFunds > 0)
                 RemoveGoods(
                     ThingDefSilver,
                     100,
-                    additionalFunds,
-                    pawn.Map
+                    _additionalFunds,
+                    _pawn.Map
                 );
 
             foreach (var soldItem in colonyBasket)
                 RemoveGoods(soldItem.ThingDef,
                     soldItem.HitPoints,
                     soldItem.TradedQuantity,
-                    pawn.Map,
+                    _pawn.Map,
                     soldItem.Quality,
                     soldItem.Stuff
                 );
@@ -245,7 +256,7 @@ namespace ise.lib.tasks
                 {
                     var thing = x.GetInnerIfMinified();
                     var possibleQuality = thing.TryGetComp<CompQuality>();
-                    return possibleQuality != null && (int) possibleQuality.Quality == quality;
+                    return possibleQuality != null && (int)possibleQuality.Quality == quality;
                 }).ToList();
                 Logging.WriteDebugMessage($"I found {thingDef} x {things.Count()}");
             }
@@ -296,18 +307,6 @@ namespace ise.lib.tasks
 
             if (toRemove > 0)
                 Logging.WriteErrorMessage($"We've been had, the colony doesn't have enough {thingDef} to remove.");
-        }
-
-        #endregion
-
-        #region Nested type: State
-
-        private enum State
-        {
-            Start,
-            Place,
-            Done,
-            Error,
         }
 
         #endregion

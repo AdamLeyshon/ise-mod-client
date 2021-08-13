@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, inventory.cs, Created 2021-02-09
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-core, inventory.cs 2021-02-09
+// #endregion
 
 #endregion
 
@@ -29,7 +31,7 @@ namespace ise_core.rest.api.v1
 
         public static Task<InventoryReply> GetInventoryAsync(string clientBindId, string colonyId)
         {
-            var request = new InventoryRequest {ColonyId = colonyId, ClientBindId = clientBindId};
+            var request = new InventoryRequest { ColonyId = colonyId, ClientBindId = clientBindId };
             return Helpers.SendAndParseReplyAsync(
                 request,
                 InventoryReply.Parser,

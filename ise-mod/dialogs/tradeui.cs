@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, tradeui.cs, Created 2021-02-11
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, tradeui.cs 2021-03-07
+// #endregion
 
 #endregion
 
@@ -27,6 +29,69 @@ namespace ise.dialogs
 {
     public class DialogTradeUI : Window
     {
+        #region ctor
+
+        public DialogTradeUI(Pawn userPawn)
+        {
+            var gc = Current.Game.GetComponent<ISEGameComponent>();
+            forcePause = true;
+            pawn = userPawn;
+            //absorbInputAroundWindow = true;
+            SetupData();
+            promise = IseCentral.DataCache.GetCollection<DBInventoryPromise>(Tables.Promises)
+                .FindById(gc.GetColonyId(userPawn.Map));
+            BuildQualityTranslationCache();
+        }
+
+        #endregion
+
+        #region Properties
+
+        public override Vector2 InitialSize => new Vector2(1500f, UI.screenHeight - 50f);
+
+        #endregion
+
+        #region Nested type: BasketStats
+
+        private struct BasketStats
+        {
+            public float WeightSell { get; set; }
+            public float WeightBuy { get; set; }
+            public float CostSell { get; set; }
+            public float CostBuy { get; set; }
+
+            public float CostSellShipping { get; set; }
+
+            public float CostBuyShipping { get; set; }
+
+            public float CostTotal { get; set; }
+        }
+
+        #endregion
+
+        #region Nested type: ItemCache
+
+        private struct ItemCache
+        {
+            public ILiteCollection<DBCachedTradable> Colony;
+            public ILiteCollection<DBCachedTradable> Market;
+            public ILiteCollection<DBCachedTradable> ColonyBasket;
+            public ILiteCollection<DBCachedTradable> MarketBasket;
+            public List<DBCachedTradable> CurrentItems;
+        }
+
+        #endregion
+
+        #region Nested type: TradeView
+
+        private enum TradeView
+        {
+            Buy,
+            Sell
+        }
+
+        #endregion
+
         #region Fields
 
 #if DEBUG
@@ -166,27 +231,6 @@ namespace ise.dialogs
 
         #endregion
 
-        #region ctor
-
-        public DialogTradeUI(Pawn userPawn)
-        {
-            var gc = Current.Game.GetComponent<ISEGameComponent>();
-            forcePause = true;
-            pawn = userPawn;
-            //absorbInputAroundWindow = true;
-            SetupData();
-            promise = IseCentral.DataCache.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(gc.GetColonyId(userPawn.Map));
-            BuildQualityTranslationCache();
-        }
-
-        #endregion
-
-        #region Properties
-
-        public override Vector2 InitialSize => new Vector2(1500f, UI.screenHeight - 50f);
-
-        #endregion
-
         #region Methods
 
         private void SetupData()
@@ -205,9 +249,9 @@ namespace ise.dialogs
 
         private void BuildQualityTranslationCache()
         {
-            qualityTranslationCache = new List<string> {"N/A", "Uh-oh"};
+            qualityTranslationCache = new List<string> { "N/A", "Uh-oh" };
             for (var quality = 2; quality < 7; quality++)
-                qualityTranslationCache.Add(((QualityCategory) quality).GetLabel().CapitalizeFirst());
+                qualityTranslationCache.Add(((QualityCategory)quality).GetLabel().CapitalizeFirst());
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -226,7 +270,7 @@ namespace ise.dialogs
             // Check if anything has changed
             if (!dataSourceDirty) return;
 
-            Logging.WriteMessage("Updating data source");
+            Logging.WriteDebugMessage("Updating data source");
 
             ILiteCollection<DBCachedTradable> collection;
 
@@ -246,8 +290,19 @@ namespace ise.dialogs
 
             // Category filter
             var filteredThingDefs = filterCategory.DescendantThingDefs.Select(x => x.defName).ToList();
-            var items = collection.Find(x => filteredThingDefs.Contains(x.ThingDef));
 
+            IEnumerable<DBCachedTradable> FullTextSearch()
+            {
+                var searchString = filterText.ToLowerInvariant();
+                return collection.Find(x => x.IndexedName.Contains(searchString));
+            }
+
+            // Text filter if needed, do it at the DB level, hopefully faster than LINQ
+            var dbItems = !filterText.NullOrEmpty()
+                ? FullTextSearch()
+                : collection.FindAll();
+
+            var items = dbItems.Where(x => filteredThingDefs.Contains(x.ThingDef));
             // Basket only filter
             if (basketItemsOnly)
             {
@@ -262,15 +317,6 @@ namespace ise.dialogs
             {
                 var colonyItems = cache.Colony.FindAll().Select(x => x.ItemCode);
                 items = items.Where(x => colonyItems.Contains(x.ItemCode));
-            }
-
-            // Text filter
-            if (!filterText.NullOrEmpty())
-            {
-                var searchString = filterText.ToLowerInvariant();
-                items = items.Where(x => x.TranslatedName
-                    .ToLowerInvariant()
-                    .Contains(searchString));
             }
 
             cache.CurrentItems = items
@@ -523,10 +569,9 @@ namespace ise.dialogs
             var buttonRect = new Rect(width, 0, _uiActionButtonWidth, inRect.height);
             if (Widgets.ButtonText(buttonRect, "Confirm"))
             {
-                var fundsAvailable = 0;
                 var silver = GetItemsNearBeacons(pawn.Map, ThingDefSilver);
-                fundsAvailable = silver.Sum(s => s.stackCount);
-                var remaining = Mathf.Clamp((int) Math.Ceiling(Math.Round(
+                var fundsAvailable = silver.Sum(s => s.stackCount);
+                var remaining = Mathf.Clamp((int)Math.Ceiling(Math.Round(
                     stats.CostTotal - promise.AccountBalance,
                     2,
                     MidpointRounding.ToEven
@@ -543,7 +588,7 @@ namespace ise.dialogs
                     {
                         if (promise.AccountBalance > stats.CostTotal)
                         {
-                            var accRemaining = (int) Math.Ceiling(Math.Round(
+                            var accRemaining = (int)Math.Ceiling(Math.Round(
                                 promise.AccountBalance - stats.CostTotal,
                                 2,
                                 MidpointRounding.ToEven
@@ -585,7 +630,7 @@ namespace ise.dialogs
                 else if (stats.CostTotal < 0)
                 {
                     var credit = Math.Abs(stats.CostTotal);
-                    text = $"Your account will be credited with: {Math.Abs(stats.CostTotal)}\r\n" +
+                    text = $"Your account will be credited with: {credit}\r\n" +
                            $"Your new balance will be approximately: {promise.AccountBalance + credit}";
                     canAfford = true;
                 }
@@ -939,6 +984,13 @@ namespace ise.dialogs
 
             // Enumerate list of ThingCategoryDef and add to menu options.
             var allDefsListForReading = DefDatabase<ThingCategoryDef>.AllDefsListForReading;
+            allDefsListForReading.SortBy(def => def.LabelCap.ToString());
+
+            // Ensure Root is always at the top
+            var rootIndex = allDefsListForReading.FindIndex(def => def.defName == "Root");
+            var root = allDefsListForReading[rootIndex];
+            allDefsListForReading.RemoveAt(rootIndex);
+            allDefsListForReading.Insert(0, root);
             foreach (var def in allDefsListForReading)
                 try
                 {
@@ -975,7 +1027,7 @@ namespace ise.dialogs
 
             Find.WindowStack.Add(new FloatMenu(list));
         }
-        
+
         private void PromptForRootCategory()
         {
             void Confirm()
@@ -1010,11 +1062,11 @@ namespace ise.dialogs
             switch (uiTradeMode)
             {
                 case TradeView.Buy:
-                    stats.CostBuy = (float) Math.Round(cost, 2, MidpointRounding.ToEven);
+                    stats.CostBuy = (float)Math.Round(cost, 2, MidpointRounding.ToEven);
                     stats.WeightBuy = Mathf.Ceil(weight);
                     break;
                 case TradeView.Sell:
-                    stats.CostSell = (float) Math.Round(cost, 2, MidpointRounding.ToEven);
+                    stats.CostSell = (float)Math.Round(cost, 2, MidpointRounding.ToEven);
                     stats.WeightSell = Mathf.Ceil(weight);
                     break;
                 default:
@@ -1023,7 +1075,7 @@ namespace ise.dialogs
 
             stats.CostBuyShipping = Mathf.Ceil(promise.DeliveryChargePerKG * stats.WeightBuy);
             stats.CostSellShipping = Mathf.Ceil(promise.CollectionChargePerKG * stats.WeightSell);
-            stats.CostTotal = (float) Math.Round(
+            stats.CostTotal = (float)Math.Round(
                 stats.CostBuy +
                 stats.CostBuyShipping +
                 stats.CostSellShipping -
@@ -1031,47 +1083,6 @@ namespace ise.dialogs
                 , 2
                 , MidpointRounding.ToEven
             );
-        }
-
-        #endregion
-
-        #region Nested type: BasketStats
-
-        private struct BasketStats
-        {
-            public float WeightSell { get; set; }
-            public float WeightBuy { get; set; }
-            public float CostSell { get; set; }
-            public float CostBuy { get; set; }
-
-            public float CostSellShipping { get; set; }
-
-            public float CostBuyShipping { get; set; }
-
-            public float CostTotal { get; set; }
-        }
-
-        #endregion
-
-        #region Nested type: ItemCache
-
-        private struct ItemCache
-        {
-            public ILiteCollection<DBCachedTradable> Colony;
-            public ILiteCollection<DBCachedTradable> Market;
-            public ILiteCollection<DBCachedTradable> ColonyBasket;
-            public ILiteCollection<DBCachedTradable> MarketBasket;
-            public List<DBCachedTradable> CurrentItems;
-        }
-
-        #endregion
-
-        #region Nested type: TradeView
-
-        private enum TradeView
-        {
-            Buy,
-            Sell
         }
 
         #endregion

@@ -1,7 +1,7 @@
 function CompileProto  {
     Param([object]$protofile)
     Write-Host "Compiling $protofile"
-    protoc --csharp_out="./iseworld/ise-core/packets/" -I ./proto $protofile.Name
+    G:\Code\protobuf3\bin\protoc --csharp_out="./iseworld/ise-core/packets/" -I ./proto $protofile.Name
 }
 
 function Get-ScriptDirectory
@@ -19,6 +19,5 @@ Get-ChildItem -File -Path ./proto -Filter "*.proto" -Recurse | Set-Variable prot
 foreach ($protofile in $protoFiles) {
     CompileProto($protofile)
 }
-Write-Host "Done"
 
 Set-Location $cwd

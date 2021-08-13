@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, clientbinddialogtask.cs, Created 2021-02-11
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, clientbinddialogtask.cs 2021-02-11
+// #endregion
 
 #endregion
 
@@ -25,21 +27,36 @@ namespace ise.lib.tasks
 {
     internal class ClientBindDialogTask : AbstractDialogTask
     {
-        #region Fields
-
-        private string bindId;
-
-        private State state;
-        private Task task;
-
-        #endregion
-
         #region ctor
 
         public ClientBindDialogTask(IDialog dialog) : base(dialog)
         {
             state = State.Start;
         }
+
+        #endregion
+
+        #region Nested type: State
+
+        private enum State
+        {
+            Start,
+            Request,
+            Confirm,
+            WaitConfirm,
+            Verify,
+            Done,
+            Error
+        }
+
+        #endregion
+
+        #region Fields
+
+        private string bindId;
+
+        private State state;
+        private Task task;
 
         #endregion
 
@@ -58,13 +75,13 @@ namespace ise.lib.tasks
                     break;
                 case State.Request:
                     Dialog.DialogMessage = "Registering";
-                    if (task != null && task.IsCompleted) ProcessBindRequestReply(((Task<BindReply>) task).Result);
+                    if (task != null && task.IsCompleted) ProcessBindRequestReply(((Task<BindReply>)task).Result);
 
                     break;
                 case State.Confirm:
                     Dialog.DialogMessage = "Confirming details";
                     if (task != null && task.IsCompleted)
-                        ProcessConfirmBindReply(((Task<ConfirmBindReply>) task).Result);
+                        ProcessConfirmBindReply(((Task<ConfirmBindReply>)task).Result);
 
                     break;
                 case State.WaitConfirm:
@@ -79,7 +96,7 @@ namespace ise.lib.tasks
                 case State.Verify:
                     Dialog.DialogMessage = "Verifying details";
                     if (task != null && task.IsCompleted)
-                        ProcessBindVerifyReply(((Task<ClientBindVerifyReply>) task).Result);
+                        ProcessBindVerifyReply(((Task<ClientBindVerifyReply>)task).Result);
 
                     break;
                 case State.Done:
@@ -111,7 +128,7 @@ namespace ise.lib.tasks
             }
             else
             {
-                var request = new BindRequest {SteamId = IseCentral.User.UserId};
+                var request = new BindRequest { SteamId = IseCentral.User.UserId };
                 task = SendAndParseReplyAsync(
                     request,
                     BindReply.Parser,
@@ -141,7 +158,7 @@ namespace ise.lib.tasks
         private void StartConfirmBind()
         {
             state = State.Confirm;
-            var request = new ConfirmBindRequest {BindId = bindId, BindType = BindTypeEnum.AccountBind};
+            var request = new ConfirmBindRequest { BindId = bindId, BindType = BindTypeEnum.AccountBind };
             task = SendAndParseReplyAsync(
                 request,
                 ConfirmBindReply.Parser,
@@ -159,14 +176,12 @@ namespace ise.lib.tasks
                     switch (reply.BindType)
                     {
                         case BindTypeEnum.AccountBind:
-
-
                             Logging.WriteMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
 
                             // Now confirm the Client Bind ID
                             state = State.Confirm;
                             var request = new ConfirmBindRequest
-                                {BindId = reply.ClientBindId, BindType = BindTypeEnum.ClientBind};
+                                { BindId = reply.ClientBindId, BindType = BindTypeEnum.ClientBind };
                             task = SendAndParseReplyAsync(
                                 request,
                                 ConfirmBindReply.Parser,
@@ -239,21 +254,6 @@ namespace ise.lib.tasks
                 gc.ClientBindVerified = true;
                 state = State.Done;
             }
-        }
-
-        #endregion
-
-        #region Nested type: State
-
-        private enum State
-        {
-            Start,
-            Request,
-            Confirm,
-            WaitConfirm,
-            Verify,
-            Done,
-            Error,
         }
 
         #endregion

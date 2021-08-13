@@ -1,16 +1,20 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, user.cs, Created 2021-02-09
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, user.cs 2021-02-09
+// #endregion
 
 #endregion
 
 using System;
 using ise_core.db;
+using Steamworks;
 using Verse;
+using Verse.Steam;
 using static ise.lib.Constants;
 
 namespace ise.lib
@@ -21,19 +25,19 @@ namespace ise.lib
 
         private static string GetUserSteamId()
         {
-#if DEBUG
-            // Pretend we're a steam user
-            return "[U:1:13457876]";
-#else
+// #if DEBUG
+//             // Pretend we're a steam user
+//             return "[U:1:13457876]";
+// #else
             return SteamManager.Initialized ? SteamUser.GetSteamID().ToString() : null;
-#endif
+// #endif
         }
 
         internal static DBUser LoadUserData()
         {
             var steamId = GetUserSteamId();
             var db = IseCentral.DataCache;
-            Logging.WriteMessage($"Trying to load user data");
+            Logging.WriteDebugMessage("Trying to load user data");
             var col = db.GetCollection<DBUser>(Tables.Users);
 
             var userData = steamId.NullOrEmpty()
@@ -44,8 +48,8 @@ namespace ise.lib
             {
                 Logging.WriteMessage("Creating new user data");
                 userData = steamId.NullOrEmpty()
-                    ? new DBUser {UserId = Guid.NewGuid().ToString(), IsSteamUser = false}
-                    : new DBUser {UserId = steamId, IsSteamUser = true};
+                    ? new DBUser { UserId = Guid.NewGuid().ToString(), IsSteamUser = false }
+                    : new DBUser { UserId = steamId, IsSteamUser = true };
                 col.Insert(userData);
             }
 
@@ -67,7 +71,7 @@ namespace ise.lib
         {
             var db = IseCentral.DataCache;
             var col = db.GetCollection<T>(Tables.Bindings);
-            var bind = new T {ParentId = parentId, BindId = bindId};
+            var bind = new T { ParentId = parentId, BindId = bindId };
             col.Insert(bind);
         }
 

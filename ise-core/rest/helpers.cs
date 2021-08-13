@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-core, helpers.cs, Created 2020-10-01
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-core, helpers.cs 2021-07-09
+// #endregion
 
 #endregion
 
@@ -14,10 +16,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using RestSharp;
-using System.Threading;
 using static ise_core.rest.api.v1.Constants;
 
 namespace ise_core.rest
@@ -28,7 +30,7 @@ namespace ise_core.rest
 
         public static long GetUTCNow()
         {
-            return (long) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         public struct TaskOrReply<T>
@@ -42,7 +44,7 @@ namespace ise_core.rest
             var client = new RestClient(Server)
             {
                 AutomaticDecompression = true,
-                UserAgent = $"ISE/1.0",
+                UserAgent = "ISE/1.0"
             };
             return client;
         }
@@ -115,31 +117,22 @@ namespace ise_core.rest
                 );
                 task.Wait();
 
-                if (task.Result.IsSuccessful)
-                {
-                    return task.Result;
-                }
+                if (task.Result.IsSuccessful) return task.Result;
 
                 var tryAgain = task.Result.Headers.Any(p => p.Name?.ToLower() == "retry-after");
 
                 // If we've reached max try count or server says does not ask to try again 
                 // Then exit immediately
                 if (!tryAgain) break;
-                if (tries < 2)
-                {
-                    Thread.Sleep(5 * 1000); // Sleep for 5 seconds
-                }
+                if (tries < 2) Thread.Sleep(5 * 1000); // Sleep for 5 seconds
             }
 
             if (task == null)
                 throw new Exception(
-                    $"HTTP Client in Invalid State, task was null! wat do?");
+                    "HTTP Client in Invalid State, task was null! wat do?");
 
             // Throw the task exception if there was one
-            if (task.Exception != null)
-            {
-                throw task.Exception;
-            }
+            if (task.Exception != null) throw task.Exception;
 
             // Otherwise generate one from HTTP Response
             throw new Exception(
@@ -168,31 +161,22 @@ namespace ise_core.rest
                 );
                 task.Wait();
 
-                if (task.Result.IsSuccessful)
-                {
-                    return task.Result;
-                }
+                if (task.Result.IsSuccessful) return task.Result;
 
                 var tryAgain = task.Result.Headers.Any(p => p.Name?.ToLower() == "retry-after");
 
                 // If we've reached max try count or server says does not ask to try again 
                 // Then exit immediately
                 if (!tryAgain) break;
-                if (tries < 2)
-                {
-                    Thread.Sleep(5 * 1000); // Sleep for 5 seconds
-                }
+                if (tries < 2) Thread.Sleep(5 * 1000); // Sleep for 5 seconds
             }
 
             if (task == null)
                 throw new Exception(
-                    $"HTTP Client in Invalid State, task was null! wat do?");
+                    "HTTP Client in Invalid State, task was null! wat do?");
 
             // Throw the task exception if there was one
-            if (task.Exception != null)
-            {
-                throw task.Exception;
-            }
+            if (task.Exception != null) throw task.Exception;
 
             // Otherwise generate one from HTTP Response
             throw new Exception(
@@ -240,12 +224,8 @@ namespace ise_core.rest
                 request.AddParameter("x-ise-client-id", clientId, ParameterType.HttpHeader);
 
             if (urlSegments != null)
-            {
                 foreach (var kvp in urlSegments)
-                {
                     request.AddParameter(kvp.Key, kvp.Value, ParameterType.UrlSegment);
-                }
-            }
 
             request.RequestFormat = DataFormat.None;
             request.AddDecompressionMethod(DecompressionMethods.GZip);

@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, marketdownloaddialogtask.cs, Created 2021-02-12
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, marketdownloaddialogtask.cs 2021-02-12
+// #endregion
 
 #endregion
 
@@ -17,13 +19,11 @@ using ise.components;
 using ise.dialogs;
 using ise_core.db;
 using LiteDB;
-using RestSharp;
 using RimWorld;
 using UnityEngine;
 using Verse;
 using static ise_core.rest.Helpers;
 using static ise.lib.Constants;
-using static ise_core.rest.api.v1.Constants;
 using static ise.lib.Tradables;
 using static ise.lib.Cache;
 
@@ -31,18 +31,6 @@ namespace ise.lib.tasks
 {
     internal class MarketDownloadDialogTask : AbstractDialogTask
     {
-        #region Fields
-
-        private readonly string colonyId;
-        private readonly ISEGameComponent gc;
-        private readonly Pawn pawn;
-        private List<Thing> colonyThings;
-
-        private State state;
-        private Task task;
-
-        #endregion
-
         #region ctor
 
         public MarketDownloadDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
@@ -54,6 +42,32 @@ namespace ise.lib.tasks
 
             colonyId = gc.GetColonyId(pawn.Map);
         }
+
+        #endregion
+
+        #region Nested type: State
+
+        private enum State
+        {
+            Start,
+            Request,
+            MarketCaching,
+            ColonyCaching,
+            Done,
+            Error
+        }
+
+        #endregion
+
+        #region Fields
+
+        private readonly string colonyId;
+        private readonly ISEGameComponent gc;
+        private readonly Pawn pawn;
+        private List<Thing> colonyThings;
+
+        private State state;
+        private Task task;
 
         #endregion
 
@@ -72,7 +86,7 @@ namespace ise.lib.tasks
                     break;
                 case State.Request:
                     Dialog.DialogMessage = "Downloading Market Data";
-                    if (task != null && task.IsCompleted) ProcessInventoryReply(((Task<InventoryReply>) task).Result);
+                    if (task != null && task.IsCompleted) ProcessInventoryReply(((Task<InventoryReply>)task).Result);
 
                     break;
                 case State.MarketCaching:
@@ -113,7 +127,7 @@ namespace ise.lib.tasks
         {
             var db = IseCentral.DataCache;
             var inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(colonyId);
-            
+
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
                 // No need to download, promise is still valid
@@ -129,10 +143,10 @@ namespace ise.lib.tasks
 
         private void ProcessInventoryReply(InventoryReply reply)
         {
-            Logging.WriteMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
+            Logging.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
             task = new Task(delegate
             {
-                Logging.WriteMessage($"Building cache of {reply.Items.Count} market items");
+                Logging.WriteDebugMessage($"Building cache of {reply.Items.Count} market items");
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
@@ -155,12 +169,14 @@ namespace ise.lib.tasks
                             WeSellAt = tradable.WeSellAt,
                             Minified = tradable.Minified,
                             TranslatedName = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).LabelCap,
+                            IndexedName = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).LabelCap.ToLower(),
                             TranslatedStuff = tradable.Stuff.NullOrEmpty()
                                 ? ""
-                                : (string) DefDatabase<ThingDef>.GetNamed(tradable.Stuff).LabelCap,
+                                : (string)DefDatabase<ThingDef>.GetNamed(tradable.Stuff).LabelCap,
                             Category = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).FirstThingCategory.defName
                         }));
                 marketCache.EnsureIndex(mc => mc.ThingDef);
+                marketCache.EnsureIndex(mc => mc.IndexedName);
                 var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
                 inventoryCache.DeleteMany(x => x.ColonyId == colonyId);
                 inventoryCache.Insert(new DBInventoryPromise
@@ -171,7 +187,7 @@ namespace ise.lib.tasks
                     CollectionChargePerKG = reply.CollectionChargePerKG,
                     DeliveryChargePerKG = reply.DeliveryChargePerKG, AccountBalance = reply.AccountBalance
                 });
-                Logging.WriteMessage("Done caching market items");
+                Logging.WriteDebugMessage("Done caching market items");
             });
             task.Start();
 
@@ -183,7 +199,7 @@ namespace ise.lib.tasks
         {
             task = new Task(delegate
             {
-                Logging.WriteMessage("Building colony item cache");
+                Logging.WriteDebugMessage("Building colony item cache");
 
                 Logging.WriteDebugMessage("Getting list of all items in range of beacons");
                 Logging.WriteDebugMessage($"on map for {pawn.Name}");
@@ -201,6 +217,7 @@ namespace ise.lib.tasks
 
                 colonyCache.DeleteAll();
                 colonyCache.EnsureIndex(cc => cc.ThingDef);
+                colonyCache.EnsureIndex(cc => cc.IndexedName);
 
                 // For each downloaded market item
                 foreach (var thingGroup in colonyThings.GroupBy(ci => ci.def.defName))
@@ -214,7 +231,7 @@ namespace ise.lib.tasks
                         var qualityCategory = unpackedThing.TryGetComp<CompQuality>()?.Quality;
                         var stuff = unpackedThing.Stuff?.defName;
 
-                        if (qualityCategory != null && (int) qualityCategory < 2)
+                        if (qualityCategory != null && (int)qualityCategory < 2)
                         {
                             Logging.WriteDebugMessage(
                                 $"Item {unpackedThing.ThingID} was less than Normal quality, Skipped");
@@ -223,7 +240,7 @@ namespace ise.lib.tasks
                         }
 
                         // Check if the item has quality, set to 0 if not.
-                        var intQuality = qualityCategory == null ? 0 : (int) qualityCategory;
+                        var intQuality = qualityCategory == null ? 0 : (int)qualityCategory;
 
 
                         Logging.WriteDebugMessage(
@@ -286,7 +303,7 @@ namespace ise.lib.tasks
                             unpackedThing.def.defName == cacheItem.ThingDef &&
                             stuff == cacheItem.Stuff &&
                             // Check if the item has quality, set to 0 if not.
-                            (qualityCategory == null ? 0 : (int) qualityCategory) == cacheItem.Quality &&
+                            (qualityCategory == null ? 0 : (int)qualityCategory) == cacheItem.Quality &&
                             itemHitPointsAsPercentage == cacheItem.HitPoints
                         ) ?? new DBCachedTradable
                         {
@@ -302,6 +319,7 @@ namespace ise.lib.tasks
                             Minified = matchMarketCacheItem.Minified,
                             Category = matchMarketCacheItem.Category,
                             TranslatedName = matchMarketCacheItem.TranslatedName,
+                            IndexedName = matchMarketCacheItem.IndexedName,
                             TranslatedStuff = matchMarketCacheItem.TranslatedStuff
                         };
                         matchColonyCacheItem.Quantity += unpackedThing.stackCount;
@@ -309,7 +327,7 @@ namespace ise.lib.tasks
                     }
                 }
 
-                Logging.WriteMessage("Done caching colony items");
+                Logging.WriteDebugMessage("Done caching colony items");
 
                 Logging.WriteDebugMessage("Restoring basket");
                 RestoreBasket();
@@ -366,20 +384,6 @@ namespace ise.lib.tasks
             // Delete any items in the basket which we don't have anymore
             var marketCachedItems = marketCache.FindAll().Select(cc => cc.ItemCode);
             marketBasket.DeleteMany(x => !marketCachedItems.Contains(x.ItemCode));
-        }
-
-        #endregion
-
-        #region Nested type: State
-
-        private enum State
-        {
-            Start,
-            Request,
-            MarketCaching,
-            ColonyCaching,
-            Done,
-            Error,
         }
 
         #endregion

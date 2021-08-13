@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, tradables.cs, Created 2021-02-03
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, tradables.cs 2021-02-03
+// #endregion
 
 #endregion
 
@@ -67,7 +69,7 @@ namespace ise.lib
             var thingDef = DefDatabase<ThingDef>.GetNamed(thing);
             var stuffDef = stuff.NullOrEmpty() ? null : DefDatabase<ThingDef>.GetNamed(stuff);
             return StatDefOf.MarketValue.Worker.GetValue(quality > 2
-                ? StatRequest.For(thingDef, stuffDef, (QualityCategory) quality)
+                ? StatRequest.For(thingDef, stuffDef, (QualityCategory)quality)
                 : StatRequest.For(thingDef, stuffDef));
         }
 
@@ -84,8 +86,8 @@ namespace ise.lib
                         Stuff = stuff.defName,
                         Minified = thing.Minifiable,
                         Quality = -1,
-                        BaseValue = StatDefOf.MarketValue.Worker
-                            .GetValue(StatRequest.For(thing, stuff)),
+                        BaseValue = (float)Math.Round(StatDefOf.MarketValue.Worker
+                            .GetValue(StatRequest.For(thing, stuff)), 2, MidpointRounding.AwayFromZero),
                         Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, stuff))
                     };
                 ;
@@ -106,10 +108,11 @@ namespace ise.lib
                             Stuff = stuff.defName,
                             Minified = thing.Minifiable,
                             Quality = quality,
-                            BaseValue = StatDefOf.MarketValue.Worker
-                                .GetValue(StatRequest.For(thing, stuff, (QualityCategory) quality)),
+                            BaseValue = (float)Math.Round(StatDefOf.MarketValue.Worker
+                                    .GetValue(StatRequest.For(thing, stuff, (QualityCategory)quality)), 2,
+                                MidpointRounding.AwayFromZero),
                             Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, stuff,
-                                (QualityCategory) quality))
+                                (QualityCategory)quality))
                         };
                 }
         }
@@ -122,9 +125,10 @@ namespace ise.lib
                     ThingDef = thing.defName,
                     Minified = thing.Minifiable,
                     Quality = quality,
-                    BaseValue = StatDefOf.MarketValue.Worker
-                        .GetValue(StatRequest.For(thing, null, (QualityCategory) quality)),
-                    Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null, (QualityCategory) quality))
+                    BaseValue = (float)Math.Round(StatDefOf.MarketValue.Worker
+                            .GetValue(StatRequest.For(thing, null, (QualityCategory)quality)), 2,
+                        MidpointRounding.AwayFromZero),
+                    Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null, (QualityCategory)quality))
                 };
         }
 
@@ -148,7 +152,7 @@ namespace ise.lib
                     {
                         ThingDef = thing.defName,
                         Minified = thing.Minifiable,
-                        BaseValue = (float) Math.Round(
+                        BaseValue = (float)Math.Round(
                             StatDefOf.MarketValue.Worker.GetValue(StatRequest.For(thing, null)), 2,
                             MidpointRounding.AwayFromZero),
                         Weight = StatDefOf.Mass.Worker.GetValue(StatRequest.For(thing, null))
@@ -167,7 +171,7 @@ namespace ise.lib
         {
             foreach (var beacon in Building_OrbitalTradeBeacon.AllPowered(map))
             {
-                Logging.WriteMessage($"Found trade beacon @ {beacon.Position.ToString()}");
+                Logging.WriteDebugMessage($"Found trade beacon @ {beacon.Position.ToString()}");
                 foreach (var beaconCell in beacon.TradeableCells)
                 {
                     var thingList = beaconCell.GetThingList(map);
@@ -221,7 +225,7 @@ namespace ise.lib
 
         internal static int CalculateThingHitPoints(Thing thing)
         {
-            if (thing.def.useHitPoints) return (int) Math.Floor((float) thing.HitPoints / thing.MaxHitPoints * 100.0f);
+            if (thing.def.useHitPoints) return (int)Math.Floor((float)thing.HitPoints / thing.MaxHitPoints * 100.0f);
 
             return 100;
         }

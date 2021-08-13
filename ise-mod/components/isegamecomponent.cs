@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, isegamecomponent.cs, Created 2021-02-10
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, isegamecomponent.cs 2021-02-10
+// #endregion
 
 #endregion
 
@@ -24,6 +26,15 @@ namespace ise.components
     // ReSharper disable once InconsistentNaming
     public class ISEGameComponent : GameComponent
     {
+        #region ctor
+
+        public ISEGameComponent(Game game)
+        {
+            Logging.WriteDebugMessage("Game Component installed");
+        }
+
+        #endregion
+
         #region Fields
 
         private const int UpdateTickInterval = 2000;
@@ -34,15 +45,6 @@ namespace ise.components
         private int nextUpdateTick;
         private bool spawnToolUsed;
         private bool firstRunComplete;
-
-        #endregion
-
-        #region ctor
-
-        public ISEGameComponent(Game game)
-        {
-            Logging.WriteMessage("Game Component installed");
-        }
 
         #endregion
 
@@ -110,7 +112,7 @@ namespace ise.components
         {
             // Can only use ISE where you own the map and it's a settlement with a name
             var mapID = GetUniqueMapID(map);
-            Logging.WriteMessage($"Map ID of caller is {mapID}");
+            Logging.WriteDebugMessage($"Map ID of caller is {mapID}");
             return GetColonyFaction().HasName && map.Parent.HasName && MapIsSettlementOfPlayer(map);
         }
 
@@ -138,10 +140,7 @@ namespace ise.components
             Logging.WriteDebugMessage("Ticking Account Managers");
             nextUpdateTick = currentTick + UpdateTickInterval;
 
-            foreach (var task in activeAccounts.Values.Select(account => new Task(account.UpdateAsync)))
-            {
-                task.Start();
-            }
+            foreach (var task in activeAccounts.Values.Select(account => new Task(account.UpdateAsync))) task.Start();
         }
 
         private void StartAccountTracking()

@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, cache.cs, Created 2021-02-20
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, cache.cs 2021-02-20
+// #endregion
 
 #endregion
 
@@ -17,6 +19,18 @@ namespace ise.lib
 {
     internal static class Cache
     {
+        #region Nested type: CacheType
+
+        internal enum CacheType
+        {
+            MarketCache = 0,
+            ColonyCache = 1,
+            MarketBasket = 2,
+            ColonyBasket = 3
+        }
+
+        #endregion
+
         #region Methods
 
         internal static ILiteCollection<DBCachedTradable> GetCache(
@@ -71,18 +85,6 @@ namespace ise.lib
             }
 
             IseCentral.DataCache.DropCollection($"{tableName}_{colonyId}");
-        }
-
-        #endregion
-
-        #region Nested type: CacheType
-
-        internal enum CacheType
-        {
-            MarketCache = 0,
-            ColonyCache = 1,
-            MarketBasket = 2,
-            ColonyBasket = 3
         }
 
         #endregion

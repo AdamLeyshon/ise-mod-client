@@ -1,17 +1,24 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, iseconsole.cs, Created 2021-02-10
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, iseconsole.cs 2021-02-10
+// #endregion
 
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
+using Common;
 using ise.components;
 using ise.dialogs;
 using ise.jobs;
+using ise.lib;
+using ise_core.db;
+using Order;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -22,7 +29,8 @@ namespace ise.buildings
     {
         #region Fields
 
-        private CompPowerTrader powerComp;
+        private CompPowerTrader _powerComp;
+        private ISEGameComponent _gc;
 
         #endregion
 
@@ -30,9 +38,12 @@ namespace ise.buildings
 
         internal bool CanShopOnlineNow =>
             Spawned &&
-            ISEUplink.HasUplink(Map) &&
+            ISEUplink.HasBuilding(Map) &&
+            ISEMaterialiser.HasBuilding(Map) &&
             !Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) &&
-            powerComp.PowerOn;
+            _powerComp.PowerOn;
+
+        internal bool CanWithdrawCashNow => !_gc.ClientBind.NullOrEmpty();
 
         #endregion
 
@@ -41,7 +52,8 @@ namespace ise.buildings
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            powerComp = GetComp<CompPowerTrader>();
+            _powerComp = GetComp<CompPowerTrader>();
+            _gc = Current.Game.GetComponent<ISEGameComponent>();
         }
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
@@ -50,40 +62,67 @@ namespace ise.buildings
             if (failureReason != null)
             {
                 yield return failureReason;
-                yield break;
             }
+            else
+            {
+                yield return new FloatMenuOption("ISEShopMenuOption".Translate(),
+                    delegate { GiveJobShopOnline(myPawn, this); });
 
-            yield return new FloatMenuOption("ISEShopOnline".Translate(),
-                delegate { GiveJobShopOnline(myPawn, this); });
+                if (CanWithdrawCashNow)
+                    yield return new FloatMenuOption("ISEWithdrawMenuOption".Translate(),
+                        delegate { GiveJobWithdrawCash(myPawn, this); });
+
+                var dbOrders = IseCentral.DataCache.GetCollection<DBOrder>(Constants.Tables.Orders);
+                foreach (var order in _gc.GetAccount(_gc.GetColonyId(Map)).GetActiveOrders
+                    .Where(x => x.Status == OrderStatusEnum.Placed))
+                {
+                    var dbOrder = dbOrders.FindById(order.OrderId);
+                    if (dbOrder != null)
+                        yield return new FloatMenuOption(
+                            $"Order {order.OrderId}, Ready for materialising in {dbOrder.DeliveryTick.ToStringTicksToDays()}",
+                            null);
+                }
+            }
         }
 
         private FloatMenuOption GetFailureReason(Pawn myPawn)
         {
-            if (!ISEUplink.HasUplink(Map))
+            if (!ISEUplink.HasBuilding(Map))
                 return new FloatMenuOption("ISENeedUplink".Translate(), null);
-            if (!myPawn.CanReach((LocalTargetInfo) this, PathEndMode.InteractionCell, Danger.Some))
+            if (!ISEMaterialiser.HasBuilding(Map))
+                return new FloatMenuOption("ISENeedMaterialiser".Translate(), null);
+            if (!myPawn.CanReach((LocalTargetInfo)this, PathEndMode.InteractionCell, Danger.Some))
                 return new FloatMenuOption("CannotUseNoPath".Translate(), null);
             if (Spawned && Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
                 return new FloatMenuOption("CannotUseSolarFlare".Translate(), null);
-            if (!powerComp.PowerOn)
+            if (!_powerComp.PowerOn)
                 return new FloatMenuOption("CannotUseNoPower".Translate(), null);
-            if (CanShopOnlineNow)
-                return null;
-            Log.Error($"{myPawn} could not use console for unknown reason.");
-            return new FloatMenuOption("Cannot use now", null);
+            return CanShopOnlineNow ? null : new FloatMenuOption("Cannot use now", null);
         }
 
         private void GiveJobShopOnline(Pawn myPawn, ISEConsole target)
         {
-            myPawn.jobs.TryTakeOrderedJob(new Job(ISEJobDefOf.ISEShopOnline, (LocalTargetInfo) this));
+            myPawn.jobs.TryTakeOrderedJob(new Job(ISEJobDefOf.ISEShopOnlineJob, (LocalTargetInfo)this));
+        }
+
+        private void GiveJobWithdrawCash(Pawn myPawn, ISEConsole target)
+        {
+            myPawn.jobs.TryTakeOrderedJob(new Job(ISEJobDefOf.ISEWithdrawCashJob, (LocalTargetInfo)this));
         }
 
         internal void ShopOnline(Pawn user)
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
+            var destination = new DialogMarketDownload(user);
             Find.WindowStack.Add(gc.ClientBindVerified
-                ? new DialogBind(user, DialogBind.BindUIType.Colony)
-                : new DialogBind(user, DialogBind.BindUIType.Client));
+                ? new DialogBind(user, DialogBind.BindUIType.Colony, destination)
+                : new DialogBind(user, DialogBind.BindUIType.Client, destination));
+        }
+
+        internal void WithdrawCash(Pawn user)
+        {
+            var destination = new DialogBankAccountFetch(user, CurrencyEnum.Utc);
+            Find.WindowStack.Add(new DialogBind(user, DialogBind.BindUIType.Colony, destination));
         }
 
         #endregion

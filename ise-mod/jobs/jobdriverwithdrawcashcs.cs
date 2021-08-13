@@ -5,7 +5,7 @@
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
-// // iseworld, ise-mod, jobdrivershoponline.cs 2021-02-10
+// // iseworld, ise-mod, jobdriverwithdrawcashcs.cs 2021-08-12
 // #endregion
 
 #endregion
@@ -17,7 +17,7 @@ using Verse.AI;
 namespace ise.jobs
 {
     // ReSharper disable once UnusedType.Global
-    public class JobDriverShopOnline : JobDriver
+    public class JobDriverWithdrawCash : JobDriver
     {
         #region Methods
 
@@ -30,15 +30,15 @@ namespace ise.jobs
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.InteractionCell).FailOn(to =>
-                !((ISEConsole)to.actor.jobs.curJob.GetTarget(TargetIndex.A).Thing).CanShopOnlineNow);
-            var shopOnline = new Toil();
-            shopOnline.initAction = delegate
+                !((ISEConsole)to.actor.jobs.curJob.GetTarget(TargetIndex.A).Thing).CanWithdrawCashNow);
+            var toil = new Toil();
+            toil.initAction = delegate
             {
-                var actor = shopOnline.actor;
-                if (((ISEConsole)actor.jobs.curJob.GetTarget(TargetIndex.A).Thing).CanShopOnlineNow)
-                    ((ISEConsole)actor.jobs.curJob.targetA).ShopOnline(actor);
+                var actor = toil.actor;
+                if (((ISEConsole)actor.jobs.curJob.GetTarget(TargetIndex.A).Thing).CanWithdrawCashNow)
+                    ((ISEConsole)actor.jobs.curJob.targetA).WithdrawCash(actor);
             };
-            yield return shopOnline;
+            yield return toil;
         }
 
         #endregion

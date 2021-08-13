@@ -1,10 +1,12 @@
-#region License
+#region license
 
-// This file was created by TwistedSoul @ TheCodeCache.net
-// You are free to inspect the mod but may not modify or redistribute without my express permission.
-// However! If you would like to contribute to GWP please feel free to drop me a message.
-// 
-// ise-mod, consts.cs, Created 2021-02-09
+// #region License
+// // This file was created by TwistedSoul @ TheCodeCache.net
+// // You are free to inspect the mod but may not modify or redistribute without my express permission.
+// // However! If you would like to contribute to this code please feel free to drop me a message.
+// //
+// // iseworld, ise-mod, consts.cs 2021-02-09
+// #endregion
 
 #endregion
 
@@ -14,22 +16,6 @@ namespace ise.lib
 {
     internal static class Constants
     {
-        #region Fields
-
-        internal const string ThingDefSilver = "Silver";
-
-        /// <summary>
-        ///     This is how often we ask the server to update orders.
-        ///     7500 ticks is about every 3 minutes, or 3 in-game hours.
-        /// </summary>
-        internal const int OrderUpdateTickRate = 7500;
-
-
-        internal static readonly string DBLocation =
-            $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=direct";
-
-        #endregion
-
         #region Nested type: Tables
 
         internal static class Tables
@@ -49,6 +35,22 @@ namespace ise.lib
 
             #endregion
         }
+
+        #endregion
+
+        #region Fields
+
+        internal const string ThingDefSilver = "Silver";
+
+        /// <summary>
+        ///     This is how often we ask the server to update orders.
+        ///     7500 ticks is about every 3 minutes, or 3 in-game hours.
+        /// </summary>
+        internal const int OrderUpdateTickRate = 7500;
+
+
+        internal static readonly string DBLocation =
+            $"Filename='{GenFilePaths.ConfigFolderPath}\\ISEData.db';Connection=direct";
 
         #endregion
     }
