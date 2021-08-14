@@ -32,10 +32,10 @@ namespace ise.lib.tasks
 
         public ColonyBindDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
         {
-            state = State.Start;
-            gc = Current.Game.GetComponent<ISEGameComponent>();
-            pawn = userPawn;
-            colonyId = gc.GetColonyId(pawn.Map);
+            _state = State.Start;
+            _gc = Current.Game.GetComponent<ISEGameComponent>();
+            _pawn = userPawn;
+            _colonyId = _gc.GetColonyId(_pawn.Map);
         }
 
         #endregion
@@ -58,12 +58,12 @@ namespace ise.lib.tasks
 
         #region Fields
 
-        private readonly ISEGameComponent gc;
-        private readonly Pawn pawn;
-        private string colonyId;
+        private readonly ISEGameComponent _gc;
+        private readonly Pawn _pawn;
+        private string _colonyId;
 
-        private State state;
-        private Task task;
+        private State _state;
+        private Task _task;
 
         #endregion
 
@@ -72,9 +72,31 @@ namespace ise.lib.tasks
         public override void Update()
         {
             // Handle task errors first.
-            if (task != null && task.IsFaulted) LogTaskError();
+            if (_task != null && _task.IsFaulted)
+            {
+                if (_state == State.GetDetails)
+                {
+                    // Handle a 404 Colony not found:
+                    if (_task.Exception?.InnerException != null && _task.Exception.InnerException.Message.Contains("404"))
+                    {
+                        // Delete the bind and re-create
+                        DeleteBind<DBColonyBind>(_colonyId);
+                        _gc.FlushColonyIdCache();
+                        _colonyId = string.Empty;
+                        _state = State.Start;
+                    }
+                    else
+                    {
+                        LogTaskError();
+                    }
+                }
+                else
+                {
+                    LogTaskError();
+                }
+            }
 
-            switch (state)
+            switch (_state)
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
@@ -82,29 +104,29 @@ namespace ise.lib.tasks
                     break;
                 case State.Create:
                     Dialog.DialogMessage = "Registering Colony";
-                    if (task != null && task.IsCompleted) ProcessColonyCreateReply(((Task<ColonyData>)task).Result);
+                    if (_task != null && _task.IsCompleted) ProcessColonyCreateReply(((Task<ColonyData>)_task).Result);
 
                     break;
                 case State.GetDetails:
                     Dialog.DialogMessage = "Checking Details";
-                    if (task != null && task.IsCompleted) ProcessGetColonyDataReply(((Task<ColonyData>)task).Result);
+                    if (_task != null && _task.IsCompleted) ProcessGetColonyDataReply(((Task<ColonyData>)_task).Result);
 
                     break;
                 case State.UpdateData:
                     Dialog.DialogMessage = "Updating Colony Details";
-                    if (task != null && task.IsCompleted) ProcessUpdateColonyReply(((Task<ColonyData>)task).Result);
+                    if (_task != null && _task.IsCompleted) ProcessUpdateColonyReply(((Task<ColonyData>)_task).Result);
 
                     break;
                 case State.UpdateMods:
                     Dialog.DialogMessage = "Updating Colony Mods";
-                    if (task != null && task.IsCompleted)
-                        ProcessColonyModsUpdateReply(((Task<ColonyModsSetReply>)task).Result);
+                    if (_task != null && _task.IsCompleted)
+                        ProcessColonyModsUpdateReply(((Task<ColonyModsSetReply>)_task).Result);
 
                     break;
                 case State.UpdateTradables:
                     Dialog.DialogMessage = "Updating Colony Tradables";
-                    if (task != null && task.IsCompleted)
-                        ProcessColonyTradablesReply(((Task<bool>)task).Result);
+                    if (_task != null && _task.IsCompleted)
+                        ProcessColonyTradablesReply(((Task<bool>)_task).Result);
 
                     break;
                 case State.Done:
@@ -122,14 +144,14 @@ namespace ise.lib.tasks
 
         private void LogTaskError()
         {
-            state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
-            task = null;
+            _state = State.Error;
+            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            _task = null;
         }
 
         private void StartCreate()
         {
-            if (!colonyId.NullOrEmpty())
+            if (!_colonyId.NullOrEmpty())
             {
                 // Jump straight to verify
                 StartColonyGet();
@@ -143,24 +165,24 @@ namespace ise.lib.tasks
                     FactionName = GameInfo.GetColonyFaction().Name,
                     MapId = map.Parent.ID,
                     Tick = Current.Game.tickManager.TicksGame,
-                    UsedDevMode = gc.SpawnToolUsed,
+                    UsedDevMode = _gc.SpawnToolUsed,
                     GameVersion = VersionControl.CurrentVersionStringWithRev,
                     Platform = GameInfo.GetGamePlatform(),
                     Seed = Current.Game.World.info.Seed.ToString(),
                     Location = map.info.Tile.ToString()
                 };
 
-                var request = new ColonyCreateRequest { ClientBindId = gc.ClientBind, Data = colonyData };
+                var request = new ColonyCreateRequest { ClientBindId = _gc.ClientBind, Data = colonyData };
 
-                task = SendAndParseReplyAsync(
+                _task = SendAndParseReplyAsync(
                     request,
                     ColonyData.Parser,
                     $"{URLPrefix}colony/",
                     Method.POST,
-                    gc.ClientBind
+                    _gc.ClientBind
                 );
-                task.Start();
-                state = State.Create;
+                _task.Start();
+                _state = State.Create;
             }
         }
 
@@ -168,9 +190,9 @@ namespace ise.lib.tasks
         {
             Logging.WriteMessage($"Got new Colony ID: {reply.ColonyId}");
 
-            SaveBind<DBColonyBind>(gc.ClientBind, reply.ColonyId);
-            SaveBind<DBMapBind>(GameInfo.GetUniqueMapID(pawn.Map), reply.ColonyId);
-            colonyId = reply.ColonyId;
+            SaveBind<DBColonyBind>(GameInfo.GetUniqueMapID(_pawn.Map), reply.ColonyId);
+            _gc.FlushColonyIdCache();
+            _colonyId = reply.ColonyId;
 
             // Jump to Colony Mods
             StartColonyUpdateMods();
@@ -178,54 +200,53 @@ namespace ise.lib.tasks
 
         private void StartColonyGet()
         {
-            state = State.GetDetails;
+            _state = State.GetDetails;
             var request = new ColonyGetRequest
             {
-                ClientBindId = gc.ClientBind,
-                ColonyId = colonyId
+                ClientBindId = _gc.ClientBind,
+                ColonyId = _colonyId
             };
-            task = SendAndParseReplyAsync(
-                request,
-                ColonyData.Parser,
-                $"{URLPrefix}colony/get",
-                Method.POST,
-                gc.ClientBind
-            );
-            task.Start();
+            _task = SendAndParseReplyAsync(
+                        request,
+                        ColonyData.Parser,
+                        $"{URLPrefix}colony/get",
+                        Method.POST,
+                        _gc.ClientBind
+                    );
+            _task.Start();
         }
 
         private void ProcessGetColonyDataReply(ColonyData reply)
         {
             Logging.WriteMessage($"Colony ID confirmed: {reply.ColonyId}");
-
             // Now update the colony data
             StartColonyUpdate();
         }
 
         private void StartColonyUpdate()
         {
-            Logging.WriteDebugMessage($"Updating Colony Details for {gc.GetColonyId(pawn.Map)}");
+            Logging.WriteDebugMessage($"Updating Colony Details for {_gc.GetColonyId(_pawn.Map)}");
             var request = new ColonyUpdateRequest
             {
-                ClientBindId = gc.ClientBind,
+                ClientBindId = _gc.ClientBind,
                 Data = new ColonyData
                 {
-                    ColonyId = colonyId,
+                    ColonyId = _colonyId,
                     Tick = Current.Game.tickManager.TicksGame,
-                    UsedDevMode = gc.SpawnToolUsed,
+                    UsedDevMode = _gc.SpawnToolUsed,
                     GameVersion = VersionControl.CurrentVersionStringWithRev
                 }
             };
 
-            task = SendAndParseReplyAsync(
+            _task = SendAndParseReplyAsync(
                 request,
                 ColonyData.Parser,
                 $"{URLPrefix}colony/",
                 Method.PATCH,
-                gc.ClientBind
+                _gc.ClientBind
             );
-            task.Start();
-            state = State.UpdateData;
+            _task.Start();
+            _state = State.UpdateData;
         }
 
         private void ProcessUpdateColonyReply(ColonyData reply)
@@ -236,23 +257,23 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateMods()
         {
-            Logging.WriteDebugMessage($"UpdateAsync Colony mods {colonyId}");
+            Logging.WriteDebugMessage($"UpdateAsync Colony mods {_colonyId}");
             var request = new ColonyModsSetRequest
             {
-                ClientBindId = gc.ClientBind,
-                ColonyId = colonyId
+                ClientBindId = _gc.ClientBind,
+                ColonyId = _colonyId
             };
             request.ModName.AddRange(Mods.GetModList());
 
-            task = SendAndParseReplyAsync(
+            _task = SendAndParseReplyAsync(
                 request,
                 ColonyModsSetReply.Parser,
                 $"{URLPrefix}colony/mods",
                 Method.POST,
-                gc.ClientBind
+                _gc.ClientBind
             );
-            task.Start();
-            state = State.UpdateMods;
+            _task.Start();
+            _state = State.UpdateMods;
         }
 
         private void ProcessColonyModsUpdateReply(ColonyModsSetReply reply)
@@ -263,22 +284,22 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateTradables()
         {
-            Logging.WriteDebugMessage($"UpdateAsync Colony tradables {colonyId}");
+            Logging.WriteDebugMessage($"UpdateAsync Colony tradables {_colonyId}");
 
-            task = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
-                gc.ClientBind,
-                colonyId,
+            _task = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
+                _gc.ClientBind,
+                _colonyId,
                 Tradables.GetAllTradables()
             ));
 
-            task.Start();
-            state = State.UpdateTradables;
+            _task.Start();
+            _state = State.UpdateTradables;
         }
 
         private void ProcessColonyTradablesReply(bool reply)
         {
             Logging.WriteDebugMessage("Server accepted colony tradables");
-            state = State.Done;
+            _state = State.Done;
         }
 
         #endregion

@@ -35,12 +35,10 @@ namespace ise.lib.tasks
 
         public MarketDownloadDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
         {
-            pawn = userPawn;
-            state = State.Start;
-            gc = Current.Game.GetComponent<ISEGameComponent>();
-            if (pawn == null) throw new ArgumentNullException(nameof(userPawn));
-
-            colonyId = gc.GetColonyId(pawn.Map);
+            _pawn = userPawn;
+            _state = State.Start;
+            _gc = Current.Game.GetComponent<ISEGameComponent>();
+            if (_pawn == null) throw new ArgumentNullException(nameof(userPawn));
         }
 
         #endregion
@@ -61,13 +59,13 @@ namespace ise.lib.tasks
 
         #region Fields
 
-        private readonly string colonyId;
-        private readonly ISEGameComponent gc;
-        private readonly Pawn pawn;
-        private List<Thing> colonyThings;
+        private string _colonyId;
+        private readonly ISEGameComponent _gc;
+        private readonly Pawn _pawn;
+        private List<Thing> _colonyThings;
 
-        private State state;
-        private Task task;
+        private State _state;
+        private Task _task;
 
         #endregion
 
@@ -76,27 +74,31 @@ namespace ise.lib.tasks
         public override void Update()
         {
             // Handle task errors first.
-            if (task != null && task.IsFaulted) LogTaskError();
+            if (_task != null && _task.IsFaulted) LogTaskError();
 
-            switch (state)
+            switch (_state)
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
+                    
+                    // Don't read the Colony ID until we try and talk to the server
+                    // It may have changed or just been created in the bind task
+                    _colonyId = _gc.GetColonyId(_pawn.Map);
                     StartDownload();
                     break;
                 case State.Request:
                     Dialog.DialogMessage = "Downloading Market Data";
-                    if (task != null && task.IsCompleted) ProcessInventoryReply(((Task<InventoryReply>)task).Result);
+                    if (_task != null && _task.IsCompleted) ProcessInventoryReply(((Task<InventoryReply>)_task).Result);
 
                     break;
                 case State.MarketCaching:
                     Dialog.DialogMessage = "Building Cache";
-                    if (task != null && task.IsCompleted) GatherColonyInventory();
+                    if (_task != null && _task.IsCompleted) GatherColonyInventory();
 
                     break;
                 case State.ColonyCaching:
                     Dialog.DialogMessage = "Getting colony inventory";
-                    if (task != null && task.IsCompleted) state = State.Done;
+                    if (_task != null && _task.IsCompleted) _state = State.Done;
 
                     break;
 
@@ -114,19 +116,19 @@ namespace ise.lib.tasks
 
         private void LogTaskError()
         {
-            state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
-            if (task.Exception?.InnerExceptions != null)
-                foreach (var innerException in task.Exception.InnerExceptions)
+            _state = State.Error;
+            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            if (_task.Exception?.InnerExceptions != null)
+                foreach (var innerException in _task.Exception.InnerExceptions)
                     Logging.WriteErrorMessage($"Inner exception in task {innerException}");
 
-            task = null;
+            _task = null;
         }
 
         private void StartDownload()
         {
             var db = IseCentral.DataCache;
-            var inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(colonyId);
+            var inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(_colonyId);
 
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
@@ -135,23 +137,23 @@ namespace ise.lib.tasks
             }
             else
             {
-                task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(gc.ClientBind, colonyId);
-                task.Start();
-                state = State.Request;
+                _task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(_gc.ClientBind, _colonyId);
+                _task.Start();
+                _state = State.Request;
             }
         }
 
         private void ProcessInventoryReply(InventoryReply reply)
         {
             Logging.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
-            task = new Task(delegate
+            _task = new Task(delegate
             {
                 Logging.WriteDebugMessage($"Building cache of {reply.Items.Count} market items");
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
-                var marketCache = GetCache(colonyId, CacheType.MarketCache);
-                GetCache(colonyId, CacheType.ColonyBasket).DeleteAll();
+                var marketCache = GetCache(_colonyId, CacheType.MarketCache);
+                GetCache(_colonyId, CacheType.ColonyBasket).DeleteAll();
                 db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
                 marketCache.DeleteAll();
                 marketCache.InsertBulk(
@@ -178,10 +180,10 @@ namespace ise.lib.tasks
                 marketCache.EnsureIndex(mc => mc.ThingDef);
                 marketCache.EnsureIndex(mc => mc.IndexedName);
                 var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
-                inventoryCache.DeleteMany(x => x.ColonyId == colonyId);
+                inventoryCache.DeleteMany(x => x.ColonyId == _colonyId);
                 inventoryCache.Insert(new DBInventoryPromise
                 {
-                    ColonyId = colonyId,
+                    ColonyId = _colonyId,
                     InventoryPromiseId = reply.InventoryPromiseId,
                     InventoryPromiseExpires = reply.InventoryPromiseExpires,
                     CollectionChargePerKG = reply.CollectionChargePerKG,
@@ -189,27 +191,27 @@ namespace ise.lib.tasks
                 });
                 Logging.WriteDebugMessage("Done caching market items");
             });
-            task.Start();
+            _task.Start();
 
             // Go to next step
-            state = State.MarketCaching;
+            _state = State.MarketCaching;
         }
 
         private void GatherColonyInventory()
         {
-            task = new Task(delegate
+            _task = new Task(delegate
             {
                 Logging.WriteDebugMessage("Building colony item cache");
 
                 Logging.WriteDebugMessage("Getting list of all items in range of beacons");
-                Logging.WriteDebugMessage($"on map for {pawn.Name}");
+                Logging.WriteDebugMessage($"on map for {_pawn.Name}");
 
-                colonyThings = AllColonyThingsForTrade(pawn.Map);
+                _colonyThings = AllColonyThingsForTrade(_pawn.Map);
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
-                var marketCache = GetCache(colonyId, CacheType.MarketCache);
-                var colonyCache = GetCache(colonyId, CacheType.ColonyCache);
+                var marketCache = GetCache(_colonyId, CacheType.MarketCache);
+                var colonyCache = GetCache(_colonyId, CacheType.ColonyCache);
 
                 // Clear colony cache
 
@@ -220,7 +222,7 @@ namespace ise.lib.tasks
                 colonyCache.EnsureIndex(cc => cc.IndexedName);
 
                 // For each downloaded market item
-                foreach (var thingGroup in colonyThings.GroupBy(ci => ci.def.defName))
+                foreach (var thingGroup in _colonyThings.GroupBy(ci => ci.def.defName))
                 {
                     Logging.WriteDebugMessage($"Working on group {thingGroup.Key}");
 
@@ -333,20 +335,20 @@ namespace ise.lib.tasks
                 RestoreBasket();
                 Logging.WriteDebugMessage("Done");
             });
-            task.Start();
+            _task.Start();
 
             // Go to next step
-            state = State.ColonyCaching;
+            _state = State.ColonyCaching;
         }
 
         private void RestoreBasket()
         {
             var db = IseCentral.DataCache;
-            var marketCache = GetCache(colonyId, CacheType.MarketCache);
-            var marketBasket = GetCache(colonyId, CacheType.MarketBasket);
+            var marketCache = GetCache(_colonyId, CacheType.MarketCache);
+            var marketBasket = GetCache(_colonyId, CacheType.MarketBasket);
 
-            var colonyCache = GetCache(colonyId, CacheType.ColonyCache);
-            var colonyBasket = GetCache(colonyId, CacheType.ColonyBasket);
+            var colonyCache = GetCache(_colonyId, CacheType.ColonyCache);
+            var colonyBasket = GetCache(_colonyId, CacheType.ColonyBasket);
 
             marketCache.EnsureIndex(cc => cc.ItemCode);
             colonyCache.EnsureIndex(cc => cc.ItemCode);

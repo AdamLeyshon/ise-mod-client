@@ -132,6 +132,11 @@ namespace ise.components
             return outputId;
         }
 
+        internal void FlushColonyIdCache()
+        {
+            colonyCache.Clear();
+        }
+
         public override void GameComponentTick()
         {
             var currentTick = Current.Game.tickManager.TicksGame;

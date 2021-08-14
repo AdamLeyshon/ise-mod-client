@@ -73,6 +73,12 @@ namespace ise.buildings
                         delegate { GiveJobWithdrawCash(myPawn, this); });
 
                 var dbOrders = IseCentral.DataCache.GetCollection<DBOrder>(Constants.Tables.Orders);
+
+                // Don't process any more if we don't have a Colony ID yet
+                if (_gc.GetColonyId(Map).NullOrEmpty())
+                {
+                    yield break;
+                }
                 foreach (var order in _gc.GetAccount(_gc.GetColonyId(Map)).GetActiveOrders
                     .Where(x => x.Status == OrderStatusEnum.Placed))
                 {

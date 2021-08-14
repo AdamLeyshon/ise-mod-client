@@ -66,6 +66,14 @@ namespace ise.lib
             Logging.WriteMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
             return clientBindData.BindId;
         }
+        
+        internal static void DeleteBind<T>(string targetBind) where T : IBaseBind, new()
+        {
+            var db = IseCentral.DataCache;
+            var col = db.GetCollection<T>(Tables.Bindings);
+            col.DeleteMany(data => data.BindId == targetBind);
+            Logging.WriteMessage($"Deleted all binds referring to {typeof(T)} with ID: {targetBind}");
+        }
 
         internal static void SaveBind<T>(string parentId, string bindId) where T : IBaseBind, new()
         {

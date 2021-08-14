@@ -44,7 +44,6 @@
     <ItemGroup>
         <Compile Include="db\DBCachedTradable.cs" />
         <Compile Include="db\DBInventory.cs" />
-        <Compile Include="db\DBMapBind.cs" />
         <Compile Include="db\DBOrder.cs" />
         <Compile Include="db\DBOrderItem.cs" />
         <Compile Include="db\DBStorageItem.cs" />
