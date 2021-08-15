@@ -206,7 +206,9 @@ namespace ise.lib
             if (t is Apparel apparel && apparel.WornByCorpse) return false;
 
             // Can't sell BioCoded
-            return t.TryGetComp<CompBiocodable>() != null;
+            var compBiocodable = t.TryGetComp<CompBiocodable>();
+            if (compBiocodable is null) return true;
+            return !compBiocodable.Biocoded;
         }
 
         private static bool CanThisThingDefBeSold(ThingDef def)

@@ -245,6 +245,14 @@ namespace ise.lib.tasks
             if (!reply.Valid)
             {
                 Logging.WriteErrorMessage($"Server refused bind: {reply.Valid}");
+                
+                // Delete the client bind stored
+                DeleteBind<DBClientBind>(IseCentral.User.UserId);
+                
+                // Delete all colony binds :(
+                DeleteBind<DBClientBind>(gc.ClientBind);
+                gc.ClientBind = string.Empty;
+                gc.ClientBindVerified = false;
                 task = null;
                 state = State.Start;
             }
