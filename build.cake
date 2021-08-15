@@ -186,7 +186,7 @@ Task("Make")
 
 Task("MakeZIP")
 .Does(() => {
-  var zip_name = $"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip";
+  var zip_name = $"{modname}-Build_{git_hash}_{configuration}.zip";
   Zip(mod_base_path, zip_name);
   Information($"ZIP Name is: {zip_name}");
 });
@@ -199,7 +199,7 @@ Task("CopyToSteam")
     Recursive = true,
     Force = true
 	});
-  ZipUncompress($"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip", steam_folder);
+  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", steam_folder);
   Information($"ZIP Unpacked in: {dir_name}");
 });
 
@@ -213,7 +213,7 @@ Task("CopyToLocal")
     Recursive = true,
     Force = true
 	});
-  ZipUncompress($"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip", v13_game_folder);
+  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", v13_game_folder);
   Information($"ZIP Unpacked in: {dir_name}");
 
   // Version 12
@@ -223,7 +223,7 @@ Task("CopyToLocal")
     Recursive = true,
     Force = true
 	});
-  ZipUncompress($"{modname}_[{version}]-Build_{git_hash}_{configuration}.zip", v12_game_folder);
+  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", v12_game_folder);
   Information($"ZIP Unpacked in: {dir_name}");
 });
 

@@ -984,6 +984,7 @@ namespace ise.dialogs
 
             // Enumerate list of ThingCategoryDef and add to menu options.
             var allDefsListForReading = DefDatabase<ThingCategoryDef>.AllDefsListForReading;
+            allDefsListForReading.RemoveAll(def => def.LabelCap.NullOrEmpty());
             allDefsListForReading.SortBy(def => def.LabelCap.ToString());
 
             // Ensure Root is always at the top
