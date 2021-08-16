@@ -72,12 +72,12 @@ Task("UpdateV12References")
 .IsDependentOn("CopySourceCodeV12")
 .Does(() => {
   ReplaceTextInFiles(
-  $"{mod_path}/ise-mod-12.csproj", 
+  $"{v12_path}/ise-mod-12.csproj", 
   @"..\..\..\..\..\Games\RimWorld13\RimWorldWin64_Data\Managed\", 
   @"..\..\..\..\..\Games\RimWorld12\RimWorldWin64_Data\Managed\"
   );
   ReplaceTextInFiles(
-    $"{mod_path}/ise-mod-12.csproj", 
+    $"{v12_path}/ise-mod-12.csproj", 
     "Version=1.3.7892.27157,", 
     "Version=1.2.7528.19679"
   );
