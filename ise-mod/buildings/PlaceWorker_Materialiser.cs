@@ -1,11 +1,11 @@
 #region license
-// #region License
+
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-mod, PlaceWorker_Materialiser.cs 2021-08-13
-// #endregion
+
 #endregion
 
 using RimWorld;
@@ -23,10 +23,7 @@ namespace ise.buildings
             Thing thingToIgnore = null,
             Thing thing = null)
         {
-            if (ISEMaterialiser.HasBuilding(map))
-            {
-                return "ISEMaterialiserCanOnlyBuildOne".Translate();
-            }
+            if (ISEMaterialiser.HasBuilding(map)) return "ISEMaterialiserCanOnlyBuildOne".Translate();
             return true;
         }
 

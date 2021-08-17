@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-mod, iseconsole.cs 2021-02-10
-// #endregion
 
 #endregion
 
@@ -75,10 +73,7 @@ namespace ise.buildings
                 var dbOrders = IseCentral.DataCache.GetCollection<DBOrder>(Constants.Tables.Orders);
 
                 // Don't process any more if we don't have a Colony ID yet
-                if (!_gc.ClientBindVerified || _gc.GetColonyId(Map).NullOrEmpty())
-                {
-                    yield break;
-                }
+                if (!_gc.ClientBindVerified || _gc.GetColonyId(Map).NullOrEmpty()) yield break;
                 foreach (var order in _gc.GetAccount(_gc.GetColonyId(Map)).GetActiveOrders
                     .Where(x => x.Status == OrderStatusEnum.Placed))
                 {

@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-mod, clientbinddialogtask.cs 2021-02-11
-// #endregion
 
 #endregion
 
@@ -245,10 +243,10 @@ namespace ise.lib.tasks
             if (!reply.Valid)
             {
                 Logging.WriteErrorMessage($"Server refused bind: {reply.Valid}");
-                
+
                 // Delete the client bind stored
                 DeleteBind<DBClientBind>(IseCentral.User.UserId);
-                
+
                 // Delete all colony binds :(
                 DeleteBind<DBClientBind>(gc.ClientBind);
                 gc.ClientBind = string.Empty;

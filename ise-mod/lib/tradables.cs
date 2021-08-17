@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-mod, tradables.cs 2021-02-03
-// #endregion
 
 #endregion
 
@@ -50,7 +48,7 @@ namespace ise.lib
                         thing.GetStatValueAbstract(StatDefOf.MarketValue) > 0.0 &&
                         (thing.category == ThingCategory.Item || thing.category == ThingCategory.Building &&
                             thing.Minifiable))
-                        
+
                         thingsToRequestFromMarket.AddRange(ComputeThingDef(thing, stuffCategories));
                 }
                 catch (Exception ex)

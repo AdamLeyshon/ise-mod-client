@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-mod, isematerialiser.cs 2021-03-07
-// #endregion
 
 #endregion
 
@@ -115,12 +113,10 @@ namespace ise.buildings
             _compPowerTrader = GetComp<CompPowerTrader>();
             _gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             _currentMap = map;
-            
+
             if (respawningAfterLoad)
-            {
                 // Don't tick straight away
                 _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
-            }
         }
 
         public override void ExposeData()
@@ -132,10 +128,10 @@ namespace ise.buildings
             Scribe_Values.Look(ref _autorun, "autorun", true, true);
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
-            
+
             // Don't tick straight away
             _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
-            
+
             if (_currentItemDbId == null) return;
 
             var loadItem = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered)

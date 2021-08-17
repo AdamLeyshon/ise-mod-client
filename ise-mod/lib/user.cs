@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
-// // iseworld, ise-mod, user.cs 2021-02-09
-// #endregion
+// // iseworld, ise-mod, user.cs 2021-08-16
 
 #endregion
 
@@ -66,7 +64,7 @@ namespace ise.lib
             Logging.WriteMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
             return clientBindData.BindId;
         }
-        
+
         internal static void DeleteBind<T>(string targetBind) where T : IBaseBind, new()
         {
             var db = IseCentral.DataCache;

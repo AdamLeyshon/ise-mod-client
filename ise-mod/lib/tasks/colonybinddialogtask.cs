@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-mod, colonybinddialogtask.cs 2021-02-11
-// #endregion
 
 #endregion
 
@@ -77,7 +75,8 @@ namespace ise.lib.tasks
                 if (_state == State.GetDetails)
                 {
                     // Handle a 404 Colony not found:
-                    if (_task.Exception?.InnerException != null && _task.Exception.InnerException.Message.Contains("404"))
+                    if (_task.Exception?.InnerException != null &&
+                        _task.Exception.InnerException.Message.Contains("404"))
                     {
                         // Delete the bind and re-create
                         DeleteBind<DBColonyBind>(_colonyId);
@@ -207,12 +206,12 @@ namespace ise.lib.tasks
                 ColonyId = _colonyId
             };
             _task = SendAndParseReplyAsync(
-                        request,
-                        ColonyData.Parser,
-                        $"{URLPrefix}colony/get",
-                        Method.POST,
-                        _gc.ClientBind
-                    );
+                request,
+                ColonyData.Parser,
+                $"{URLPrefix}colony/get",
+                Method.POST,
+                _gc.ClientBind
+            );
             _task.Start();
         }
 
