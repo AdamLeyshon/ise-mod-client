@@ -114,9 +114,11 @@ namespace ise.buildings
             _gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             _currentMap = map;
 
-            if (respawningAfterLoad)
-                // Don't tick straight away
-                _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
+            if (!respawningAfterLoad) return;
+
+            // Don't tick straight away
+            LastSpeed = _speed;
+            _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
         }
 
         public override void ExposeData()
@@ -245,6 +247,7 @@ namespace ise.buildings
             if (MaterialiserStatus != WorkStatus.Working)
             {
                 ProgressPercent = ProgressPercent >= 50 ? 50 : 0;
+                ProgressValue = ProgressPercent >= 50 ? TotalValue / 2 : 0;
                 _compPowerTrader.PowerOutput = 0f - StandbyPower;
                 return;
             }

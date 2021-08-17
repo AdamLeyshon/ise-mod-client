@@ -159,10 +159,14 @@ namespace ise.lib.state.managers
             // Remove delivered items.
             orderItemCollection.DeleteMany(item => item.OrderId == OrderId);
             IseCentral.DataCache.Commit();
+
+            var letterDef = LetterDefOf.PositiveEvent;
+            letterDef.arriveSound = SoundDefOf.LetterArrive;
             Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(
                 "ISEOrderReadyTitle".Translate(),
                 "ISEOrderReadyText".Translate(),
-                LetterDefOf.PositiveEvent));
+                letterDef
+            ));
         }
 
         internal static void PopulateOrderItems(string orderId, OrderManifestReply orderManifest)
