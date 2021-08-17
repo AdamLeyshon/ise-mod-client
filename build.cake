@@ -1,9 +1,10 @@
+#tool nuget:?package=GitVersion.CommandLine&version=5.3.7
+#tool nuget:?package=Cake.CoreCLR&version=1.1.0
 #addin nuget:?package=SharpZipLib&version=1.3.1
 #addin nuget:?package=Cake.Compression&version=0.2.6
 #addin Cake.Incubator&version=6.0.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.3.7
 #addin Cake.FileHelpers&version=4.0.1
-#tool nuget:?package=Cake.CoreCLR&version=1.1.0
+#addin nuget:?package=Cake.VersionReader&version=5.1.0
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,8 +145,8 @@ Task("GetGitVersion")
 
 Task("GetAsmVersion")
 .Does(() => {
-  var assemblyInfo = ParseAssemblyInfo(mod_source_path + "/Properties/AssemblyInfo.cs");
-  asm_version = $"{assemblyInfo.AssemblyFileVersion}";
+  var assemblyInfo = GetFullVersionNumber(mod_source_path +  $"/bin/{configuration}/ise-mod.dll");
+  asm_version = $"{assemblyInfo}";
   Information($"Assembly version is: {asm_version}");
 });
 
@@ -156,8 +157,7 @@ Task("UpdateXML")
 .IsDependentOn("CopyDataFolders")
 .Does(() => {
   ReplaceTextInFiles($"{mod_path}/About/About.xml", "!!GITCOMMIT!!", git_hash);
-
-  ReplaceTextInFiles($"{mod_path}/About/Version.xml", "!!VERSION!!", asm_version);
+  ReplaceTextInFiles($"{mod_path}/About/About.xml", "!!VERSION!!", asm_version);
 
 });
 
