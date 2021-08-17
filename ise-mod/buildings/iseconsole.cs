@@ -75,7 +75,7 @@ namespace ise.buildings
                 var dbOrders = IseCentral.DataCache.GetCollection<DBOrder>(Constants.Tables.Orders);
 
                 // Don't process any more if we don't have a Colony ID yet
-                if (_gc.GetColonyId(Map).NullOrEmpty())
+                if (!_gc.ClientBindVerified || _gc.GetColonyId(Map).NullOrEmpty())
                 {
                     yield break;
                 }

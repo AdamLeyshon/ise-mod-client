@@ -11,6 +11,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ise.lib;
@@ -118,17 +119,20 @@ namespace ise.components
 
         internal string GetColonyId(Map map)
         {
+            var sf = new StackTrace().GetFrame(1);
+            Logging.WriteDebugMessage($"Colony bind lookup from {sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name}");
+            
             var mapId = GetUniqueMapID(map);
             if (colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
             outputId = LoadBind<DBColonyBind>(mapId);
             if (outputId.NullOrEmpty())
             {
-                Logging.WriteMessage($"No colony bind for: {ClientBind}");
+                Logging.WriteDebugMessage($"No colony bind for: {ClientBind}");
                 return null;
             }
 
             colonyCache.Add(mapId, outputId);
-            Logging.WriteMessage($"Colony bind {outputId}");
+            Logging.WriteDebugMessage($"Colony bind {outputId}");
             return outputId;
         }
 
@@ -142,7 +146,7 @@ namespace ise.components
             var currentTick = Current.Game.tickManager.TicksGame;
             base.GameComponentTick();
             if (currentTick < nextUpdateTick) return;
-            Logging.WriteDebugMessage("Ticking Account Managers");
+            Logging.WriteDebugMessage($"Ticking {activeAccounts.Count} Account Managers");
             nextUpdateTick = currentTick + UpdateTickInterval;
 
             foreach (var task in activeAccounts.Values.Select(account => new Task(account.UpdateAsync))) task.Start();

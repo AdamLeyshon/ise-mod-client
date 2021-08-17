@@ -80,7 +80,7 @@ namespace ise.lib.tasks
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
-                    
+
                     // Don't read the Colony ID until we try and talk to the server
                     // It may have changed or just been created in the bind task
                     _colonyId = _gc.GetColonyId(_pawn.Map);
@@ -130,17 +130,18 @@ namespace ise.lib.tasks
             var db = IseCentral.DataCache;
             var inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(_colonyId);
 
+            // TODO: Fix this, check with server if promise is valid, it might've been deleted
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
-                // No need to download, promise is still valid
+                // No need to download, promise is still valid.
                 GatherColonyInventory();
+                return;
             }
-            else
-            {
-                _task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(_gc.ClientBind, _colonyId);
-                _task.Start();
-                _state = State.Request;
-            }
+
+
+            _task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(_gc.ClientBind, _colonyId);
+            _task.Start();
+            _state = State.Request;
         }
 
         private void ProcessInventoryReply(InventoryReply reply)

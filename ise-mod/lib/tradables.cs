@@ -50,7 +50,7 @@ namespace ise.lib
                         thing.GetStatValueAbstract(StatDefOf.MarketValue) > 0.0 &&
                         (thing.category == ThingCategory.Item || thing.category == ThingCategory.Building &&
                             thing.Minifiable))
-
+                        
                         thingsToRequestFromMarket.AddRange(ComputeThingDef(thing, stuffCategories));
                 }
                 catch (Exception ex)
