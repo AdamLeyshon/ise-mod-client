@@ -151,6 +151,8 @@ namespace ise.lib.tasks
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
+
+                db.BeginTrans();
                 var marketCache = GetCache(_colonyId, CacheType.MarketCache);
                 GetCache(_colonyId, CacheType.ColonyBasket).DeleteAll();
                 db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
@@ -188,6 +190,9 @@ namespace ise.lib.tasks
                     CollectionChargePerKG = reply.CollectionChargePerKG,
                     DeliveryChargePerKG = reply.DeliveryChargePerKG, AccountBalance = reply.AccountBalance
                 });
+                db.Commit();
+                var writeCount = GetCache(_colonyId, CacheType.MarketCache).Count();
+                Logging.WriteDebugMessage($"Received {reply.Items.Count}, Wrote {writeCount}");
                 Logging.WriteDebugMessage("Done caching market items");
             });
             _task.Start();

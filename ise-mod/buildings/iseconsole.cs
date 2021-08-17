@@ -78,10 +78,11 @@ namespace ise.buildings
                     .Where(x => x.Status == OrderStatusEnum.Placed))
                 {
                     var dbOrder = dbOrders.FindById(order.OrderId);
-                    if (dbOrder != null)
-                        yield return new FloatMenuOption(
-                            $"Order {order.OrderId}, Ready for materialising in {dbOrder.DeliveryTick.ToStringTicksToDays()}",
-                            null);
+                    if (dbOrder == null) continue;
+                    var deliveryTime = dbOrder.DeliveryTick - Current.Game.tickManager.TicksGame;
+                    yield return new FloatMenuOption(
+                        $"Order {order.OrderId}, Ready for materialising in {deliveryTime.ToStringTicksToDays()}",
+                        null);
                 }
             }
         }

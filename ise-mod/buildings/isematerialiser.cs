@@ -192,16 +192,18 @@ namespace ise.buildings
                         ArtGenerationContext.Outsider
                     );
 
+            var valuePer = dbItem.Value / dbItem.Quantity;
+
             if (thingDef.Minifiable)
             {
                 CurrentItem.stackCount = 1;
                 CurrentItem = CurrentItem.MakeMinified();
-                TotalValue = dbItem.Value / dbItem.Quantity;
+                TotalValue = valuePer;
             }
             else
             {
                 CurrentItem.stackCount = Math.Min(dbItem.Quantity, CurrentItem.def.stackLimit);
-                TotalValue = dbItem.Value;
+                TotalValue = valuePer * CurrentItem.stackCount;
             }
         }
 

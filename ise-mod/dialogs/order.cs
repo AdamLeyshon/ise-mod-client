@@ -123,7 +123,7 @@ namespace ise.dialogs
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
             var colonyId = gc.GetColonyId(Pawn.Map);
-
+            int deliveryTime;
             var orderTask = (OrderPlaceDialogTask)_task;
             switch (orderTask.Reply.Status)
             {
@@ -134,22 +134,24 @@ namespace ise.dialogs
                                     "that your mod is up to date.";
                     break;
                 case OrderRequestStatus.AcceptedAll:
+                    deliveryTime = orderTask.Reply.Data.DeliveryTick - orderTask.Reply.Data.PlacedTick;
                     IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
 
                     DialogMessage = "Your order was successfully placed and your payment, \r\n" +
                                     "has been processed.\r\n\r\n" +
                                     "Your order should arrive in approximately " +
-                                    $"{orderTask.Reply.Data.DeliveryTick.ToStringTicksToDays()}\r\n\r\n" +
+                                    $"{deliveryTime.ToStringTicksToDays()}\r\n\r\n" +
                                     "Thank you for using Interstellar Express";
                     break;
                 case OrderRequestStatus.AcceptedPartial:
+                    deliveryTime = orderTask.Reply.Data.DeliveryTick - orderTask.Reply.Data.PlacedTick;
                     IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
                     var message = "Your order was successfully placed and your payment, \r\n" +
                                   "has been processed.\r\n\r\n" +
                                   "However, some of the items you requested were not in stock\r\n" +
                                   "and your account has been refunded the amount\r\n\r\n" +
                                   "Your order should arrive in approximately " +
-                                  $"{orderTask.Reply.Data.DeliveryTick.ToStringTicksToDays()}\r\n\r\n" +
+                                  $"{deliveryTime.ToStringTicksToDays()}\r\n\r\n" +
                                   "Thank you for using Interstellar Express\r\n\r\n" +
                                   "The items we were unable to deliver are:\r\n";
 

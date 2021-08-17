@@ -98,7 +98,6 @@ namespace ise.components
             if (firstRunComplete) return;
 
             StartAccountTracking();
-
             var currentTick = Current.Game.tickManager.TicksGame;
 
             // Set the first tick a little ahead of time so we don't
@@ -118,20 +117,18 @@ namespace ise.components
         internal string GetColonyId(Map map)
         {
             var sf = new StackTrace().GetFrame(1);
-            Logging.WriteDebugMessage(
-                $"Colony bind lookup from {sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name}");
+            // Logging.WriteDebugMessage(
+            //     $"Colony bind lookup from {sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name}");
 
             var mapId = GetUniqueMapID(map);
             if (colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
             outputId = LoadBind<DBColonyBind>(mapId);
             if (outputId.NullOrEmpty())
-            {
-                Logging.WriteDebugMessage($"No colony bind for: {ClientBind}");
+                // Logging.WriteDebugMessage($"No colony bind for: {ClientBind}");
                 return null;
-            }
 
             colonyCache.Add(mapId, outputId);
-            Logging.WriteDebugMessage($"Colony bind {outputId}");
+            // Logging.WriteDebugMessage($"Colony bind {outputId}");
             return outputId;
         }
 
@@ -146,6 +143,9 @@ namespace ise.components
             base.GameComponentTick();
             if (currentTick < nextUpdateTick) return;
             Logging.WriteDebugMessage($"Ticking {activeAccounts.Count} Account Managers");
+            foreach (var activeAccountsKey in activeAccounts.Keys)
+                Logging.WriteDebugMessage($"Account Manager: {activeAccountsKey}");
+
             nextUpdateTick = currentTick + UpdateTickInterval;
 
             foreach (var task in activeAccounts.Values.Select(account => new Task(account.UpdateAsync))) task.Start();
@@ -161,7 +161,7 @@ namespace ise.components
             foreach (var map in maps)
             {
                 var colonyId = GetColonyId(map);
-                if (colonyId != null && !activeAccounts.ContainsKey(colonyId))
+                if (!colonyId.NullOrEmpty() && !activeAccounts.ContainsKey(colonyId))
                     activeAccounts.Add(colonyId, new Account(colonyId, this));
             }
         }

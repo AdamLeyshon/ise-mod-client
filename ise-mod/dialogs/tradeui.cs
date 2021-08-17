@@ -300,7 +300,8 @@ namespace ise.dialogs
                 ? FullTextSearch()
                 : collection.FindAll();
 
-            var items = dbItems.Where(x => filteredThingDefs.Contains(x.ThingDef));
+            var items = dbItems.Where(x => filteredThingDefs.Contains(x.ThingDef) && x.Quantity > 0);
+
             // Basket only filter
             if (basketItemsOnly)
             {

@@ -167,12 +167,13 @@ namespace ise.lib.tasks
 
                 // Clear all cache and promises
                 var colonyId = _gc.GetColonyId(_pawn.Map);
+                IseCentral.DataCache.BeginTrans();
                 IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
                 DropCache(colonyId, CacheType.ColonyBasket);
                 DropCache(colonyId, CacheType.MarketBasket);
                 DropCache(colonyId, CacheType.ColonyCache);
                 DropCache(colonyId, CacheType.MarketCache);
-
+                IseCentral.DataCache.Commit();
                 // Start tracking the Order Status
                 _gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
             }

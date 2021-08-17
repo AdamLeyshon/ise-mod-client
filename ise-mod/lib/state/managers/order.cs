@@ -13,6 +13,7 @@ using System.Linq;
 using ise.components;
 using ise_core.db;
 using Order;
+using RimWorld;
 using Verse;
 using static ise.lib.Constants;
 using static RimWorld.GenDate;
@@ -151,6 +152,11 @@ namespace ise.lib.state.managers
 
             // Remove delivered items.
             orderItemCollection.DeleteMany(item => item.OrderId == OrderId);
+            
+            Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(
+                "ISEOrderReadyTitle".Translate(),
+                "ISEOrderReadyText".Translate(),
+                LetterDefOf.PositiveEvent));
         }
 
         internal static void PopulateOrderItems(string orderId, OrderManifestReply orderManifest)
