@@ -70,6 +70,8 @@ namespace ise.lib.state.managers
             var ordersToProcess = new List<string>();
             Logging.WriteDebugMessage("Deleting delivered orders from the future");
 
+            if (orders == null) return;
+            
             var dbOrders = orders.ToList();
             ordersToProcess.AddRange(
                 dbOrders.Where(order => order.DeliveryTick > currentTick).Select(order => order.Id));

@@ -110,17 +110,23 @@ namespace ise.lib.state.managers
             // Don't do anything until we reach the delivery time.
             if (currentTick < _backingOrder.DeliveryTick) return;
 
-            SetOrderState(OrderStatusEnum.Delivered, currentTick);
-
-            DeliverOrder();
-
-            IsFinished = true;
+            try
+            {
+                DeliverOrder();
+                SetOrderState(OrderStatusEnum.Delivered, currentTick);
+                IsFinished = true;
+            }
+            catch (Exception e)
+            {
+                Logging.WriteDebugMessage($"Unable to process the delivery, will retry, {e}");
+            }
         }
 
         private void DeliverOrder()
         {
             Logging.WriteDebugMessage($"Deliver Order {OrderId}");
             var colonyId = _backingOrder.ColonyId;
+            IseCentral.DataCache.BeginTrans();
             var orderItemCollection = IseCentral.DataCache.GetCollection<DBOrderItem>(Tables.OrderItems);
             var storedItemCollection = IseCentral.DataCache.GetCollection<DBStorageItem>(Tables.Delivered);
             storedItemCollection.EnsureIndex(item => item.ColonyId);
@@ -152,7 +158,7 @@ namespace ise.lib.state.managers
 
             // Remove delivered items.
             orderItemCollection.DeleteMany(item => item.OrderId == OrderId);
-            
+            IseCentral.DataCache.Commit();
             Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(
                 "ISEOrderReadyTitle".Translate(),
                 "ISEOrderReadyText".Translate(),
