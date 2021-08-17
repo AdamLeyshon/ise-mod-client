@@ -44,4 +44,6 @@
 	<ISEWithdrawInvalidAmount>The amount you want to withdraw is not valid,\nYou must enter a value between 1 and the available balance</ISEWithdrawInvalidAmount>
 	<ISEWithdrawFailure>We were not able to process this transaction, please try again later</ISEWithdrawFailure>
 	<ISEWithdrawComplete>Thank you for banking with us, your funds are on the way.</ISEWithdrawComplete>
+	<ISEOrderReadyTitle>Materialiser™ data received</ISEOrderReadyTitle>
+	<ISEOrderReadyText>We have received new Materialiser™ data from a recent order,\nRemember to start it or set it to Autorun.</ISEOrderReadyText>
 </LanguageData>
