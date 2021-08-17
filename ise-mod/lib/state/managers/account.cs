@@ -87,7 +87,9 @@ namespace ise.lib.state.managers
                     // Find the items that were delivered
                     var storedItem = dbDeliveredItems.FindOne(item =>
                         item.ColonyId == _accountId && item.ItemCode == orderItem.ItemCode);
-
+                    
+                    if(storedItem == null) continue;
+                    
                     // Reverse the transaction
                     storedItem.Quantity -= orderItem.Quantity;
                     if (storedItem.Quantity <= 0)
