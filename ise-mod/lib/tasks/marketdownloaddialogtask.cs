@@ -186,26 +186,30 @@ namespace ise.lib.tasks
         {
             var thingDef = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef, false);
             var stuffDef = DefDatabase<ThingDef>.GetNamed(tradable.Stuff, false);
+
             if (thingDef != null && !thingDef.LabelCap.NullOrEmpty() &&
                 (stuffDef == null || !stuffDef.LabelCap.NullOrEmpty()))
             {
-                return new DBCachedTradable
-                {
-                    ItemCode = tradable.ItemCode,
-                    ThingDef = tradable.ThingDef,
-                    Quantity = tradable.Quantity,
-                    HitPoints = 100,
-                    Quality = tradable.Quality,
-                    Stuff = tradable.Stuff,
-                    Weight = tradable.Weight,
-                    WeBuyAt = tradable.WeBuyAt,
-                    WeSellAt = tradable.WeSellAt,
-                    Minified = tradable.Minified,
-                    TranslatedName = thingDef.LabelCap,
-                    IndexedName = thingDef.LabelCap.ToLower(),
-                    TranslatedStuff = stuffDef != null ? (string)stuffDef.LabelCap : "",
-                    Category = thingDef.FirstThingCategory.defName
-                };
+                if (thingDef.FirstThingCategory != null)
+                    return new DBCachedTradable
+                    {
+                        ItemCode = tradable.ItemCode,
+                        ThingDef = tradable.ThingDef,
+                        Quantity = tradable.Quantity,
+                        HitPoints = 100,
+                        Quality = tradable.Quality,
+                        Stuff = tradable.Stuff,
+                        Weight = tradable.Weight,
+                        WeBuyAt = tradable.WeBuyAt,
+                        WeSellAt = tradable.WeSellAt,
+                        Minified = tradable.Minified,
+                        TranslatedName = thingDef.LabelCap,
+                        IndexedName = thingDef.LabelCap.ToLower(),
+                        TranslatedStuff = stuffDef != null ? (string)stuffDef.LabelCap : "",
+                        Category = thingDef.FirstThingCategory.defName
+                    };
+                Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} has no category, won't be tradable");
+                return null;
             }
             Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} " +
                                       $"{(tradable.Stuff.NullOrEmpty() ? "or " + tradable.Stuff :"")} " +
