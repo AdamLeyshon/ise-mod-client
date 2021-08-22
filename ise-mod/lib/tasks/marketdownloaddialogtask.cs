@@ -158,26 +158,7 @@ namespace ise.lib.tasks
                 db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
                 marketCache.DeleteAll();
                 marketCache.InsertBulk(
-                    reply.Items.Select(
-                        tradable => new DBCachedTradable
-                        {
-                            ItemCode = tradable.ItemCode,
-                            ThingDef = tradable.ThingDef,
-                            Quantity = tradable.Quantity,
-                            HitPoints = 100,
-                            Quality = tradable.Quality,
-                            Stuff = tradable.Stuff,
-                            Weight = tradable.Weight,
-                            WeBuyAt = tradable.WeBuyAt,
-                            WeSellAt = tradable.WeSellAt,
-                            Minified = tradable.Minified,
-                            TranslatedName = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).LabelCap,
-                            IndexedName = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).LabelCap.ToLower(),
-                            TranslatedStuff = tradable.Stuff.NullOrEmpty()
-                                ? ""
-                                : (string)DefDatabase<ThingDef>.GetNamed(tradable.Stuff).LabelCap,
-                            Category = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef).FirstThingCategory.defName
-                        }));
+                    reply.Items.Select(MakeDBRowFromTradable).Where(x => x != null));
                 marketCache.EnsureIndex(mc => mc.ThingDef);
                 marketCache.EnsureIndex(mc => mc.IndexedName);
                 var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
@@ -199,6 +180,37 @@ namespace ise.lib.tasks
 
             // Go to next step
             _state = State.MarketCaching;
+        }
+
+        private DBCachedTradable MakeDBRowFromTradable(Tradable.Tradable tradable)
+        {
+            var thingDef = DefDatabase<ThingDef>.GetNamed(tradable.ThingDef, false);
+            var stuffDef = DefDatabase<ThingDef>.GetNamed(tradable.Stuff, false);
+            if (thingDef != null && !thingDef.LabelCap.NullOrEmpty() &&
+                (stuffDef == null || !stuffDef.LabelCap.NullOrEmpty()))
+            {
+                return new DBCachedTradable
+                {
+                    ItemCode = tradable.ItemCode,
+                    ThingDef = tradable.ThingDef,
+                    Quantity = tradable.Quantity,
+                    HitPoints = 100,
+                    Quality = tradable.Quality,
+                    Stuff = tradable.Stuff,
+                    Weight = tradable.Weight,
+                    WeBuyAt = tradable.WeBuyAt,
+                    WeSellAt = tradable.WeSellAt,
+                    Minified = tradable.Minified,
+                    TranslatedName = thingDef.LabelCap,
+                    IndexedName = thingDef.LabelCap.ToLower(),
+                    TranslatedStuff = stuffDef != null ? (string)stuffDef.LabelCap : "",
+                    Category = thingDef.FirstThingCategory.defName
+                };
+            }
+            Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} " +
+                                      $"{(tradable.Stuff.NullOrEmpty() ? "or " + tradable.Stuff :"")} " +
+                                      $"has no label or couldn't be found, won't be tradable");
+            return null;
         }
 
         private void GatherColonyInventory()

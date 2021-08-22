@@ -45,7 +45,7 @@ namespace ise_core.rest.api.v1
             return reply.StatusCode == HttpStatusCode.OK;
         }
 
-        public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables)
+        public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables, bool firstBatch = true)
         {
             var request = new ColonyTradableSetRequest { ClientBindId = clientBindId, ColonyId = colonyId };
 
@@ -53,7 +53,7 @@ namespace ise_core.rest.api.v1
             return Helpers.SendNoReply(
                 request,
                 "/api/v1/colony/tradables",
-                Method.POST,
+                firstBatch ? Method.POST : Method.PATCH,
                 clientBindId).IsSuccessful;
         }
 

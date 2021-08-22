@@ -9,6 +9,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Colony;
 using ise.components;
@@ -20,6 +23,7 @@ using Verse;
 using static ise_core.rest.Helpers;
 using static ise.lib.User;
 using static ise_core.rest.api.v1.Constants;
+using static ise_core.extend.MoreEnumerable;
 using GameInfo = ise.lib.game.GameInfo;
 
 namespace ise.lib.tasks
@@ -285,11 +289,51 @@ namespace ise.lib.tasks
         {
             Logging.WriteDebugMessage($"UpdateAsync Colony tradables {_colonyId}");
 
-            _task = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
-                _gc.ClientBind,
-                _colonyId,
-                Tradables.GetAllTradables()
-            ));
+            _task = new Task<bool>(() =>
+            {
+                var awaitTasks = new List<Task<bool>>();
+                var firstBatch = true;
+                var response = false;
+                var tradables = Tradables.GetAllTradables();
+                foreach (var batch in tradables.Batch(100_000))
+                {
+                    var colonyTradables = batch.ToList();
+                    Logging.WriteDebugMessage($"Sending {colonyTradables.Count} tradables ");
+                    switch (firstBatch)
+                    {
+                        case true:
+                            response = ise_core.rest.api.v1.Colony.SetTradablesList(
+                                _gc.ClientBind,
+                                _colonyId,
+                                colonyTradables);
+                            firstBatch = false;
+                            break;
+                        case false:
+                            if (response)
+                            {
+                                var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
+                                    _gc.ClientBind,
+                                    _colonyId,
+                                    colonyTradables,
+                                    false));
+                                batchTask.Start();
+                                awaitTasks.Add(batchTask);
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                            break;
+                    }
+                }
+
+                if (awaitTasks.Count == 0)
+                {
+                    return response;
+                }
+                while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
+                return awaitTasks.All(t => t.Result);
+            });
 
             _task.Start();
             _state = State.UpdateTradables;
@@ -297,6 +341,12 @@ namespace ise.lib.tasks
 
         private void ProcessColonyTradablesReply(bool reply)
         {
+            if (!reply)
+            {
+                _state = State.Error;
+                Logging.WriteErrorMessage("Server did not accept colony tradables");
+            }
+
             Logging.WriteDebugMessage("Server accepted colony tradables");
             _state = State.Done;
         }
