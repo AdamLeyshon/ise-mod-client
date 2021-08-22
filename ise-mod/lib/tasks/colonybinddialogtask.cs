@@ -295,7 +295,7 @@ namespace ise.lib.tasks
                 var firstBatch = true;
                 var response = false;
                 var tradables = Tradables.GetAllTradables();
-                foreach (var batch in tradables.Batch(100_000))
+                foreach (var batch in tradables.Batch(25_000))
                 {
                     var colonyTradables = batch.ToList();
                     Logging.WriteDebugMessage($"Sending {colonyTradables.Count} tradables ");
