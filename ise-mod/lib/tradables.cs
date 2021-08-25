@@ -45,6 +45,7 @@ namespace ise.lib
                 try
                 {
                     if (thing.tradeability != Tradeability.None &&
+                        thing.FirstThingCategory != null &&
                         thing.GetStatValueAbstract(StatDefOf.MarketValue) > 0.0 &&
                         (thing.category == ThingCategory.Item || thing.category == ThingCategory.Building &&
                             thing.Minifiable))
