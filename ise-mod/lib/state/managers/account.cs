@@ -71,7 +71,7 @@ namespace ise.lib.state.managers
             Logging.WriteDebugMessage("Deleting delivered orders from the future");
 
             if (orders == null) return;
-            
+
             var dbOrders = orders.ToList();
             ordersToProcess.AddRange(
                 dbOrders.Where(order => order.DeliveryTick > currentTick).Select(order => order.Id));
@@ -87,9 +87,9 @@ namespace ise.lib.state.managers
                     // Find the items that were delivered
                     var storedItem = dbDeliveredItems.FindOne(item =>
                         item.ColonyId == _accountId && item.ItemCode == orderItem.ItemCode);
-                    
-                    if(storedItem == null) continue;
-                    
+
+                    if (storedItem == null) continue;
+
                     // Reverse the transaction
                     storedItem.Quantity -= orderItem.Quantity;
                     if (storedItem.Quantity <= 0)

@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-core, colony.cs 2021-02-09
-// #endregion
 
 #endregion
 
@@ -45,7 +43,8 @@ namespace ise_core.rest.api.v1
             return reply.StatusCode == HttpStatusCode.OK;
         }
 
-        public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables, bool firstBatch = true)
+        public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables,
+            bool firstBatch = true)
         {
             var request = new ColonyTradableSetRequest { ClientBindId = clientBindId, ColonyId = colonyId };
 

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -33,49 +33,49 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug NETLOCAL|AnyCPU' ">
-      <DebugSymbols>true</DebugSymbols>
-      <DebugType>full</DebugType>
-      <Optimize>false</Optimize>
-      <DefineConstants>NETLOCAL;DEBUG;TRACE;GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE</DefineConstants>
-      <ErrorReport>prompt</ErrorReport>
-      <WarningLevel>4</WarningLevel>
-      <OutputPath>bin\Debug NETLOCAL\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants>NETLOCAL;DEBUG;TRACE;GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <OutputPath>bin\Debug NETLOCAL\</OutputPath>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="db\DBCachedTradable.cs" />
-        <Compile Include="db\DBInventory.cs" />
-        <Compile Include="db\DBOrder.cs" />
-        <Compile Include="db\DBOrderItem.cs" />
-        <Compile Include="db\DBStorageItem.cs" />
-        <Compile Include="db\IBaseBind.cs" />
-        <Compile Include="db\DBClientBind.cs" />
-        <Compile Include="db\DBColonyBind.cs" />
-        <Compile Include="db\DBUser.cs" />
-        <Compile Include="db\BaseItem.cs" />
-        <Compile Include="extend\enums.cs" />
-        <Compile Include="extend\lists.cs" />
-        <Compile Include="packets\Bank.cs" />
-        <Compile Include="packets\Bind.cs" />
-        <Compile Include="packets\Colony.cs" />
-        <Compile Include="packets\Common.cs" />
-        <Compile Include="packets\Hello.cs" />
-        <Compile Include="packets\Inventory.cs" />
-        <Compile Include="packets\Order.cs" />
-        <Compile Include="packets\Tradable.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="rest\api\v1\bank.cs" />
-        <Compile Include="rest\api\v1\bind\verify.cs" />
-        <Compile Include="rest\api\v1\colony.cs" />
-        <Compile Include="rest\api\v1\consts.cs" />
-        <Compile Include="rest\api\v1\inventory.cs" />
-        <Compile Include="rest\api\v1\order.cs" />
-        <Compile Include="rest\api\v1\system.cs" />
-        <Compile Include="rest\helpers.cs" />
-        <Compile Include="system\consts.cs" />
-        <Compile Include="system\security.cs" />
+        <Compile Include="db\DBCachedTradable.cs"/>
+        <Compile Include="db\DBInventory.cs"/>
+        <Compile Include="db\DBOrder.cs"/>
+        <Compile Include="db\DBOrderItem.cs"/>
+        <Compile Include="db\DBStorageItem.cs"/>
+        <Compile Include="db\IBaseBind.cs"/>
+        <Compile Include="db\DBClientBind.cs"/>
+        <Compile Include="db\DBColonyBind.cs"/>
+        <Compile Include="db\DBUser.cs"/>
+        <Compile Include="db\BaseItem.cs"/>
+        <Compile Include="extend\enums.cs"/>
+        <Compile Include="extend\lists.cs"/>
+        <Compile Include="packets\Bank.cs"/>
+        <Compile Include="packets\Bind.cs"/>
+        <Compile Include="packets\Colony.cs"/>
+        <Compile Include="packets\Common.cs"/>
+        <Compile Include="packets\Hello.cs"/>
+        <Compile Include="packets\Inventory.cs"/>
+        <Compile Include="packets\Order.cs"/>
+        <Compile Include="packets\Tradable.cs"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="rest\api\v1\bank.cs"/>
+        <Compile Include="rest\api\v1\bind\verify.cs"/>
+        <Compile Include="rest\api\v1\colony.cs"/>
+        <Compile Include="rest\api\v1\consts.cs"/>
+        <Compile Include="rest\api\v1\inventory.cs"/>
+        <Compile Include="rest\api\v1\order.cs"/>
+        <Compile Include="rest\api\v1\system.cs"/>
+        <Compile Include="rest\helpers.cs"/>
+        <Compile Include="system\consts.cs"/>
+        <Compile Include="system\security.cs"/>
     </ItemGroup>
     <ItemGroup>
-        <None Include="packages.config" />
+        <None Include="packages.config"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\protobuf\csharp\src\Google.Protobuf\Google.Protobuf.csproj">
@@ -92,12 +92,12 @@
             <HintPath>..\packages\RestSharp.106.11.7\lib\net452\RestSharp.dll</HintPath>
             <Private>True</Private>
         </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Management" />
-        <Reference Include="System.Runtime" />
-        <Reference Include="System.Web" />
+        <Reference Include="System"/>
+        <Reference Include="System.Management"/>
+        <Reference Include="System.Runtime"/>
+        <Reference Include="System.Web"/>
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">

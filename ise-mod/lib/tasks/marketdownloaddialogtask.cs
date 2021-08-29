@@ -211,9 +211,10 @@ namespace ise.lib.tasks
                 Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} has no category, won't be tradable");
                 return null;
             }
+
             Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} " +
-                                      $"{(tradable.Stuff.NullOrEmpty() ? "or " + tradable.Stuff :"")} " +
-                                      $"has no label or couldn't be found, won't be tradable");
+                                      $"{(tradable.Stuff.NullOrEmpty() ? "or " + tradable.Stuff : "")} " +
+                                      "has no label or couldn't be found, won't be tradable");
             return null;
         }
 

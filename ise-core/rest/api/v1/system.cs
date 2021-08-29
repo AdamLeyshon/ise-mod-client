@@ -1,12 +1,10 @@
 #region license
 
-// #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.
 // // However! If you would like to contribute to this code please feel free to drop me a message.
 // //
 // // iseworld, ise-core, system.cs 2021-02-09
-// #endregion
 
 #endregion
 
@@ -14,9 +12,9 @@ using System;
 using System.Net;
 using Hello;
 using ise_core.system;
+using RestSharp;
 using static ise_core.rest.Helpers;
 using static ise_core.rest.api.v1.Constants;
-using RestSharp;
 
 namespace ise_core.rest.api.v1
 {
@@ -35,10 +33,10 @@ namespace ise_core.rest.api.v1
                 case HttpStatusCode.OK:
                     var reply = HelloReply.Parser.ParseFrom(result.RawBytes);
                     return new HandshakeResponse(reply.ServerVersion, HandshakeResult.OK);
-                    
+
                 case HttpStatusCode.NotAcceptable:
                     return new HandshakeResponse("", HandshakeResult.ClientOutdated);
-                    
+
                 case HttpStatusCode.GatewayTimeout:
                 case HttpStatusCode.Gone:
                 case HttpStatusCode.ServiceUnavailable:

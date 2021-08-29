@@ -323,14 +323,12 @@ namespace ise.lib.tasks
                             {
                                 return false;
                             }
+
                             break;
                     }
                 }
 
-                if (awaitTasks.Count == 0)
-                {
-                    return response;
-                }
+                if (awaitTasks.Count == 0) return response;
                 while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                 return awaitTasks.All(t => t.Result);
             });
