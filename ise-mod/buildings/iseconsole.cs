@@ -61,6 +61,12 @@ namespace ise.buildings
             {
                 yield return failureReason;
             }
+            else if (!IseCentral.HandshakeComplete)
+            {
+                yield return new FloatMenuOption("ISEUnavailable".Translate() +
+                                                 $", Reason: {IseCentral.ISEState}",
+                    null);
+            }
             else
             {
                 yield return new FloatMenuOption("ISEShopMenuOption".Translate(),

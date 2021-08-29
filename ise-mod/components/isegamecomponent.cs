@@ -8,6 +8,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -37,13 +38,13 @@ namespace ise.components
         #region Fields
 
         private const int UpdateTickInterval = 2000;
-        private readonly Dictionary<string, Account> activeAccounts = new Dictionary<string, Account>();
+        private readonly Dictionary<string, Account> _activeAccounts = new Dictionary<string, Account>();
 
-        private readonly Dictionary<string, string> colonyCache = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _colonyCache = new Dictionary<string, string>();
         internal string ClientBind;
-        private int nextUpdateTick;
-        private bool spawnToolUsed;
-        private bool firstRunComplete;
+        private int _nextUpdateTick;
+        private bool _spawnToolUsed;
+        private bool _firstRunComplete;
 
         #endregion
 
@@ -51,12 +52,12 @@ namespace ise.components
 
         internal bool SpawnToolUsed
         {
-            get => spawnToolUsed;
+            get => _spawnToolUsed;
             private set
             {
                 if (value)
                     // Don't allow unsetting
-                    spawnToolUsed = true;
+                    _spawnToolUsed = true;
             }
         }
 
@@ -95,15 +96,15 @@ namespace ise.components
             Logging.WriteMessage($"Client bind {ClientBind}");
             // Do other stuff
 
-            if (firstRunComplete) return;
+            if (_firstRunComplete) return;
 
             StartAccountTracking();
             var currentTick = Current.Game.tickManager.TicksGame;
 
             // Set the first tick a little ahead of time so we don't
             // overburden the game at startup
-            nextUpdateTick = currentTick + 500;
-            firstRunComplete = true;
+            _nextUpdateTick = currentTick + 500;
+            _firstRunComplete = true;
         }
 
         internal bool IsValidLocationForIse(Map map)
@@ -121,34 +122,43 @@ namespace ise.components
             //     $"Colony bind lookup from {sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name}");
 
             var mapId = GetUniqueMapID(map);
-            if (colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
+            if (_colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
             outputId = LoadBind<DBColonyBind>(mapId);
             if (outputId.NullOrEmpty())
                 // Logging.WriteDebugMessage($"No colony bind for: {ClientBind}");
                 return null;
 
-            colonyCache.Add(mapId, outputId);
+            _colonyCache.Add(mapId, outputId);
             // Logging.WriteDebugMessage($"Colony bind {outputId}");
             return outputId;
         }
 
         internal void FlushColonyIdCache()
         {
-            colonyCache.Clear();
+            _colonyCache.Clear();
         }
 
         public override void GameComponentTick()
         {
             var currentTick = Current.Game.tickManager.TicksGame;
             base.GameComponentTick();
-            if (currentTick < nextUpdateTick) return;
-            Logging.WriteDebugMessage($"Ticking {activeAccounts.Count} Account Managers");
-            foreach (var activeAccountsKey in activeAccounts.Keys)
+            if (currentTick < _nextUpdateTick) return;
+
+            if (DateTime.Now - IseCentral.LastHandshakeAttempt > TimeSpan.FromSeconds(30))
+            {
+                IseCentral.StartHandshakeTask();
+                return;
+            }
+
+            if(!IseCentral.HandshakeComplete) return;
+            
+            Logging.WriteDebugMessage($"Ticking {_activeAccounts.Count} Account Managers");
+            foreach (var activeAccountsKey in _activeAccounts.Keys)
                 Logging.WriteDebugMessage($"Account Manager: {activeAccountsKey}");
 
-            nextUpdateTick = currentTick + UpdateTickInterval;
+            _nextUpdateTick = currentTick + UpdateTickInterval;
 
-            foreach (var task in activeAccounts.Values.Select(account => new Task(account.UpdateAsync))) task.Start();
+            foreach (var task in _activeAccounts.Values.Select(account => new Task(account.UpdateAsync))) task.Start();
         }
 
         private void StartAccountTracking()
@@ -161,16 +171,16 @@ namespace ise.components
             foreach (var map in maps)
             {
                 var colonyId = GetColonyId(map);
-                if (!colonyId.NullOrEmpty() && !activeAccounts.ContainsKey(colonyId))
-                    activeAccounts.Add(colonyId, new Account(colonyId, this));
+                if (!colonyId.NullOrEmpty() && !_activeAccounts.ContainsKey(colonyId))
+                    _activeAccounts.Add(colonyId, new Account(colonyId, this));
             }
         }
 
         internal Account GetAccount(string colonyId)
         {
-            if (activeAccounts.TryGetValue(colonyId, out var account)) return account;
+            if (_activeAccounts.TryGetValue(colonyId, out var account)) return account;
             account = new Account(colonyId, this);
-            activeAccounts.Add(colonyId, account);
+            _activeAccounts.Add(colonyId, account);
             return account;
         }
 

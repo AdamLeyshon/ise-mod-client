@@ -110,7 +110,7 @@ namespace ise_cli
 
         private static void HelloRequest()
         {
-            var send = new HelloRequest { ClientVersion = Consts.CLIENT_VERSION };
+            var send = new HelloRequest { ClientVersion = Consts.ClientVersion };
             try
             {
                 RestWrapperSendAndReply(send, HelloReply.Parser, "/api/v1/system/hello", Method.POST);

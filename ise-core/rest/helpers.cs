@@ -33,6 +33,8 @@ namespace ise_core.rest
             return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
+        public static string UserAgentVersion = "1.0";
+
         public struct TaskOrReply<T>
         {
             public Task<T> Task;
@@ -44,7 +46,7 @@ namespace ise_core.rest
             var client = new RestClient(Server)
             {
                 AutomaticDecompression = true,
-                UserAgent = "ISE/1.0"
+                UserAgent = UserAgentVersion
             };
             return client;
         }
@@ -97,12 +99,13 @@ namespace ise_core.rest
             return DoRequest(sendPacket, url, method, clientId, urlSegments);
         }
 
-        private static IRestResponse DoRequest<TS>(
+        public static IRestResponse DoRequest<TS>(
             TS sendPacket,
             string url,
             Method method,
             string clientId,
-            Dictionary<string, string> urlSegments
+            Dictionary<string, string> urlSegments,
+            bool throwException = true
         ) where TS : IMessage<TS>, new()
         {
             Task<IRestResponse> task = null;
@@ -132,11 +135,15 @@ namespace ise_core.rest
                     "HTTP Client in Invalid State, task was null! wat do?");
 
             // Throw the task exception if there was one
-            if (task.Exception != null) throw task.Exception;
+            if (task.Exception != null && throwException) throw task.Exception;
 
             // Otherwise generate one from HTTP Response
-            throw new Exception(
-                $"{task.Result.ErrorMessage}, HTTP Code: {task.Result.StatusCode:D}, {task.Result.StatusDescription}");
+            if (throwException)
+                throw new Exception(
+                    $"{task.Result.ErrorMessage}, HTTP Code: {task.Result.StatusCode:D}, {task.Result.StatusDescription}");
+            
+            return task.Result;
+            
         }
 
 

@@ -16,7 +16,7 @@ namespace ise_core.system
     {
         #region Fields
 
-        public const string CLIENT_VERSION = "1.9.0";
+        public const string ClientVersion = "1.0.0";
 
         #endregion
     }
