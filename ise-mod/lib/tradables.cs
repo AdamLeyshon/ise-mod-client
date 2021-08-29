@@ -168,20 +168,22 @@ namespace ise.lib
 
         internal static IEnumerable<Thing> GetItemsNearBeacons(Map map, string filterByDefName = null)
         {
+            var seenThings = new HashSet<int>();
             foreach (var beacon in Building_OrbitalTradeBeacon.AllPowered(map))
             {
                 Logging.WriteDebugMessage($"Found trade beacon @ {beacon.Position.ToString()}");
                 foreach (var beaconCell in beacon.TradeableCells)
                 {
                     var thingList = beaconCell.GetThingList(map);
-                    for (var i = 0; i < thingList.Count; i++)
+                    foreach (var t in thingList)
                     {
+                        if (seenThings.Contains(t.thingIDNumber)) continue;
                         // Unpack minified boxes to find out what's in them.
-                        var thing = thingList[i].GetInnerIfMinified();
-                        if ((filterByDefName == null ||
-                             thing.def.defName == filterByDefName) &&
-                            CanThisItemBeSold(thingList[i]))
-                            yield return thingList[i];
+                        var thing = t.GetInnerIfMinified();
+                        if (filterByDefName != null && thing.def.defName != filterByDefName ||
+                            !CanThisItemBeSold(t)) continue;
+                        seenThings.Add(thing.thingIDNumber);
+                        yield return t;
                     }
                 }
             }
