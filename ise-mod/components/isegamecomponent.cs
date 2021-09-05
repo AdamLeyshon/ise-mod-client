@@ -150,8 +150,8 @@ namespace ise.components
                 return;
             }
 
-            if(!IseCentral.HandshakeComplete) return;
-            
+            if (!IseCentral.HandshakeComplete) return;
+
             Logging.WriteDebugMessage($"Ticking {_activeAccounts.Count} Account Managers");
             foreach (var activeAccountsKey in _activeAccounts.Keys)
                 Logging.WriteDebugMessage($"Account Manager: {activeAccountsKey}");

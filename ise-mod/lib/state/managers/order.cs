@@ -78,6 +78,7 @@ namespace ise.lib.state.managers
                     case OrderStatusEnum.Delivered:
                     case OrderStatusEnum.Failed:
                     case OrderStatusEnum.Reversed:
+                        IsFinished = true;
                         break;
                     case OrderStatusEnum.Placed:
                         ProcessStatePlaced(currentTick, ticksRemaining);
@@ -161,7 +162,7 @@ namespace ise.lib.state.managers
             IseCentral.DataCache.Commit();
 
             var letterDef = LetterDefOf.PositiveEvent;
-            letterDef.arriveSound = SoundDefOf.LetterArrive;
+            letterDef.arriveSound = SoundDefOf.Quest_Succeded;
             Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(
                 "ISEOrderReadyTitle".Translate(),
                 "ISEOrderReadyText".Translate(),
@@ -207,6 +208,7 @@ namespace ise.lib.state.managers
             var gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             try
             {
+                db.BeginTrans();
                 var result = ise_core.rest.api.v1.Order.SetOrderStatus(
                     state,
                     gameComponent.ClientBind,
@@ -222,6 +224,29 @@ namespace ise.lib.state.managers
                 _backingOrder.PlacedTick = result.PlacedTick;
                 _backingOrder.DeliveryTick = result.DeliveryTick;
                 _backingOrder.Status = result.Status;
+
+                // State check
+                switch (_backingOrder.Status)
+                {
+                    case OrderStatusEnum.Delivered:
+                    case OrderStatusEnum.Failed:
+                    case OrderStatusEnum.Reversed:
+                        // Clean up the manifest and the order entry.
+                        // We're not going to process this again unless the server resends it.
+                        var orderItems = db.GetCollection<DBOrderItem>(Tables.OrderItems);
+                        orderItems.DeleteMany(oi => oi.OrderId == OrderId);
+                        orderCollection.Delete(OrderId);
+                        IsFinished = true;
+                        break;
+                    case OrderStatusEnum.Placed:
+                    case OrderStatusEnum.OutForDelivery:
+                        orderCollection.Update(_backingOrder);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                db.Commit();
             }
             catch (Exception e)
             {
@@ -229,8 +254,6 @@ namespace ise.lib.state.managers
                 Logging.WriteErrorMessage($"{e}");
                 throw;
             }
-
-            orderCollection.Update(_backingOrder);
         }
 
         #endregion

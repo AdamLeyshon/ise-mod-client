@@ -950,15 +950,18 @@ namespace ise.dialogs
         private void TradeMaxMinButtonEvent(bool decrease, bool step, DBCachedTradable tradable)
         {
             int qty;
+            var stepSize = 1;
+            if (Event.current.alt) stepSize = 5;
+            if (Event.current.control) stepSize = 10;
+            if (Event.current.shift) stepSize = 100;
             if (decrease)
                 qty = step
-                    ? tradable.TradedQuantity - 5
+                    ? tradable.TradedQuantity - stepSize
                     : 0;
             else
                 qty = step
-                    ? tradable.TradedQuantity + 5
+                    ? tradable.TradedQuantity + stepSize
                     : tradable.Quantity;
-
             SetTradeAmount(tradable, qty);
         }
 

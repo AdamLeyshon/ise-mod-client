@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ise.lib;
 using ise_core.db;
+using ise_core.rest;
 using ise_core.rest.api.v1;
 using LiteDB;
 using Verse;
@@ -26,6 +27,21 @@ namespace ise
     // ReSharper disable once ClassNeverInstantiated.Global
     public class IseCentral
     {
+        public enum ServerState
+        {
+            HandshakeNotPerformed,
+            Unreachable,
+            Maintenance,
+            ClientTooOld,
+            OK
+        }
+
+        #region Properties
+
+        internal static LiteDatabase DataCache { get; }
+
+        #endregion
+
         #region Fields
 
         internal static readonly DBUser User;
@@ -37,21 +53,12 @@ namespace ise
 
         #endregion
 
-        public enum ServerState
-        {
-            HandshakeNotPerformed,
-            Unreachable,
-            Maintenance,
-            ClientTooOld,
-            OK
-        }
-
         #region ctor
 
         static IseCentral()
         {
             ModVersion = GetModVersion();
-            ise_core.rest.Helpers.UserAgentVersion = $"ISE/{ModVersion}";
+            Helpers.UserAgentVersion = $"ISE/{ModVersion}";
             DataCache = new LiteDatabase(DBLocation);
             User = LoadUserData();
             HandshakeComplete = false;
@@ -112,12 +119,6 @@ namespace ise
                     LastHandshakeAttempt = DateTime.Now;
                 });
         }
-
-        #endregion
-
-        #region Properties
-
-        internal static LiteDatabase DataCache { get; }
 
         #endregion
     }

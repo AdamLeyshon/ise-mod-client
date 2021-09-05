@@ -114,11 +114,10 @@ namespace ise.buildings
             _gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             _currentMap = map;
 
-            if (!respawningAfterLoad) return;
+            // Don't tick if we're still loading
+            if (Scribe.mode != LoadSaveMode.Inactive) return;
 
-            // Don't tick straight away
             LastSpeed = _speed;
-            _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
         }
 
         public override void ExposeData()
@@ -130,9 +129,6 @@ namespace ise.buildings
             Scribe_Values.Look(ref _autorun, "autorun", true, true);
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
-
-            // Don't tick straight away
-            _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
 
             if (_currentItemDbId == null) return;
 
@@ -170,6 +166,7 @@ namespace ise.buildings
 
         public override void Tick()
         {
+            if (_nextProgressTick == 0) _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
             if (Current.Game.tickManager.TicksGame < _nextProgressTick) return;
             UpdateProgress();
             _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
