@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
+	<ISEName>InterStellar Express</ISEName>
 	<ISEShopMenuOption>Browse Marketplace</ISEShopMenuOption>
 	<ISEWithdrawMenuOption>Withdraw funds</ISEWithdrawMenuOption>
 	<ISENeedBaseName>Base name has been set or Map not owned by Player</ISENeedBaseName>
@@ -46,4 +47,10 @@
 	<ISEWithdrawComplete>Thank you for banking with us, your funds are on the way.</ISEWithdrawComplete>
 	<ISEOrderReadyTitle>Materialiser™ data received</ISEOrderReadyTitle>
 	<ISEOrderReadyText>We have received new Materialiser™ data from a recent order,\nRemember to start it or set it to Autorun.</ISEOrderReadyText>
+	<ISEDebugMessages>Enable debug logging</ISEDebugMessages>
+	<ISEDebugMessagesTooltip>If this option is disabled, ISE will only log errors and no debug messages</ISEDebugMessagesTooltip>
+	<ISEDebugTradeBeacons>Trade beacon debug log</ISEDebugTradeBeacons>
+	<ISEDebugTradeBeaconsTooltip>Log items that ISE found near trade beacons</ISEDebugTradeBeaconsTooltip>
+	<ISEDebugMaterialiser>Materialiser debug log</ISEDebugMaterialiser>
+	<ISEDebugMaterialiserTooltip>Log Materialiser™ state</ISEDebugMaterialiserTooltip>
 </LanguageData>

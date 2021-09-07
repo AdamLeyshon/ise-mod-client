@@ -114,6 +114,9 @@ namespace ise.buildings
             _gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             _currentMap = map;
 
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "Spawned materialiser");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Scribe state: {Scribe.mode}");
+
             // Don't tick if we're still loading
             if (Scribe.mode != LoadSaveMode.Inactive) return;
 
@@ -130,15 +133,32 @@ namespace ise.buildings
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
 
-            if (_currentItemDbId == null) return;
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "Reloading data from database");
+
+
+            if (_currentItemDbId == null)
+            {
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "No item to resume");
+                return;
+            }
+            else
+            {
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser,
+                    $"Trying to resume {_currentItemDbId}");
+            }
 
             var loadItem = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered)
                 .FindOne(item => item.StoredItemID == _currentItemDbId);
 
+
             // It's possible that the save is referencing an item that was later on delivered,
             // But then they reloaded, if the server wasn't updated then it might start pick up the order
             // again, but it they've gone back too far, then the time warp code should roll back the order.
-            if (loadItem == null) return;
+            if (loadItem == null)
+            {
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "The item was not in the DB");
+                return;
+            }
 
             CreateItemFromDB(loadItem);
         }
@@ -151,7 +171,11 @@ namespace ise.buildings
             var action = new Command_Action
             {
                 icon = SpeedIcon,
-                defaultLabel = $"Speed\n({LookupSpeedTranslation(Speed)})", action = delegate { Speed = Speed.Next(); }
+                defaultLabel = $"Speed\n({LookupSpeedTranslation(Speed)})", action = delegate
+                {
+                    Speed = Speed.Next();
+                    Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Changed speed to {Speed}");
+                }
             };
             yield return action;
 
@@ -159,14 +183,23 @@ namespace ise.buildings
             action = new Command_Action
             {
                 icon = Autorun ? GoIcon : StopIcon,
-                defaultLabel = $"Autorun ({(Autorun ? "On" : "Off")})", action = delegate { Autorun = !Autorun; }
+                defaultLabel = $"Autorun ({(Autorun ? "On" : "Off")})", action = delegate
+                {
+                    Autorun = !Autorun;
+                    Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Changed state to {Autorun}");
+                }
             };
             yield return action;
         }
 
         public override void Tick()
         {
-            if (_nextProgressTick == 0) _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
+            if (_nextProgressTick == 0)
+            {
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "Materialiser next tick was zero");
+                _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
+            }
+
             if (Current.Game.tickManager.TicksGame < _nextProgressTick) return;
             UpdateProgress();
             _nextProgressTick = Current.Game.tickManager.TicksGame + TicksBetweenProgress;
@@ -211,6 +244,8 @@ namespace ise.buildings
             var colonyId = _gameComponent.GetColonyId(_currentMap);
             if (colonyId == null) return false;
 
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Checking for new item to dequeue");
+            
             var nextItem = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered)
                 .FindOne(item => item.ColonyId == colonyId);
 
@@ -246,6 +281,7 @@ namespace ise.buildings
                 ProgressPercent = ProgressPercent >= 50 ? 50 : 0;
                 ProgressValue = ProgressPercent >= 50 ? TotalValue / 2 : 0;
                 _compPowerTrader.PowerOutput = 0f - StandbyPower;
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Can't work: {MaterialiserStatus}");
                 return;
             }
 
@@ -253,6 +289,8 @@ namespace ise.buildings
             var consumePower = LookupPowerSpeedMap(Speed, false);
 
             // Check if we have work to do,
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Autorun: {Autorun}, Speed: {Speed}");
+            
             if (CurrentItem == null && (Autorun || Speed != ProcessSpeed.Stop))
                 if (!DequeueItem())
                 {
@@ -263,8 +301,12 @@ namespace ise.buildings
             // Drain the power we will consume until the next tick
             _compPowerTrader.PowerOutput = 0f - consumePower;
 
-            if (CurrentItem == null || MaterialiserStatus != WorkStatus.Working) return;
-
+            if (CurrentItem == null || MaterialiserStatus != WorkStatus.Working)
+            {
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Can't work: {MaterialiserStatus}");
+                return;
+            }
+            
             // Add any progress we made since the last tick, use the speed we recorded last time
             // This stops people getting large increments for free by
             // Changing the speed up/down before ticks
@@ -273,7 +315,7 @@ namespace ise.buildings
             // from calculating properly
             ProgressPercent = (int)(Math.Floor(((double)ProgressValue / TotalValue) * 100));
 
-            Logging.WriteDebugMessage($"Materialiser Progress {ProgressValue} ({ProgressValue}/{TotalValue})");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Materialiser Progress {ProgressValue} ({ProgressValue}/{TotalValue})");
 
             // Store the speed after the update ready for use next time
             LastSpeed = Speed;
@@ -338,6 +380,8 @@ namespace ise.buildings
             var collection = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered);
             var thisItem = collection.FindById(_currentItemDbId);
 
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Marking item {_currentItemDbId} complete");
+            
             if (thisItem == null)
             {
                 Logging.WriteErrorMessage("Item we were trying to make has been removed from the database!");
@@ -361,10 +405,12 @@ namespace ise.buildings
                 ProgressValue = 0;
             }
 
+            IseCentral.DataCache.BeginTrans();
             if (thisItem.Quantity <= 0)
                 collection.Delete(thisItem.StoredItemID);
             else
                 collection.Upsert(thisItem);
+            IseCentral.DataCache.Commit();
         }
 
         public override string GetInspectString()

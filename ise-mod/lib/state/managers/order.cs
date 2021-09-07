@@ -128,38 +128,47 @@ namespace ise.lib.state.managers
             Logging.WriteDebugMessage($"Deliver Order {OrderId}");
             var colonyId = _backingOrder.ColonyId;
             IseCentral.DataCache.BeginTrans();
-            var orderItemCollection = IseCentral.DataCache.GetCollection<DBOrderItem>(Tables.OrderItems);
-            var storedItemCollection = IseCentral.DataCache.GetCollection<DBStorageItem>(Tables.Delivered);
-            storedItemCollection.EnsureIndex(item => item.ColonyId);
-            storedItemCollection.EnsureIndex(item => item.ItemCode);
-
-            var orderItems = orderItemCollection.Find(item => item.OrderId == OrderId);
-            var deliveryItems = storedItemCollection.Find(item => item.ColonyId == colonyId).ToList();
-
-            foreach (var orderItem in orderItems)
+            try
             {
-                var item = deliveryItems.FirstOrDefault
-                               (storageItem => storageItem.ItemCode == orderItem.ItemCode) ??
-                           new DBStorageItem
-                           {
-                               StoredItemID = GetShaHash($"{colonyId}{orderItem.ItemCode}"),
-                               ItemCode = orderItem.ItemCode,
-                               ThingDef = orderItem.ThingDef,
-                               Stuff = orderItem.Stuff,
-                               Quality = orderItem.Quality,
-                               Quantity = 0,
-                               ColonyId = colonyId,
-                               Value = 0
-                           };
-                item.Quantity += orderItem.Quantity;
-                item.Value = (int)Math.Ceiling(GetValueForThing(item.ThingDef, item.Quality, item.Stuff))
-                             * item.Quantity;
-                storedItemCollection.Upsert(item);
-            }
+                var orderItemCollection = IseCentral.DataCache.GetCollection<DBOrderItem>(Tables.OrderItems);
+                var storedItemCollection = IseCentral.DataCache.GetCollection<DBStorageItem>(Tables.Delivered);
+                storedItemCollection.EnsureIndex(item => item.ColonyId);
+                storedItemCollection.EnsureIndex(item => item.ItemCode);
 
-            // Remove delivered items.
-            orderItemCollection.DeleteMany(item => item.OrderId == OrderId);
-            IseCentral.DataCache.Commit();
+                var orderItems = orderItemCollection.Find(item => item.OrderId == OrderId);
+                var deliveryItems = storedItemCollection.Find(item => item.ColonyId == colonyId).ToList();
+
+                foreach (var orderItem in orderItems)
+                {
+                    var item = deliveryItems.FirstOrDefault
+                                   (storageItem => storageItem.ItemCode == orderItem.ItemCode) ??
+                               new DBStorageItem
+                               {
+                                   StoredItemID = GetShaHash($"{colonyId}{orderItem.ItemCode}"),
+                                   ItemCode = orderItem.ItemCode,
+                                   ThingDef = orderItem.ThingDef,
+                                   Stuff = orderItem.Stuff,
+                                   Quality = orderItem.Quality,
+                                   Quantity = 0,
+                                   ColonyId = colonyId,
+                                   Value = 0
+                               };
+                    item.Quantity += orderItem.Quantity;
+                    item.Value = (int)Math.Ceiling(GetValueForThing(item.ThingDef, item.Quality, item.Stuff))
+                                 * item.Quantity;
+                    storedItemCollection.Upsert(item);
+                }
+
+                // Remove delivered items.
+                orderItemCollection.DeleteMany(item => item.OrderId == OrderId);
+
+                IseCentral.DataCache.Commit();
+            }
+            catch (Exception)
+            {
+                IseCentral.DataCache.Rollback();
+                throw;
+            }
 
             var letterDef = LetterDefOf.PositiveEvent;
             letterDef.arriveSound = SoundDefOf.Quest_Succeded;
@@ -175,28 +184,47 @@ namespace ise.lib.state.managers
             Logging.WriteDebugMessage($"Processing manifest for {orderId}");
             var db = IseCentral.DataCache;
 
-            var orderItems = db.GetCollection<DBOrderItem>(Tables.OrderItems);
-            orderItems.InsertBulk(
-                orderManifest.Items.Select(
-                    orderItem => new DBOrderItem
-                    {
-                        ItemCode = orderItem.ItemCode,
-                        ThingDef = orderItem.ThingDef,
-                        Stuff = orderItem.Stuff,
-                        Quality = orderItem.Quality,
-                        Quantity = orderItem.Quantity,
-                        OrderId = orderId
-                    }
-                )
-            );
+            try
+            {
+                db.BeginTrans();
+                var orderItems = db.GetCollection<DBOrderItem>(Tables.OrderItems);
+                orderItems.InsertBulk(
+                    orderManifest.Items.Select(
+                        orderItem => new DBOrderItem
+                        {
+                            ItemCode = orderItem.ItemCode,
+                            ThingDef = orderItem.ThingDef,
+                            Stuff = orderItem.Stuff,
+                            Quality = orderItem.Quality,
+                            Quantity = orderItem.Quantity,
+                            OrderId = orderId
+                        }
+                    )
+                );
+                db.Commit();
+            }
+            catch (Exception)
+            {
+                db.Rollback();
+                throw;
+            }
 
             // Mark the order as downloaded so we don't fetch it again.
             var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
             var order = orderCollection.FindById(orderId);
             if (order == null) throw new NullReferenceException($"Couldn't find order {orderId} in cache");
-
-            order.ManifestAvailable = true;
-            orderCollection.Update(order);
+            try
+            {
+                db.BeginTrans();
+                order.ManifestAvailable = true;
+                orderCollection.Update(order);
+                db.Commit();
+            }
+            catch (Exception)
+            {
+                db.Rollback();
+                throw;
+            }
         }
 
         private void SetOrderState(OrderStatusEnum state, int currentTick)
@@ -208,7 +236,7 @@ namespace ise.lib.state.managers
             var gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             try
             {
-                db.BeginTrans();
+
                 var result = ise_core.rest.api.v1.Order.SetOrderStatus(
                     state,
                     gameComponent.ClientBind,
@@ -225,6 +253,7 @@ namespace ise.lib.state.managers
                 _backingOrder.DeliveryTick = result.DeliveryTick;
                 _backingOrder.Status = result.Status;
 
+                db.BeginTrans();
                 // State check
                 switch (_backingOrder.Status)
                 {
@@ -245,11 +274,11 @@ namespace ise.lib.state.managers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
                 db.Commit();
             }
             catch (Exception e)
             {
+                db.Rollback();
                 Logging.WriteErrorMessage($"Failed to update order status for {OrderId}");
                 Logging.WriteErrorMessage($"{e}");
                 throw;

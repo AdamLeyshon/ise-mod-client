@@ -44,14 +44,14 @@ namespace ise.lib
 
             if (userData == null)
             {
-                Logging.WriteMessage("Creating new user data");
+                Logging.WriteDebugMessage("Creating new user data");
                 userData = steamId.NullOrEmpty()
                     ? new DBUser { UserId = Guid.NewGuid().ToString(), IsSteamUser = false }
                     : new DBUser { UserId = steamId, IsSteamUser = true };
                 col.Insert(userData);
             }
 
-            Logging.WriteMessage($"Loaded User ID: {userData.UserId}");
+            Logging.WriteDebugMessage($"Loaded User ID: {userData.UserId}");
             return userData;
         }
 
@@ -61,7 +61,7 @@ namespace ise.lib
             var col = db.GetCollection<T>(Tables.Bindings);
             var clientBindData = col.FindOne(data => data.ParentId == parentId);
             if (clientBindData == null) return string.Empty;
-            Logging.WriteMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
+            Logging.WriteDebugMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
             return clientBindData.BindId;
         }
 
@@ -70,7 +70,7 @@ namespace ise.lib
             var db = IseCentral.DataCache;
             var col = db.GetCollection<T>(Tables.Bindings);
             col.DeleteMany(data => data.BindId == targetBind);
-            Logging.WriteMessage($"Deleted all binds referring to {typeof(T)} with ID: {targetBind}");
+            Logging.WriteDebugMessage($"Deleted all binds referring to {typeof(T)} with ID: {targetBind}");
         }
 
         internal static void SaveBind<T>(string parentId, string bindId) where T : IBaseBind, new()

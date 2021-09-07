@@ -174,7 +174,7 @@ namespace ise.lib.tasks
                     switch (reply.BindType)
                     {
                         case BindTypeEnum.AccountBind:
-                            Logging.WriteMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
+                            Logging.WriteDebugMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
 
                             // Now confirm the Client Bind ID
                             state = State.Confirm;
@@ -189,7 +189,7 @@ namespace ise.lib.tasks
                             task.Start();
                             return;
                         case BindTypeEnum.ClientBind:
-                            Logging.WriteMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
+                            Logging.WriteDebugMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
                             var gc = Current.Game.GetComponent<ISEGameComponent>();
                             gc.ClientBind = reply.ClientBindId;
                             SaveBind<DBClientBind>(IseCentral.User.UserId, reply.ClientBindId);
@@ -213,7 +213,7 @@ namespace ise.lib.tasks
 
             // Bind invalid, go back to start
             bindId = "";
-            Logging.WriteMessage("Bind expired or was invalid, Requesting new bind");
+            Logging.WriteDebugMessage("Bind expired or was invalid, Requesting new bind");
             task = null;
             state = State.Start;
         }
@@ -221,7 +221,7 @@ namespace ise.lib.tasks
         private void StartBindVerify()
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
-            Logging.WriteMessage($"Verifying Client Bind {gc.ClientBind}");
+            Logging.WriteDebugMessage($"Verifying Client Bind {gc.ClientBind}");
             var request = new ClientBindVerifyRequest
             {
                 SteamId = IseCentral.User.UserId,
@@ -256,7 +256,7 @@ namespace ise.lib.tasks
             }
             else
             {
-                Logging.WriteMessage($"Server accepted Bind {gc.ClientBind}");
+                Logging.WriteDebugMessage($"Server accepted Bind {gc.ClientBind}");
                 gc.ClientBindVerified = true;
                 state = State.Done;
             }

@@ -191,7 +191,7 @@ namespace ise.lib.tasks
 
         private void ProcessColonyCreateReply(ColonyData reply)
         {
-            Logging.WriteMessage($"Got new Colony ID: {reply.ColonyId}");
+            Logging.WriteDebugMessage($"Got new Colony ID: {reply.ColonyId}");
 
             SaveBind<DBColonyBind>(GameInfo.GetUniqueMapID(_pawn.Map), reply.ColonyId);
             _gc.FlushColonyIdCache();
@@ -221,7 +221,7 @@ namespace ise.lib.tasks
 
         private void ProcessGetColonyDataReply(ColonyData reply)
         {
-            Logging.WriteMessage($"Colony ID confirmed: {reply.ColonyId}");
+            Logging.WriteDebugMessage($"Colony ID confirmed: {reply.ColonyId}");
             // Now update the colony data
             StartColonyUpdate();
         }

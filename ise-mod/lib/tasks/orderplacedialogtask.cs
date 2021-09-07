@@ -153,6 +153,7 @@ namespace ise.lib.tasks
             Reply = reply.Clone();
             try
             {
+                IseCentral.DataCache.BeginTrans();
                 IseCentral.DataCache.GetCollection<DBOrder>(Tables.Orders).Insert(
                     new DBOrder
                     {
@@ -167,18 +168,20 @@ namespace ise.lib.tasks
 
                 // Clear all cache and promises
                 var colonyId = _gc.GetColonyId(_pawn.Map);
-                IseCentral.DataCache.BeginTrans();
                 IseCentral.DataCache.GetCollection<DBInventoryPromise>().DeleteMany(x => x.ColonyId == colonyId);
                 DropCache(colonyId, CacheType.ColonyBasket);
                 DropCache(colonyId, CacheType.MarketBasket);
                 DropCache(colonyId, CacheType.ColonyCache);
                 DropCache(colonyId, CacheType.MarketCache);
+                
                 IseCentral.DataCache.Commit();
+                
                 // Start tracking the Order Status
                 _gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
             }
             catch (Exception)
             {
+                IseCentral.DataCache.Rollback();
                 _state = State.Error;
                 return;
             }
@@ -238,44 +241,44 @@ namespace ise.lib.tasks
             string stuff = null)
         {
             // Sort the Things, start with smallest stacks first.
-            Logging.WriteDebugMessage($"Looking for {thingDef} x {quantity} to remove");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Looking for {thingDef} x {quantity} to remove");
 
             if (quantity == 0)
             {
-                Logging.WriteDebugMessage($"Asked to remove {thingDef} x 0, This is an error");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Asked to remove {thingDef} x 0, This is an error");
                 return;
             }
 
             var things = GetItemsNearBeacons(map, thingDef).ToList();
-            Logging.WriteDebugMessage($"I found {thingDef} x {things.Count()}");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"I found {thingDef} x {things.Count}");
             if (quality >= 2)
             {
-                Logging.WriteDebugMessage($"Filtering for quality: {quality}");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Filtering for quality: {quality}");
                 things = things.Where(x =>
                 {
                     var thing = x.GetInnerIfMinified();
                     var possibleQuality = thing.TryGetComp<CompQuality>();
                     return possibleQuality != null && (int)possibleQuality.Quality == quality;
                 }).ToList();
-                Logging.WriteDebugMessage($"I found {thingDef} x {things.Count()}");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"I found {thingDef} x {things.Count}");
             }
 
             if (stuff != null)
             {
-                Logging.WriteDebugMessage($"Filtering for stuff: {stuff}");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Filtering for stuff: {stuff}");
 
                 things = things.Where(x =>
                 {
                     var thing = x.GetInnerIfMinified();
                     return thing.Stuff.defName == stuff;
                 }).ToList();
-                Logging.WriteDebugMessage($"I found {thingDef} x {things.Count()}");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"I found {thingDef} x {things.Count}");
             }
 
             var thingsToRemove = things.ToList();
             thingsToRemove.SortBy(x => x.stackCount);
 
-            Logging.WriteDebugMessage($"Found {thingsToRemove.Count()} stacks to inspect");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Found {thingsToRemove.Count} stacks to inspect");
 
             var toRemove = quantity;
             foreach (var stack in thingsToRemove)
@@ -283,7 +286,7 @@ namespace ise.lib.tasks
                 if (CalculateThingHitPoints(stack) != hitPoints)
                     continue;
 
-                Logging.WriteDebugMessage($"Trying to remove: {stack} x {quantity}");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Trying to remove: {stack} x {quantity}");
 
                 var newStack = stack.stackCount > toRemove
                     ? stack.SplitOff(toRemove)
@@ -293,7 +296,7 @@ namespace ise.lib.tasks
 
                 if (newStack is MinifiedThing && newStack.stackCount == 1)
                 {
-                    Logging.WriteDebugMessage($"Destroying Minified thing {stack}");
+                    Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons ,$"Destroying Minified thing {stack}");
                     stack.Destroy();
                 }
                 else
@@ -305,7 +308,7 @@ namespace ise.lib.tasks
             }
 
             if (toRemove > 0)
-                Logging.WriteErrorMessage($"We've been had, the colony doesn't have enough {thingDef} to remove.");
+                Logging.WriteErrorMessage($"The colony doesn't have enough {thingDef} {stuff} {quality} to remove.");
         }
 
         #endregion

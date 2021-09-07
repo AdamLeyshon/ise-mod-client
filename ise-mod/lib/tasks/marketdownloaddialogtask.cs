@@ -152,26 +152,36 @@ namespace ise.lib.tasks
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
 
-                db.BeginTrans();
-                var marketCache = GetCache(_colonyId, CacheType.MarketCache);
-                GetCache(_colonyId, CacheType.ColonyBasket).DeleteAll();
-                db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
-                marketCache.DeleteAll();
-                marketCache.InsertBulk(
-                    reply.Items.Select(MakeDBRowFromTradable).Where(x => x != null));
-                marketCache.EnsureIndex(mc => mc.ThingDef);
-                marketCache.EnsureIndex(mc => mc.IndexedName);
-                var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
-                inventoryCache.DeleteMany(x => x.ColonyId == _colonyId);
-                inventoryCache.Insert(new DBInventoryPromise
+                try
                 {
-                    ColonyId = _colonyId,
-                    InventoryPromiseId = reply.InventoryPromiseId,
-                    InventoryPromiseExpires = reply.InventoryPromiseExpires,
-                    CollectionChargePerKG = reply.CollectionChargePerKG,
-                    DeliveryChargePerKG = reply.DeliveryChargePerKG, AccountBalance = reply.AccountBalance
-                });
-                db.Commit();
+                    db.BeginTrans();
+                    var marketCache = GetCache(_colonyId, CacheType.MarketCache);
+                    GetCache(_colonyId, CacheType.ColonyBasket).DeleteAll();
+                    db.GetCollection<DBCachedTradable>(Tables.MarketBasket).DeleteAll();
+                    marketCache.DeleteAll();
+                    marketCache.InsertBulk(
+                        reply.Items.Select(MakeDBRowFromTradable).Where(x => x != null));
+                    marketCache.EnsureIndex(mc => mc.ThingDef);
+                    marketCache.EnsureIndex(mc => mc.IndexedName);
+                    var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
+                    inventoryCache.DeleteMany(x => x.ColonyId == _colonyId);
+                    inventoryCache.Insert(new DBInventoryPromise
+                    {
+                        ColonyId = _colonyId,
+                        InventoryPromiseId = reply.InventoryPromiseId,
+                        InventoryPromiseExpires = reply.InventoryPromiseExpires,
+                        CollectionChargePerKG = reply.CollectionChargePerKG,
+                        DeliveryChargePerKG = reply.DeliveryChargePerKG, AccountBalance = reply.AccountBalance
+                    });
+
+                    db.Commit();
+                }
+                catch (Exception)
+                {
+                    db.Rollback();
+                    throw;
+                }
+
                 var writeCount = GetCache(_colonyId, CacheType.MarketCache).Count();
                 Logging.WriteDebugMessage($"Received {reply.Items.Count}, Wrote {writeCount}");
                 Logging.WriteDebugMessage("Done caching market items");
@@ -245,7 +255,9 @@ namespace ise.lib.tasks
                 // For each downloaded market item
                 foreach (var thingGroup in _colonyThings.GroupBy(ci => ci.def.defName))
                 {
-                    Logging.WriteDebugMessage($"Working on group {thingGroup.Key}");
+                    Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                        $"Working on group {thingGroup.Key}");
+
 
                     foreach (var ci in thingGroup.OrderByDescending(ci => ci.HitPoints))
                     {
@@ -256,7 +268,7 @@ namespace ise.lib.tasks
 
                         if (qualityCategory != null && (int)qualityCategory < 2)
                         {
-                            Logging.WriteDebugMessage(
+                            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                                 $"Item {unpackedThing.ThingID} was less than Normal quality, Skipped");
 
                             continue;
@@ -266,7 +278,7 @@ namespace ise.lib.tasks
                         var intQuality = qualityCategory == null ? 0 : (int)qualityCategory;
 
 
-                        Logging.WriteDebugMessage(
+                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Searching market for {unpackedThing.def.defName}, " +
                             $"Quality: {intQuality}, " +
                             $"Stuff: {stuff} ");
@@ -283,7 +295,7 @@ namespace ise.lib.tasks
                         if (matchMarketCacheItem == null)
                         {
                             if (unpackedThing.def.defName != ThingDefSilver)
-                                Logging.WriteMessage(
+                                Logging.WriteDebugMessage(
                                     $"Did not find a Market entry for {unpackedThing.def.defName}, " +
                                     "This could be a problem.");
 
@@ -298,22 +310,25 @@ namespace ise.lib.tasks
                         // Calculate percentage of HP remaining
                         var itemHitPointsAsPercentage = 100;
 
-                        Logging.WriteDebugMessage(
+                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Item Stack HP {unpackedThing.HitPoints}/{unpackedThing.MaxHitPoints}, " +
                             $"Size: {unpackedThing.stackCount}");
+
 
                         if (unpackedThing.def.useHitPoints)
                             // The brackets here are not redundant no matter what Rider/ReSharper suggests
                             // Removing the casts/brackets causes incorrect percentage computation.
                             itemHitPointsAsPercentage = CalculateThingHitPoints(unpackedThing);
 
-                        Logging.WriteDebugMessage($"Item Stack HP {itemHitPointsAsPercentage}%");
+                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                            $"Item Stack HP {itemHitPointsAsPercentage}%");
 
                         // Below this threshold, we don't  want the remaining items in this groups
                         // Break now to save iteration.
                         if (itemHitPointsAsPercentage < 15)
                         {
-                            Logging.WriteDebugMessage("Item has low HP, skipping.");
+                            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                                "Item has low HP, skipping.");
 
                             if (!(ci is MinifiedThing))
                                 // If not minified skip this ThingDef group, else go to next minified item

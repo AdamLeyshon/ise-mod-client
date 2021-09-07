@@ -24,32 +24,36 @@ namespace ise.lib
 
         #region Methods
 
+        private static void WriteLogMessage(string message, bool error, StackFrame sf)
+        {
+            // Go back two frames to get actual caller
+            if (sf == null) sf = new StackTrace().GetFrame(2);
+            var text = $"{Prefix}{DateTime.UtcNow} -> " +
+                       $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}";
+
+            if (error)
+            {
+                Log.Error(text);
+            }
+            else
+            {
+                if (IseCentral.Settings.DebugMessages) Log.Message(text);
+            }
+        }
+
         internal static void WriteErrorMessage(string message)
         {
-            var sf = new StackTrace().GetFrame(1);
-            WriteErrorMessage(message, sf);
-        }
-
-        private static void WriteErrorMessage(string message, StackFrame sf)
-        {
-            Log.Error($"{Prefix}{DateTime.UtcNow} -> " +
-                      $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
-        }
-
-        internal static void WriteMessage(string message, StackFrame sf = null)
-        {
-            if (sf == null) sf = new StackTrace().GetFrame(1);
-
-            Log.Message($"{Prefix}{DateTime.UtcNow} -> " +
-                        $"{sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name} -> {message}");
+            WriteLogMessage(message, true, null);
         }
 
         internal static void WriteDebugMessage(string message, StackFrame sf = null)
         {
-#if DEBUG
-            if (sf == null) sf = new StackTrace().GetFrame(1);
-            WriteMessage(message, sf);
-#endif
+            WriteLogMessage(message, false, sf);
+        }
+
+        internal static void WriteDebugMessage(bool condition, string message, StackFrame sf = null)
+        {
+            if (condition) WriteLogMessage(message, false, sf);
         }
 
         #endregion

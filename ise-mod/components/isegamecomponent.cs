@@ -72,14 +72,14 @@ namespace ise.components
 
         public override void LoadedGame()
         {
-            Logging.WriteMessage("Loaded game");
+            Logging.WriteDebugMessage("Loaded game");
             base.LoadedGame();
             LoadBinds();
         }
 
         public override void StartedNewGame()
         {
-            Logging.WriteMessage("Start new game");
+            Logging.WriteDebugMessage("Start new game");
             base.StartedNewGame();
             LoadBinds();
         }
@@ -89,11 +89,11 @@ namespace ise.components
             ClientBind = LoadBind<DBClientBind>(IseCentral.User.UserId);
             if (ClientBind.NullOrEmpty())
             {
-                Logging.WriteMessage($"No Client bind for: {IseCentral.User.UserId}");
+                Logging.WriteDebugMessage($"No Client bind for: {IseCentral.User.UserId}");
                 return;
             }
 
-            Logging.WriteMessage($"Client bind {ClientBind}");
+            Logging.WriteDebugMessage($"Client bind {ClientBind}");
             // Do other stuff
 
             if (_firstRunComplete) return;
