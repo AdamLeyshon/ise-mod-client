@@ -141,11 +141,9 @@ namespace ise.buildings
                 Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "No item to resume");
                 return;
             }
-            else
-            {
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser,
-                    $"Trying to resume {_currentItemDbId}");
-            }
+
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser,
+                $"Trying to resume {_currentItemDbId}");
 
             var loadItem = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered)
                 .FindOne(item => item.StoredItemID == _currentItemDbId);
@@ -244,8 +242,8 @@ namespace ise.buildings
             var colonyId = _gameComponent.GetColonyId(_currentMap);
             if (colonyId == null) return false;
 
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Checking for new item to dequeue");
-            
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, "Checking for new item to dequeue");
+
             var nextItem = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered)
                 .FindOne(item => item.ColonyId == colonyId);
 
@@ -290,7 +288,7 @@ namespace ise.buildings
 
             // Check if we have work to do,
             Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Autorun: {Autorun}, Speed: {Speed}");
-            
+
             if (CurrentItem == null && (Autorun || Speed != ProcessSpeed.Stop))
                 if (!DequeueItem())
                 {
@@ -306,7 +304,7 @@ namespace ise.buildings
                 Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Can't work: {MaterialiserStatus}");
                 return;
             }
-            
+
             // Add any progress we made since the last tick, use the speed we recorded last time
             // This stops people getting large increments for free by
             // Changing the speed up/down before ticks
@@ -315,7 +313,8 @@ namespace ise.buildings
             // from calculating properly
             ProgressPercent = (int)(Math.Floor(((double)ProgressValue / TotalValue) * 100));
 
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Materialiser Progress {ProgressValue} ({ProgressValue}/{TotalValue})");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser,
+                $"Materialiser Progress {ProgressValue} ({ProgressValue}/{TotalValue})");
 
             // Store the speed after the update ready for use next time
             LastSpeed = Speed;
@@ -380,8 +379,9 @@ namespace ise.buildings
             var collection = IseCentral.DataCache.GetCollection<DBStorageItem>(Constants.Tables.Delivered);
             var thisItem = collection.FindById(_currentItemDbId);
 
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser, $"Marking item {_currentItemDbId} complete");
-            
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser,
+                $"Marking item {_currentItemDbId} complete");
+
             if (thisItem == null)
             {
                 Logging.WriteErrorMessage("Item we were trying to make has been removed from the database!");

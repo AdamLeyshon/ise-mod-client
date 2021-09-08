@@ -53,4 +53,6 @@
 	<ISEDebugTradeBeaconsTooltip>Log items that ISE found near trade beacons</ISEDebugTradeBeaconsTooltip>
 	<ISEDebugMaterialiser>Materialiser debug log</ISEDebugMaterialiser>
 	<ISEDebugMaterialiserTooltip>Log Materialiser™ state</ISEDebugMaterialiserTooltip>
+	<ISEDebugColonyItemRemove>Sold item search debug log</ISEDebugColonyItemRemove>
+	<ISEDebugColonyItemRemoveTooltip>Log info about state of items sold</ISEDebugColonyItemRemoveTooltip>
 </LanguageData>

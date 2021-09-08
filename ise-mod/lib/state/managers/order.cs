@@ -236,7 +236,6 @@ namespace ise.lib.state.managers
             var gameComponent = Current.Game.GetComponent<ISEGameComponent>();
             try
             {
-
                 var result = ise_core.rest.api.v1.Order.SetOrderStatus(
                     state,
                     gameComponent.ClientBind,
@@ -274,6 +273,7 @@ namespace ise.lib.state.managers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
                 db.Commit();
             }
             catch (Exception e)

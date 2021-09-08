@@ -16,13 +16,9 @@ namespace ise.settings
     public class ISESettings : ModSettings
     {
         public bool DebugMaterialiser;
-
-        /// <summary>
-        ///     The three settings our mod has.
-        /// </summary>
         public bool DebugMessages;
-
         public bool DebugTradeBeacons;
+        public bool DebugColonyItemRemove;
 
         /// <summary>
         ///     The part that writes our settings to file. Note that saving is by ref.
@@ -32,6 +28,7 @@ namespace ise.settings
             Scribe_Values.Look(ref DebugMessages, "DebugMessages");
             Scribe_Values.Look(ref DebugTradeBeacons, "DebugTradeBeacons");
             Scribe_Values.Look(ref DebugMaterialiser, "DebugMaterialiser");
+            Scribe_Values.Look(ref DebugColonyItemRemove, "DebugColonyItemRemove");
             base.ExposeData();
 
             if (Scribe.mode == LoadSaveMode.Saving) IseCentral.ReloadSettings();
@@ -58,6 +55,8 @@ namespace ise.settings
                 "ISEDebugTradeBeaconsTooltip".Translate());
             listingStandard.CheckboxLabeled("ISEDebugMaterialiser".Translate(), ref settings.DebugMaterialiser,
                 "ISEDebugMaterialiserTooltip".Translate());
+            listingStandard.CheckboxLabeled("ISEDebugColonyItemRemove".Translate(), ref settings.DebugMaterialiser,
+                "ISEDebugColonyItemRemoveTooltip".Translate());
             // listingStandard.Label("exampleFloatExplanation");
             // settings.exampleFloat = listingStandard.Slider(settings.exampleFloat, 100f, 300f);
             listingStandard.End();
