@@ -82,6 +82,8 @@ namespace ise.lib.tasks
                     if (_task.Exception?.InnerException != null &&
                         _task.Exception.InnerException.Message.Contains("404"))
                     {
+                        Logging.WriteDebugMessage($"Colony ID {_colonyId} doesn't exist, re-registering.");
+                        
                         // Delete the bind and re-create
                         DeleteBind<DBColonyBind>(_colonyId);
                         _gc.FlushColonyIdCache();
@@ -103,7 +105,7 @@ namespace ise.lib.tasks
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
-                    StartCreate();
+                    if (_task == null) StartCreate();
                     break;
                 case State.Create:
                     Dialog.DialogMessage = "Registering Colony";

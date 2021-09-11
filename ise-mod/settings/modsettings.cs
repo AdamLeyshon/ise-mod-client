@@ -15,10 +15,10 @@ namespace ise.settings
 {
     public class ISESettings : ModSettings
     {
+        public bool DebugColonyItemRemove;
         public bool DebugMaterialiser;
         public bool DebugMessages;
         public bool DebugTradeBeacons;
-        public bool DebugColonyItemRemove;
 
         /// <summary>
         ///     The part that writes our settings to file. Note that saving is by ref.

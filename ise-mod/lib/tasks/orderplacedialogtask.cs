@@ -82,7 +82,7 @@ namespace ise.lib.tasks
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
-                    StartOrder();
+                    if (_task == null) StartOrder();
                     break;
                 case State.Place:
                     Dialog.DialogMessage = "Placing order";
@@ -252,10 +252,12 @@ namespace ise.lib.tasks
             }
 
             var things = GetItemsNearBeacons(map, thingDef).ToList();
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"I found {thingDef} x {things.Count}");
+            Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                $"I found {thingDef} x {things.Count}");
             if (quality >= 2)
             {
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Filtering for quality: {quality}");
+                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                    $"Filtering for quality: {quality}");
                 things = things.Where(x =>
                 {
                     var thing = x.GetInnerIfMinified();
@@ -331,7 +333,8 @@ namespace ise.lib.tasks
             }
 
             if (toRemove > 0)
-                Logging.WriteErrorMessage($"The colony doesn't have enough td:{thingDef} st:{stuff} q:{quality} to remove.");
+                Logging.WriteErrorMessage(
+                    $"The colony doesn't have enough td:{thingDef} st:{stuff} q:{quality} to remove.");
         }
 
         #endregion

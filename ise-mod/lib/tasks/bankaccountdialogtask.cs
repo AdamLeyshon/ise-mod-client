@@ -74,12 +74,11 @@ namespace ise.lib.tasks
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
-                    GetBankAccountData();
+                    if (_task == null) GetBankAccountData();
                     break;
                 case State.Fetch:
                     Dialog.DialogMessage = "Communicating with bank";
                     if (_task != null && _task.IsCompleted) ProcessBankDataReply(((Task<BankDataReply>)_task).Result);
-
                     break;
                 case State.Done:
                     Dialog.DialogMessage = "Bank account data received";

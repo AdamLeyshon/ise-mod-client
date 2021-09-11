@@ -82,7 +82,7 @@ namespace ise.lib.tasks
                     // Don't read the Colony ID until we try and talk to the server
                     // It may have changed or just been created in the bind task
                     _colonyId = _gc.GetColonyId(_pawn.Map);
-                    StartDownload();
+                    if (_task == null) StartDownload();
                     break;
                 case State.Request:
                     Dialog.DialogMessage = "Downloading Market Data";

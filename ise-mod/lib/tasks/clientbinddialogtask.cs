@@ -29,7 +29,7 @@ namespace ise.lib.tasks
 
         public ClientBindDialogTask(IDialog dialog) : base(dialog)
         {
-            state = State.Start;
+            _state = State.Start;
         }
 
         #endregion
@@ -51,10 +51,10 @@ namespace ise.lib.tasks
 
         #region Fields
 
-        private string bindId;
+        private string _bindId;
 
-        private State state;
-        private Task task;
+        private State _state;
+        private Task _task;
 
         #endregion
 
@@ -63,38 +63,38 @@ namespace ise.lib.tasks
         public override void Update()
         {
             // Handle task errors first.
-            if (task != null && task.IsFaulted) LogTaskError(task);
+            if (_task != null && _task.IsFaulted) LogTaskError(_task);
 
-            switch (state)
+            switch (_state)
             {
                 case State.Start:
                     Dialog.DialogMessage = "Connecting to server";
-                    StartBind();
+                    if (_task == null) StartBind();
                     break;
                 case State.Request:
                     Dialog.DialogMessage = "Registering";
-                    if (task != null && task.IsCompleted) ProcessBindRequestReply(((Task<BindReply>)task).Result);
+                    if (_task != null && _task.IsCompleted) ProcessBindRequestReply(((Task<BindReply>)_task).Result);
 
                     break;
                 case State.Confirm:
                     Dialog.DialogMessage = "Confirming details";
-                    if (task != null && task.IsCompleted)
-                        ProcessConfirmBindReply(((Task<ConfirmBindReply>)task).Result);
+                    if (_task != null && _task.IsCompleted)
+                        ProcessConfirmBindReply(((Task<ConfirmBindReply>)_task).Result);
 
                     break;
                 case State.WaitConfirm:
-                    if (task != null && task.IsCompleted)
+                    if (_task != null && _task.IsCompleted)
                     {
                         // Sleep over
                         StartConfirmBind();
-                        state = State.Confirm;
+                        _state = State.Confirm;
                     }
 
                     break;
                 case State.Verify:
                     Dialog.DialogMessage = "Verifying details";
-                    if (task != null && task.IsCompleted)
-                        ProcessBindVerifyReply(((Task<ClientBindVerifyReply>)task).Result);
+                    if (_task != null && _task.IsCompleted)
+                        ProcessBindVerifyReply(((Task<ClientBindVerifyReply>)_task).Result);
 
                     break;
                 case State.Done:
@@ -111,7 +111,7 @@ namespace ise.lib.tasks
 
         private void LogTaskError(Task task)
         {
-            state = State.Error;
+            _state = State.Error;
             Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
             task = null;
         }
@@ -127,14 +127,14 @@ namespace ise.lib.tasks
             else
             {
                 var request = new BindRequest { SteamId = IseCentral.User.UserId };
-                task = SendAndParseReplyAsync(
+                _task = SendAndParseReplyAsync(
                     request,
                     BindReply.Parser,
                     $"{URLPrefix}binder/bind",
                     Method.POST
                 );
-                task.Start();
-                state = State.Request;
+                _task.Start();
+                _state = State.Request;
             }
         }
 
@@ -143,27 +143,27 @@ namespace ise.lib.tasks
             if (!reply.Valid)
             {
                 Logging.WriteErrorMessage($"Server refused bind request: {reply}");
-                state = State.Error;
+                _state = State.Error;
             }
             else
             {
                 // Go to next step
-                bindId = reply.BindId;
+                _bindId = reply.BindId;
                 StartConfirmBind();
             }
         }
 
         private void StartConfirmBind()
         {
-            state = State.Confirm;
-            var request = new ConfirmBindRequest { BindId = bindId, BindType = BindTypeEnum.AccountBind };
-            task = SendAndParseReplyAsync(
+            _state = State.Confirm;
+            var request = new ConfirmBindRequest { BindId = _bindId, BindType = BindTypeEnum.AccountBind };
+            _task = SendAndParseReplyAsync(
                 request,
                 ConfirmBindReply.Parser,
                 $"{URLPrefix}binder/bind_confirm",
                 Method.POST
             );
-            task.Start();
+            _task.Start();
         }
 
         private void ProcessConfirmBindReply(ConfirmBindReply reply)
@@ -177,16 +177,16 @@ namespace ise.lib.tasks
                             Logging.WriteDebugMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
 
                             // Now confirm the Client Bind ID
-                            state = State.Confirm;
+                            _state = State.Confirm;
                             var request = new ConfirmBindRequest
                                 { BindId = reply.ClientBindId, BindType = BindTypeEnum.ClientBind };
-                            task = SendAndParseReplyAsync(
+                            _task = SendAndParseReplyAsync(
                                 request,
                                 ConfirmBindReply.Parser,
                                 $"{URLPrefix}binder/bind_confirm",
                                 Method.POST
                             );
-                            task.Start();
+                            _task.Start();
                             return;
                         case BindTypeEnum.ClientBind:
                             Logging.WriteDebugMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
@@ -203,19 +203,19 @@ namespace ise.lib.tasks
                 if (reply.TTL > 10)
                 {
                     // Sleep for 10 seconds;
-                    task = new Task(delegate { Thread.Sleep(10 * 1000); });
-                    state = State.WaitConfirm;
+                    _task = new Task(delegate { Thread.Sleep(10 * 1000); });
+                    _state = State.WaitConfirm;
                     Dialog.DialogMessage = $"Waiting for confirmation (About {reply.TTL}s left)";
-                    task.Start();
+                    _task.Start();
                     return;
                 }
             }
 
             // Bind invalid, go back to start
-            bindId = "";
+            _bindId = "";
             Logging.WriteDebugMessage("Bind expired or was invalid, Requesting new bind");
-            task = null;
-            state = State.Start;
+            _task = null;
+            _state = State.Start;
         }
 
         private void StartBindVerify()
@@ -227,14 +227,14 @@ namespace ise.lib.tasks
                 SteamId = IseCentral.User.UserId,
                 ClientBindId = gc.ClientBind
             };
-            task = SendAndParseReplyAsync(
+            _task = SendAndParseReplyAsync(
                 request,
                 ClientBindVerifyReply.Parser,
                 $"{URLPrefix}binder/bind_verify",
                 Method.POST
             );
-            task.Start();
-            state = State.Verify;
+            _task.Start();
+            _state = State.Verify;
         }
 
         private void ProcessBindVerifyReply(ClientBindVerifyReply reply)
@@ -251,14 +251,14 @@ namespace ise.lib.tasks
                 DeleteBind<DBClientBind>(gc.ClientBind);
                 gc.ClientBind = string.Empty;
                 gc.ClientBindVerified = false;
-                task = null;
-                state = State.Start;
+                _task = null;
+                _state = State.Start;
             }
             else
             {
                 Logging.WriteDebugMessage($"Server accepted Bind {gc.ClientBind}");
                 gc.ClientBindVerified = true;
-                state = State.Done;
+                _state = State.Done;
             }
         }
 
