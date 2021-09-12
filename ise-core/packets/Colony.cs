@@ -37,19 +37,19 @@ namespace Colony {
             "DENsaWVudEJpbmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCSJPChRDb2xv",
             "bnlNb2RzU2V0UmVxdWVzdBIUCgxDbGllbnRCaW5kSWQYASABKAkSEAoIQ29s",
             "b255SWQYAiABKAkSDwoHTW9kTmFtZRgDIAMoCSIUChJDb2xvbnlNb2RzU2V0",
-            "UmVwbHkiagoYQ29sb255VHJhZGFibGVTZXRSZXF1ZXN0EhQKDENsaWVudEJp",
+            "UmVwbHkifwoYQ29sb255VHJhZGFibGVTZXRSZXF1ZXN0EhQKDENsaWVudEJp",
             "bmRJZBgBIAEoCRIQCghDb2xvbnlJZBgCIAEoCRImCgRpdGVtGAMgAygLMhgu",
-            "dHJhZGFibGUuQ29sb255VHJhZGFibGUiGAoWQ29sb255VHJhZGFibGVTZXRS",
-            "ZXBseSo8CgxQbGF0Zm9ybUVudW0SCwoHVW5rbm93bhAAEgsKB1dpbmRvd3MQ",
-            "ARIJCgVMaW51eBACEgcKA01hYxADMtkCCg1Db2xvbnlTZXJ2aWNlEjsKBkNy",
-            "ZWF0ZRIbLmNvbG9ueS5Db2xvbnlDcmVhdGVSZXF1ZXN0GhIuY29sb255LkNv",
-            "bG9ueURhdGEiABI7CgZVcGRhdGUSGy5jb2xvbnkuQ29sb255VXBkYXRlUmVx",
-            "dWVzdBoSLmNvbG9ueS5Db2xvbnlEYXRhIgASNQoDR2V0EhguY29sb255LkNv",
-            "bG9ueUdldFJlcXVlc3QaEi5jb2xvbnkuQ29sb255RGF0YSIAEkQKBk1vZFNl",
-            "dBIcLmNvbG9ueS5Db2xvbnlNb2RzU2V0UmVxdWVzdBoaLmNvbG9ueS5Db2xv",
-            "bnlNb2RzU2V0UmVwbHkiABJRCgtUcmFkYWJsZVNldBIgLmNvbG9ueS5Db2xv",
-            "bnlUcmFkYWJsZVNldFJlcXVlc3QaHi5jb2xvbnkuQ29sb255VHJhZGFibGVT",
-            "ZXRSZXBseSIAYgZwcm90bzM="));
+            "dHJhZGFibGUuQ29sb255VHJhZGFibGUSEwoLRmluYWxQYWNrZXQYCiABKAgi",
+            "GAoWQ29sb255VHJhZGFibGVTZXRSZXBseSo8CgxQbGF0Zm9ybUVudW0SCwoH",
+            "VW5rbm93bhAAEgsKB1dpbmRvd3MQARIJCgVMaW51eBACEgcKA01hYxADMtkC",
+            "Cg1Db2xvbnlTZXJ2aWNlEjsKBkNyZWF0ZRIbLmNvbG9ueS5Db2xvbnlDcmVh",
+            "dGVSZXF1ZXN0GhIuY29sb255LkNvbG9ueURhdGEiABI7CgZVcGRhdGUSGy5j",
+            "b2xvbnkuQ29sb255VXBkYXRlUmVxdWVzdBoSLmNvbG9ueS5Db2xvbnlEYXRh",
+            "IgASNQoDR2V0EhguY29sb255LkNvbG9ueUdldFJlcXVlc3QaEi5jb2xvbnku",
+            "Q29sb255RGF0YSIAEkQKBk1vZFNldBIcLmNvbG9ueS5Db2xvbnlNb2RzU2V0",
+            "UmVxdWVzdBoaLmNvbG9ueS5Db2xvbnlNb2RzU2V0UmVwbHkiABJRCgtUcmFk",
+            "YWJsZVNldBIgLmNvbG9ueS5Db2xvbnlUcmFkYWJsZVNldFJlcXVlc3QaHi5j",
+            "b2xvbnkuQ29sb255VHJhZGFibGVTZXRSZXBseSIAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Tradable.TradableReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Colony.PlatformEnum), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -59,7 +59,7 @@ namespace Colony {
             new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyGetRequest), global::Colony.ColonyGetRequest.Parser, new[]{ "ClientBindId", "ColonyId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyModsSetRequest), global::Colony.ColonyModsSetRequest.Parser, new[]{ "ClientBindId", "ColonyId", "ModName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyModsSetReply), global::Colony.ColonyModsSetReply.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyTradableSetRequest), global::Colony.ColonyTradableSetRequest.Parser, new[]{ "ClientBindId", "ColonyId", "Item" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyTradableSetRequest), global::Colony.ColonyTradableSetRequest.Parser, new[]{ "ClientBindId", "ColonyId", "Item", "FinalPacket" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Colony.ColonyTradableSetReply), global::Colony.ColonyTradableSetReply.Parser, null, null, null, null, null)
           }));
     }
@@ -1790,6 +1790,7 @@ namespace Colony {
       clientBindId_ = other.clientBindId_;
       colonyId_ = other.colonyId_;
       item_ = other.item_.Clone();
+      finalPacket_ = other.finalPacket_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1834,6 +1835,18 @@ namespace Colony {
       get { return item_; }
     }
 
+    /// <summary>Field number for the "FinalPacket" field.</summary>
+    public const int FinalPacketFieldNumber = 10;
+    private bool finalPacket_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool FinalPacket {
+      get { return finalPacket_; }
+      set {
+        finalPacket_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1852,6 +1865,7 @@ namespace Colony {
       if (ClientBindId != other.ClientBindId) return false;
       if (ColonyId != other.ColonyId) return false;
       if(!item_.Equals(other.item_)) return false;
+      if (FinalPacket != other.FinalPacket) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1862,6 +1876,7 @@ namespace Colony {
       if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
       if (ColonyId.Length != 0) hash ^= ColonyId.GetHashCode();
       hash ^= item_.GetHashCode();
+      if (FinalPacket != false) hash ^= FinalPacket.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1889,6 +1904,10 @@ namespace Colony {
         output.WriteString(ColonyId);
       }
       item_.WriteTo(output, _repeated_item_codec);
+      if (FinalPacket != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(FinalPacket);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1908,6 +1927,10 @@ namespace Colony {
         output.WriteString(ColonyId);
       }
       item_.WriteTo(ref output, _repeated_item_codec);
+      if (FinalPacket != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(FinalPacket);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1925,6 +1948,9 @@ namespace Colony {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ColonyId);
       }
       size += item_.CalculateSize(_repeated_item_codec);
+      if (FinalPacket != false) {
+        size += 1 + 1;
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1944,6 +1970,9 @@ namespace Colony {
         ColonyId = other.ColonyId;
       }
       item_.Add(other.item_);
+      if (other.FinalPacket != false) {
+        FinalPacket = other.FinalPacket;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1971,6 +2000,10 @@ namespace Colony {
             item_.AddEntriesFrom(input, _repeated_item_codec);
             break;
           }
+          case 80: {
+            FinalPacket = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -1996,6 +2029,10 @@ namespace Colony {
           }
           case 26: {
             item_.AddEntriesFrom(ref input, _repeated_item_codec);
+            break;
+          }
+          case 80: {
+            FinalPacket = input.ReadBool();
             break;
           }
         }

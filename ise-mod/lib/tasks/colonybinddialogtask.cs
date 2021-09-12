@@ -30,6 +30,8 @@ namespace ise.lib.tasks
 {
     internal class ColonyBindDialogTask : AbstractDialogTask
     {
+        private const int TradableBatchSize = 25_000;
+
         #region ctor
 
         public ColonyBindDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
@@ -83,7 +85,7 @@ namespace ise.lib.tasks
                         _task.Exception.InnerException.Message.Contains("404"))
                     {
                         Logging.WriteDebugMessage($"Colony ID {_colonyId} doesn't exist, re-registering.");
-                        
+
                         // Delete the bind and re-create
                         DeleteBind<DBColonyBind>(_colonyId);
                         _gc.FlushColonyIdCache();
@@ -294,43 +296,34 @@ namespace ise.lib.tasks
             _task = new Task<bool>(() =>
             {
                 var awaitTasks = new List<Task<bool>>();
-                var firstBatch = true;
-                var response = false;
                 var tradables = Tradables.GetAllTradables();
-                foreach (var batch in tradables.Batch(25_000))
+                foreach (var batch in tradables.Batch(TradableBatchSize))
                 {
                     var colonyTradables = batch.ToList();
-                    Logging.WriteDebugMessage($"Sending {colonyTradables.Count} tradables ");
-                    switch (firstBatch)
+                    var finalPacket = colonyTradables.Count < TradableBatchSize;
+                    Logging.WriteDebugMessage(
+                        $"Sending {colonyTradables.Count} tradables, final packet: {finalPacket}");
+
+                    if (finalPacket)
                     {
-                        case true:
-                            response = ise_core.rest.api.v1.Colony.SetTradablesList(
-                                _gc.ClientBind,
-                                _colonyId,
-                                colonyTradables);
-                            firstBatch = false;
-                            break;
-                        case false:
-                            if (response)
-                            {
-                                var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
-                                    _gc.ClientBind,
-                                    _colonyId,
-                                    colonyTradables,
-                                    false));
-                                batchTask.Start();
-                                awaitTasks.Add(batchTask);
-                            }
-                            else
-                            {
-                                return false;
-                            }
-
-                            break;
+                        if (awaitTasks.Count > 0)
+                        {
+                            Logging.WriteDebugMessage($"Final packet waiting for {awaitTasks.Count} other requests to finish");
+                            while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
+                        }
+                        Logging.WriteDebugMessage("Sending final packet");
                     }
+                    
+                    var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
+                        _gc.ClientBind,
+                        _colonyId,
+                        colonyTradables,
+                        finalPacket
+                        ));
+                    batchTask.Start();
+                    awaitTasks.Add(batchTask);
                 }
-
-                if (awaitTasks.Count == 0) return response;
+                Logging.WriteDebugMessage("Waiting for final request to finish");
                 while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                 return awaitTasks.All(t => t.Result);
             });

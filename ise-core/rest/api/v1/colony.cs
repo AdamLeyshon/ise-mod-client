@@ -44,15 +44,20 @@ namespace ise_core.rest.api.v1
         }
 
         public static bool SetTradablesList(string clientBindId, string colonyId, IEnumerable<ColonyTradable> tradables,
-            bool firstBatch = true)
+            bool finalPacket = false)
         {
-            var request = new ColonyTradableSetRequest { ClientBindId = clientBindId, ColonyId = colonyId };
+            var request = new ColonyTradableSetRequest
+            {
+                ClientBindId = clientBindId,
+                ColonyId = colonyId,
+                FinalPacket = finalPacket
+            };
 
             request.Item.AddRange(tradables);
             return Helpers.SendNoReply(
                 request,
                 "/api/v1/colony/tradables",
-                firstBatch ? Method.POST : Method.PATCH,
+                Method.POST,
                 clientBindId).IsSuccessful;
         }
 
