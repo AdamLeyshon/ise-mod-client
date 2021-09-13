@@ -151,21 +151,7 @@ namespace ise.dialogs
 
                 if (reply.Status != OrderRequestStatus.AcceptedAll)
                     throw new ApplicationException($"Server refused transaction: {reply}");
-
-                // Add to database
-                IseCentral.DataCache.GetCollection<DBOrder>(Constants.Tables.Orders).Insert(
-                    new DBOrder
-                    {
-                        Id = reply.Data.OrderId,
-                        ColonyId = colonyId,
-                        Status = reply.Data.Status,
-                        PlacedTick = reply.Data.PlacedTick,
-                        DeliveryTick = reply.Data.DeliveryTick
-                    });
-
-                // Start the order manager
-                _gc.GetAccount(colonyId).AddOrder(reply.Data.OrderId);
-
+                
                 dialogText = "ISEWithdrawComplete".Translate();
             }
             catch (Exception e)

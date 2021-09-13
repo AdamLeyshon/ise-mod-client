@@ -138,6 +138,8 @@ namespace ise.lib.state.managers
                 var orderItems = orderItemCollection.Find(item => item.OrderId == OrderId);
                 var deliveryItems = storedItemCollection.Find(item => item.ColonyId == colonyId).ToList();
 
+                Logging.WriteDebugMessage($"Need to add {deliveryItems.Count} items");
+
                 foreach (var orderItem in orderItems)
                 {
                     var item = deliveryItems.FirstOrDefault
