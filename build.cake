@@ -1,10 +1,9 @@
-#tool nuget:?package=GitVersion.CommandLine&version=5.3.7
 #tool nuget:?package=Cake.CoreCLR&version=1.1.0
+#tool dotnet:?package=GitVersion.Tool&version=5.7.0
 #addin nuget:?package=SharpZipLib&version=1.3.1
 #addin nuget:?package=Cake.Compression&version=0.2.6
 #addin Cake.Incubator&version=6.0.0
 #addin Cake.FileHelpers&version=4.0.1
-#addin nuget:?package=Cake.VersionReader&version=5.1.0
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,21 +138,18 @@ Task("CopyDLLs")
 
 Task("GetGitVersion")
 .Does(() => {
-  git_hash = GitVersion().Sha.Substring(0,8);
-  Information($"Git hash is: {git_hash}");
-});
+  var gvSettings = new GitVersionSettings {
+    UpdateAssemblyInfo = true
+  };
+  var gv = GitVersion(gvSettings);
 
-Task("GetAsmVersion")
-.Does(() => {
-  var assemblyInfo = GetFullVersionNumber(mod_source_path +  $"/bin/{configuration}/ise-mod.dll");
-  asm_version = $"{assemblyInfo}";
-  Information($"Assembly version is: {asm_version}");
+  git_hash = gv.Sha.Substring(0,7);
+  asm_version = gv.AssemblySemFileVer;
+  Information($"Git hash is: {git_hash}, File Version is: {asm_version}");
 });
-
 
 Task("UpdateXML")
 .IsDependentOn("GetGitVersion")
-.IsDependentOn("GetAsmVersion")
 .IsDependentOn("CopyDataFolders")
 .Does(() => {
   ReplaceTextInFiles($"{mod_path}/About/About.xml", "!!GITCOMMIT!!", git_hash);
@@ -163,28 +159,37 @@ Task("UpdateXML")
 
 Task("Compile")
 .Does(() => {
+  var msBuildSettings = new MSBuildSettings {
+    Verbosity = Verbosity.Normal,
+    ToolVersion = MSBuildToolVersion.Default,
+    Configuration = configuration,
+    PlatformTarget = PlatformTarget.MSIL,
+  };
+  if(!IsRunningOnWindows())
+	{
+    msBuildSettings.ToolPath = new FilePath(
+		  @"/usr/lib/mono/msbuild/15.0/bin/MSBuild.dll"
+		  );
+	}
+
 	CreateDirectory(mod_source_path + "/Assemblies");
 	DeleteDirectory(mod_source_path + "/Assemblies", new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
-  MSBuild("./iseworld.sln", new MSBuildSettings {
-    Verbosity = Verbosity.Normal,
-    ToolVersion = MSBuildToolVersion.Default,
-    Configuration = configuration,
-    PlatformTarget = PlatformTarget.MSIL,
-  }.WithTarget("Build"));
+  MSBuild("./iseworld.sln", msBuildSettings.WithTarget("Build"));
 });
 
 Task("Make")
   .IsDependentOn("UpdateV12References")
   .IsDependentOn("CopyDataFolders")
-  .IsDependentOn("CopyDLLs")
   .IsDependentOn("UpdateXML")
+  .IsDependentOn("CopyDLLs")
   .Does(() => {
 });
 
 Task("MakeZIP")
+.IsDependentOn("Make")
 .Does(() => {
   var zip_name = $"{modname}-Build_{git_hash}_{configuration}.zip";
   Zip(mod_base_path, zip_name);
@@ -227,20 +232,16 @@ Task("CopyToLocal")
   Information($"ZIP Unpacked in: {dir_name}");
 });
 
-
 Task("SteamPublish")
-  .IsDependentOn("Make")
   .IsDependentOn("MakeZIP")
 	.IsDependentOn("CopyToSteam")
   .Does(() => {});
 
 
 Task("LocalPublish")
-  .IsDependentOn("Make")
   .IsDependentOn("MakeZIP")
 	.IsDependentOn("CopyToLocal")
   .Does(() => {});
-
 
 Task("Publish")
   .IsDependentOn("LocalPublish")
