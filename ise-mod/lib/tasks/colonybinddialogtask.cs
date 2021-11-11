@@ -296,13 +296,16 @@ namespace ise.lib.tasks
             _task = new Task<bool>(() =>
             {
                 var awaitTasks = new List<Task<bool>>();
-                var tradables = Tradables.GetAllTradables();
+                var tradables = Tradables.GetAllTradables().ToList();
+                var itemsSent = 0;
                 foreach (var batch in tradables.Batch(TradableBatchSize))
                 {
-                    var colonyTradables = batch.ToList();
-                    var finalPacket = colonyTradables.Count < TradableBatchSize;
+                    var itemsToSend = batch.ToList();
+                    itemsSent += itemsToSend.Count;
+                    var finalPacket = itemsSent == tradables.Count;
+                    
                     Logging.WriteDebugMessage(
-                        $"Sending {colonyTradables.Count} tradables, final packet: {finalPacket}");
+                        $"Sending {itemsToSend.Count} tradables, final packet: {finalPacket}");
 
                     if (finalPacket)
                     {
@@ -317,7 +320,7 @@ namespace ise.lib.tasks
                     var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
                         _gc.ClientBind,
                         _colonyId,
-                        colonyTradables,
+                        itemsToSend,
                         finalPacket
                         ));
                     batchTask.Start();
