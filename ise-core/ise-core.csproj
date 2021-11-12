@@ -78,12 +78,6 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\protobuf\csharp\src\Google.Protobuf\Google.Protobuf.csproj">
-            <Project>{6eef7b57-2fa0-4ce8-8e53-6f25b94bcbf9}</Project>
-            <Name>Google.Protobuf</Name>
-        </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
         <Reference Include="Google.Protobuf, Version=3.11.4.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604">
           <HintPath>..\packages\Google.Protobuf.3.11.4\lib\net45\Google.Protobuf.dll</HintPath>
           <Private>True</Private>

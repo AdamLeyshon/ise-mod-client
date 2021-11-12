@@ -86,10 +86,6 @@
             <Project>{742bdf7f-1357-4a62-b52d-0bd32710e29c}</Project>
             <Name>ise-core</Name>
         </ProjectReference>
-        <ProjectReference Include="..\protobuf\csharp\src\Google.Protobuf\Google.Protobuf.csproj">
-            <Project>{6eef7b57-2fa0-4ce8-8e53-6f25b94bcbf9}</Project>
-            <Name>Google.Protobuf</Name>
-        </ProjectReference>
     </ItemGroup>
     <ItemGroup>
         <None Include="packages.config" />

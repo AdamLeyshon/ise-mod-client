@@ -19,9 +19,9 @@ var mod_common_path = $"{mod_path}/Common";
 var v12_path = "./ise-mod-12";
 var git_hash = "";
 var asm_version = "";
-var steam_folder = @"F:\Games\Steam\steamapps\common\RimWorld\Mods";
-var v13_game_folder = @"G:\Games\RimWorld13\Mods";
-var v12_game_folder = @"G:\Games\RimWorld12\Mods";
+var steam_folder = Argument<string>("steam_path");
+var v13_game_folder = Argument<string>("v13_path");
+var v12_game_folder = Argument<string>("v12_path");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -68,13 +68,18 @@ Task("CopySourceCodeV12")
   CreateDirectory(v12_path+"/Assemblies");
 });
 
-Task("UpdateV12References")
+Task("UpdateReferences")
 .IsDependentOn("CopySourceCodeV12")
 .Does(() => {
-  ReplaceTextInFiles(
+  var changed = ReplaceRegexInFiles(
+  $"{mod_source_path}/ise-mod.csproj", 
+  @"<HintPath>.*(RimWorldWin64_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
+  $"<HintPath>{v13_game_folder}/$1/$2</HintPath>"
+  );
+  ReplaceRegexInFiles(
   $"{v12_path}/ise-mod-12.csproj", 
-  @"..\..\..\..\..\Games\RimWorld13\RimWorldWin64_Data\Managed\", 
-  @"..\..\..\..\..\Games\RimWorld12\RimWorldWin64_Data\Managed\"
+  @"<HintPath>.*(RimWorldWin64_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
+  $"<HintPath>{v12_game_folder}/$1/$2</HintPath>"
   );
   ReplaceTextInFiles(
     $"{v12_path}/ise-mod-12.csproj", 
@@ -82,7 +87,6 @@ Task("UpdateV12References")
     "Version=1.2.7528.19679"
   );
 });
-
 
 Task("CopyDataFolders")
 .Does(() => {
@@ -181,7 +185,7 @@ Task("Compile")
 });
 
 Task("Make")
-  .IsDependentOn("UpdateV12References")
+  .IsDependentOn("UpdateReferences")
   .IsDependentOn("CopyDataFolders")
   .IsDependentOn("UpdateXML")
   .IsDependentOn("CopyDLLs")
@@ -198,38 +202,44 @@ Task("MakeZIP")
 
 Task("CopyToSteam")
 .Does(() => {
-  var dir_name = $"{steam_folder}/{modname}";
+  var rimworld_mod_path = $"{steam_folder}/steamapps/common/RimWorld/Mods/";
+  var dir_name = $"{rimworld_mod_path}{modname}";
 	CreateDirectory(dir_name);
 	DeleteDirectory(dir_name, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
-  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", steam_folder);
-  Information($"ZIP Unpacked in: {dir_name}");
+  ZipUncompress(
+    $"{modname}-Build_{git_hash}_{configuration}.zip", 
+    rimworld_mod_path
+  );
+  Information($"ZIP Unpacked in: {rimworld_mod_path}");
 });
 
 Task("CopyToLocal")
 .Does(() => {
 
   // Version 13
-  var dir_name = $"{v13_game_folder}/{modname}";
-	CreateDirectory(dir_name);
-	DeleteDirectory(dir_name, new DeleteDirectorySettings {
+  var game_mod_path = $"{v13_game_folder}/mods/{modname}";
+	CreateDirectory(game_mod_path);
+	DeleteDirectory(game_mod_path, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
+  game_mod_path = $"{v13_game_folder}/mods/";
   ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", v13_game_folder);
-  Information($"ZIP Unpacked in: {dir_name}");
+  Information($"ZIP Unpacked in: {game_mod_path}");
 
   // Version 12
-  dir_name = $"{v12_game_folder}/{modname}";
-	CreateDirectory(dir_name);
-	DeleteDirectory(dir_name, new DeleteDirectorySettings {
+  game_mod_path = $"{v12_game_folder}/mods/{modname}";
+	CreateDirectory(game_mod_path);
+	DeleteDirectory(game_mod_path, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
+  game_mod_path = $"{v12_game_folder}/mods/";
   ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", v12_game_folder);
-  Information($"ZIP Unpacked in: {dir_name}");
+  Information($"ZIP Unpacked in: {game_mod_path}");
 });
 
 Task("SteamPublish")
