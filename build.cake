@@ -185,9 +185,9 @@ Task("Compile")
 });
 
 Task("Make")
+.IsDependentOn("UpdateXML")
   .IsDependentOn("UpdateReferences")
   .IsDependentOn("CopyDataFolders")
-  .IsDependentOn("UpdateXML")
   .IsDependentOn("CopyDLLs")
   .Does(() => {
 });
