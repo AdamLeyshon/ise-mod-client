@@ -11,6 +11,7 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using HarmonyLib;
 using ise.lib;
 using ise.settings;
 using ise_core.db;
@@ -59,6 +60,7 @@ namespace ise
 
         static IseCentral()
         {
+            ApplyPatches();
             ReloadSettings();
             ModVersion = GetModVersion();
             Helpers.UserAgentVersion = $"ISE/{ModVersion}";
@@ -68,6 +70,13 @@ namespace ise
             ISEState = ServerState.HandshakeNotPerformed;
             LastHandshakeAttempt = DateTime.MinValue;
             HandshakeTask = null;
+        }
+
+        private static void ApplyPatches()
+        {
+            var harmony = new Harmony("net.thecodecache.ise");
+            var assembly = Assembly.GetExecutingAssembly();
+            harmony.PatchAll(assembly);
         }
 
         public static void ReloadSettings()
