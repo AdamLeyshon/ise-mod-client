@@ -12,9 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using HarmonyLib;
 using ise.components;
 using ise.lib;
 using ise_core.db;
+using ise_core.rest;
 using LiteDB;
 using RimWorld;
 using UnityEngine;
@@ -226,6 +228,7 @@ namespace ise.dialogs
         private Vector2 scrollPosition = Vector2.zero;
         private BasketStats stats;
         private TradeView uiTradeMode = TradeView.Buy;
+        private readonly bool showIcons = IseCentral.Settings.ShowTradeUIIcons;
 
         #endregion
 
@@ -326,7 +329,7 @@ namespace ise.dialogs
 
             dataSourceDirty = false;
         }
-
+        
         private void DrawOuterFrame(Rect inRect)
         {
             var addY = _uiControlHeight + _uiControlVerticalSpacing;
@@ -344,12 +347,23 @@ namespace ise.dialogs
             DrawFilters(targetArea);
 
             targetArea = new Rect(0f, targetArea.y + addY, inRect.width, _uiControlHeight);
-            DrawGridHeaders(targetArea);
+            DrawGridHeaders(targetArea, showIcons);
 
             // Anchor to bottom
+            // The width is the padding + button width x 2
+            // The top rightmost position is Y Max - Padding - Button Height
             var actionButtons = new Rect(0f, inRect.height - _uiControlVerticalSpacing - _uiActionButtonHeight,
-                inRect.width, _uiActionButtonHeight);
+                (_uiControlPadding + _uiActionButtonWidth) * 2, _uiActionButtonHeight);
             DrawConfirmCancel(actionButtons);
+
+            // Draw countdown
+            // Starting X position is the left most edge of the buttons, add padding for the start position
+            // The top right position is Y Max - Padding - Button Height
+            // The width is the (label size + padding) x 2
+            DrawCountdown(new Rect(actionButtons.width + _uiControlPadding,
+                inRect.height - _uiControlVerticalSpacing - _uiActionButtonHeight,
+                (_uiControlPadding + _labelStatsWidth) * 2,
+                _uiActionButtonHeight));
 
             // Find top of action buttons, subtract spacing, then find distance to top of grid and subtract that
             var remaining = actionButtons.y - _uiControlVerticalSpacing * 2 - (targetArea.y + addY);
@@ -357,6 +371,38 @@ namespace ise.dialogs
             // Grid takes up the remaining space
             targetArea = new Rect(0f, targetArea.y + addY, inRect.width, remaining);
             DrawTradeGrid(targetArea);
+        }
+
+        private void DrawCountdown(Rect outerFrame)
+        {
+            // Subtract the grids margin to make the headers line up with grid
+            var width = outerFrame.width + _uiControlPadding;
+
+            GUI.BeginGroup(outerFrame);
+            Text.Font = GameFont.Small;
+            
+            // Time remaining
+            width -= _labelStatsWidth;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            var rectLabel = new Rect(width, 0f, 125f, _uiActionButtonHeight);
+            var secondsLeft = Math.Max(promise.InventoryPromiseExpires - Helpers.GetUTCNow(), 0);
+            var timeRemaining = TimeSpan.FromSeconds(secondsLeft);
+
+            if (secondsLeft <= 15)
+            {
+                GUI.color = Color.red;
+            }
+            Widgets.Label(rectLabel, $"{timeRemaining}");
+            
+            // Countdown label
+            GUI.color = Color.white;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            width -= _labelStatsWidth - _uiControlPadding;
+            rectLabel = new Rect(width, 0f, 125f, _uiActionButtonHeight);
+            Widgets.Label(rectLabel, "Basket expires in:");
+            
+            GenUI.ResetLabelAlign();
+            GUI.EndGroup();
         }
 
         private void DrawStatLabels(Rect outerFrame)
@@ -568,94 +614,110 @@ namespace ise.dialogs
             var buttonRect = new Rect(width, 0, _uiActionButtonWidth, inRect.height);
             if (Widgets.ButtonText(buttonRect, "Confirm"))
             {
-                var silver = GetItemsNearBeacons(pawn.Map, ThingDefSilver);
-                var fundsAvailable = silver.Sum(s => s.stackCount);
-                var remaining = Mathf.Clamp((int)Math.Ceiling(Math.Round(
-                    stats.CostTotal - promise.AccountBalance,
-                    2,
-                    MidpointRounding.ToEven
-                )), 0, int.MaxValue);
-                var canAfford = false;
-                var noMoney = "Your colony can't afford this right now.\r\n" +
-                              $"You have {fundsAvailable} Silver in stockpiles and " +
-                              $"{promise.AccountBalance} in your account";
-
-                string text;
-                if (stats.CostTotal > 0)
+                var secondsLeft = Math.Max(promise.InventoryPromiseExpires - Helpers.GetUTCNow(), 0);
+                if (secondsLeft == 0)
                 {
-                    if (promise.AccountBalance > 0)
+                    var expired = "Unfortunately your basket has expired\r\n" +
+                                  "Please try again\r\n" +
+                                  "You'll need to complete the order before the timer runs out.";
+
+                    Find.WindowStack.Add(new Dialog_MessageBox(
+                        expired,
+                        "Gotta go fast",
+                        title: "You're too slow"
+                    ));
+                }
+                else
+                {
+                    var silver = GetItemsNearBeacons(pawn.Map, ThingDefSilver);
+                    var fundsAvailable = silver.Sum(s => s.stackCount);
+                    var remaining = Mathf.Clamp((int)Math.Ceiling(Math.Round(
+                        stats.CostTotal - promise.AccountBalance,
+                        2,
+                        MidpointRounding.ToEven
+                    )), 0, int.MaxValue);
+                    var canAfford = false;
+                    var noMoney = "Your colony can't afford this right now.\r\n" +
+                                  $"You have {fundsAvailable} Silver in stockpiles and " +
+                                  $"{promise.AccountBalance} in your account";
+
+                    string text;
+                    if (stats.CostTotal > 0)
                     {
-                        if (promise.AccountBalance > stats.CostTotal)
+                        if (promise.AccountBalance > 0)
                         {
-                            var accRemaining = (int)Math.Ceiling(Math.Round(
-                                promise.AccountBalance - stats.CostTotal,
-                                2,
-                                MidpointRounding.ToEven
-                            ));
-                            text = "We will withdraw the full amount from your account,\r\n" +
-                                   $"Your account balance will be {accRemaining}\r\n" +
-                                   $"The total cost is: {stats.CostTotal}";
-                            canAfford = true;
+                            if (promise.AccountBalance > stats.CostTotal)
+                            {
+                                var accRemaining = (int)Math.Ceiling(Math.Round(
+                                    promise.AccountBalance - stats.CostTotal,
+                                    2,
+                                    MidpointRounding.ToEven
+                                ));
+                                text = "We will withdraw the full amount from your account,\r\n" +
+                                       $"Your account balance will be {accRemaining}\r\n" +
+                                       $"The total cost is: {stats.CostTotal}";
+                                canAfford = true;
+                            }
+                            else
+                            {
+                                if (fundsAvailable < remaining)
+                                {
+                                    text = noMoney;
+                                }
+                                else
+                                {
+                                    text = "There are insufficient funds in your account,\r\n" +
+                                           $"We will withdraw {promise.AccountBalance} of the " +
+                                           $"total {stats.CostTotal} from your account" +
+                                           $"\r\nThe remaining balance due is: {remaining}";
+                                    canAfford = true;
+                                }
+                            }
                         }
                         else
                         {
-                            if (fundsAvailable < remaining)
+                            if (fundsAvailable < stats.CostTotal)
                             {
                                 text = noMoney;
                             }
                             else
                             {
-                                text = "There are insufficient funds in your account,\r\n" +
-                                       $"We will withdraw {promise.AccountBalance} of the " +
-                                       $"total {stats.CostTotal} from your account" +
-                                       $"\r\nThe remaining balance due is: {remaining}";
+                                text = $"The total balance is due is: {stats.CostTotal}";
                                 canAfford = true;
                             }
                         }
                     }
+                    else if (stats.CostTotal < 0)
+                    {
+                        var credit = Math.Abs(stats.CostTotal);
+                        text = $"Your account will be credited with: {credit}\r\n" +
+                               $"Your new balance will be approximately: {promise.AccountBalance + credit}";
+                        canAfford = true;
+                    }
                     else
                     {
-                        if (fundsAvailable < stats.CostTotal)
-                        {
-                            text = noMoney;
-                        }
-                        else
-                        {
-                            text = $"The total balance is due is: {stats.CostTotal}";
-                            canAfford = true;
-                        }
+                        text = "Thank you for trading with ISE,\r\n" +
+                               "We hope to hear from you again.";
+                        canAfford = true;
                     }
-                }
-                else if (stats.CostTotal < 0)
-                {
-                    var credit = Math.Abs(stats.CostTotal);
-                    text = $"Your account will be credited with: {credit}\r\n" +
-                           $"Your new balance will be approximately: {promise.AccountBalance + credit}";
-                    canAfford = true;
-                }
-                else
-                {
-                    text = "Thank you for trading with ISE,\r\n" +
-                           "We hope to hear from you again.";
-                    canAfford = true;
-                }
 
-                if (canAfford)
-                    Find.WindowStack.Add(new Dialog_MessageBox(
-                        text,
-                        "Agree, Place Order",
-                        delegate { PlaceOrder(remaining); },
-                        "Decline",
-                        null,
-                        "Terms and Conditions", false,
-                        delegate { PlaceOrder(remaining); }
-                    ));
-                else
-                    Find.WindowStack.Add(new Dialog_MessageBox(
-                        text,
-                        "Oh...",
-                        title: "Insufficient funds"
-                    ));
+                    if (canAfford)
+                        Find.WindowStack.Add(new Dialog_MessageBox(
+                            text,
+                            "Agree, Place Order",
+                            delegate { PlaceOrder(remaining); },
+                            "Decline",
+                            null,
+                            "Terms and Conditions", false,
+                            delegate { PlaceOrder(remaining); }
+                        ));
+                    else
+                        Find.WindowStack.Add(new Dialog_MessageBox(
+                            text,
+                            "Oh...",
+                            title: "Insufficient funds"
+                        ));
+                }
             }
 
             // Cancel Button
@@ -732,7 +794,7 @@ namespace ise.dialogs
             GUI.EndGroup();
         }
 
-        private static void DrawGridHeaders(Rect outerFrame)
+        private static void DrawGridHeaders(Rect outerFrame, bool showIcons)
         {
             // Subtract the grids margin to make the headers line up with grid
             var width = outerFrame.width - _gridMargin;
@@ -759,8 +821,7 @@ namespace ise.dialogs
             Text.Anchor = TextAnchor.MiddleCenter;
             var rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Max");
-
-
+            
             // Step UP
             width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
@@ -810,11 +871,19 @@ namespace ise.dialogs
             Widgets.Label(rectStuff, "Material");
 
             // Name Label
-            width -= _gridRowNameWidth + _gridRowMargin;
+            var iconWidth =  showIcons ? 42f : 0f ;
+            width -= _gridRowNameWidth + iconWidth + _gridRowMargin;
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectName = new Rect(width, 0f, _gridRowNameWidth, _uiControlHeight);
             Widgets.Label(rectName, "Item Name");
 
+            if (showIcons)
+            {
+                width -= 32f + _gridRowMargin;
+                var rectIcon = new Rect(width, 0f, 32f, _uiControlHeight);
+                Widgets.Label(rectName, "Icon");
+            }
+            
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
@@ -938,11 +1007,22 @@ namespace ise.dialogs
             Widgets.Label(rectStuff, rowData.TranslatedStuff);
 
             // Name Label
-            width -= _gridRowNameWidth + _gridRowMargin;
+            var iconWidth = showIcons ? 27f + _gridRowMargin : 0f;
+            width -= _gridRowNameWidth + _gridRowMargin - iconWidth;
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectName = new Rect(width, 0f, _gridRowNameWidth, tradeGridRow.height);
             Widgets.Label(rectName, rowData.TranslatedName);
-
+            
+            // Icons
+            if (showIcons)
+            {
+                width -= iconWidth;
+                var rectIcon = new Rect(width, 0f, 27f, tradeGridRow.height);
+                Widgets.DefIcon(rectIcon, 
+                    ThingDef.Named(rowData.ThingDef), 
+                    rowData.Stuff.NullOrEmpty()? null: ThingDef.Named(rowData.Stuff)
+                    );
+            }
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
@@ -987,6 +1067,7 @@ namespace ise.dialogs
             // Enumerate list of ThingCategoryDef and add to menu options.
             var allDefsListForReading = DefDatabase<ThingCategoryDef>.AllDefsListForReading;
             allDefsListForReading.RemoveAll(def => def.LabelCap.NullOrEmpty());
+            allDefsListForReading.RemoveAll(def => def.defName != "Root" && !def.DescendantThingDefs.Any());
             allDefsListForReading.SortBy(def => def.LabelCap.ToString());
 
             // Ensure Root is always at the top
@@ -997,15 +1078,13 @@ namespace ise.dialogs
             foreach (var def in allDefsListForReading)
                 try
                 {
-                    if (def.LabelCap.NullOrEmpty())
-                    {
-                        Logging.WriteErrorMessage(
-                            $"ThingCategoryDef {def.defName} has no label!, Not able to filter by this, skipping. Please report to Mod Author.");
-                        continue;
-                    }
-
                     // We'll never deal with corpses so don't show them.
                     if (def.LabelCap.ToLower().ToString().Contains("corpse")) continue;
+                    
+                    // Remove CE Ammo Categories
+                    if(def.modContentPack.PackageId == "ceteam.combatextended") {
+                        if(def.defName.StartsWith("Ammo") && def.defName.Length > 4) continue;
+                    }
 
                     // When they select a new category, update the filter and refresh the query.
                     void ChangeFilterAction()

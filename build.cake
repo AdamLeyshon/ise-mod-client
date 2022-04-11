@@ -226,8 +226,8 @@ Task("CopyToLocal")
     Recursive = true,
     Force = true
 	});
-  game_mod_path = $"{v13_game_folder}/mods/";
-  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", v13_game_folder);
+  game_mod_path = $"{v13_game_folder}/mods";
+  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", game_mod_path);
   Information($"ZIP Unpacked in: {game_mod_path}");
 
   // Version 12
@@ -237,8 +237,8 @@ Task("CopyToLocal")
     Recursive = true,
     Force = true
 	});
-  game_mod_path = $"{v12_game_folder}/mods/";
-  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", v12_game_folder);
+  game_mod_path = $"{v12_game_folder}/mods";
+  ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", game_mod_path);
   Information($"ZIP Unpacked in: {game_mod_path}");
 });
 

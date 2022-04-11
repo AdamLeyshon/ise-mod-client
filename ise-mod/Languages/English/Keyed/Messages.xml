@@ -55,4 +55,6 @@
 	<ISEDebugMaterialiserTooltip>Log Materialiser™ state</ISEDebugMaterialiserTooltip>
 	<ISEDebugColonyItemRemove>Sold item search debug log</ISEDebugColonyItemRemove>
 	<ISEDebugColonyItemRemoveTooltip>Log info about state of items sold</ISEDebugColonyItemRemoveTooltip>
+	<ISEShowTradeUIIcons>Show Icons in Trade UI (Experimental)</ISEShowTradeUIIcons>
+	<ISEShowTradeUIIconsTooltip>Shows the icon for an item in the trade ui\nHowever, this option can cause issues if an item has no icon!</ISEShowTradeUIIconsTooltip>
 </LanguageData>

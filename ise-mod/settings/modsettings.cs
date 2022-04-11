@@ -19,6 +19,7 @@ namespace ise.settings
         public bool DebugMaterialiser;
         public bool DebugMessages;
         public bool DebugTradeBeacons;
+        public bool ShowTradeUIIcons;
 
         /// <summary>
         ///     The part that writes our settings to file. Note that saving is by ref.
@@ -29,6 +30,7 @@ namespace ise.settings
             Scribe_Values.Look(ref DebugTradeBeacons, "DebugTradeBeacons");
             Scribe_Values.Look(ref DebugMaterialiser, "DebugMaterialiser");
             Scribe_Values.Look(ref DebugColonyItemRemove, "DebugColonyItemRemove");
+            Scribe_Values.Look(ref ShowTradeUIIcons, "ShowTradeUIIcons");
             base.ExposeData();
 
             if (Scribe.mode == LoadSaveMode.Saving) IseCentral.ReloadSettings();
@@ -49,6 +51,8 @@ namespace ise.settings
         {
             var listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
+            listingStandard.CheckboxLabeled("ISEShowTradeUIIcons".Translate(), ref settings.ShowTradeUIIcons,
+                "ISEShowTradeUIIconsTooltip".Translate());
             listingStandard.CheckboxLabeled("ISEDebugMessages".Translate(), ref settings.DebugMessages,
                 "ISEDebugMessagesTooltip".Translate());
             listingStandard.CheckboxLabeled("ISEDebugTradeBeacons".Translate(), ref settings.DebugTradeBeacons,

@@ -18,7 +18,7 @@
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
         <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE;MARKET_DEBUG</DefineConstants>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
@@ -35,7 +35,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <DefineConstants>DEBUG;TRACE;MARKET_DEBUG</DefineConstants>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <OutputPath>bin\Debug NETLOCAL\</OutputPath>
@@ -45,13 +45,16 @@
           <HintPath>..\packages\Lib.Harmony.2.2.0\lib\net472\0Harmony.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Assembly-CSharp, Version=1.3.7892.27157, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="Assembly-CSharp, Culture=neutral, PublicKeyToken=null">
             <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/Assembly-CSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="Assembly-CSharp-firstpass, Culture=neutral, PublicKeyToken=null">
             <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/Assembly-CSharp-firstpass.dll</HintPath>
             <Private>False</Private>
+        </Reference>
+        <Reference Include="com.rlabrecque.steamworks.net, Culture=neutral, PublicKeyToken=null">
+          <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/com.rlabrecque.steamworks.net.dll</HintPath>
         </Reference>
         <Reference Include="Google.Protobuf, Version=3.12.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604">
           <HintPath>..\packages\Google.Protobuf.3.12.0\lib\net45\Google.Protobuf.dll</HintPath>
