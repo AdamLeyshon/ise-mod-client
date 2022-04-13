@@ -10,7 +10,7 @@
 
 ise-mod-12/
 *.dll
-
+proto/
 
 # User-specific files
 *.rsuser

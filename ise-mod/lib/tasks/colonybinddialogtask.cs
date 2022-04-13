@@ -165,6 +165,7 @@ namespace ise.lib.tasks
             }
             else
             {
+                _state = State.Create;
                 var map = Dialog.Pawn.Map;
                 var colonyData = new ColonyData
                 {
@@ -189,7 +190,6 @@ namespace ise.lib.tasks
                     _gc.ClientBind
                 );
                 _task.Start();
-                _state = State.Create;
             }
         }
 
@@ -264,6 +264,7 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateMods()
         {
+            _state = State.UpdateMods;
             Logging.WriteDebugMessage($"UpdateAsync Colony mods {_colonyId}");
             var request = new ColonyModsSetRequest
             {
@@ -280,7 +281,7 @@ namespace ise.lib.tasks
                 _gc.ClientBind
             );
             _task.Start();
-            _state = State.UpdateMods;
+            
         }
 
         private void ProcessColonyModsUpdateReply(ColonyModsSetReply reply)
@@ -330,9 +331,8 @@ namespace ise.lib.tasks
                 while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                 return awaitTasks.All(t => t.Result);
             });
-
-            _task.Start();
             _state = State.UpdateTradables;
+            _task.Start();
         }
 
         private void ProcessColonyTradablesReply(bool reply)
