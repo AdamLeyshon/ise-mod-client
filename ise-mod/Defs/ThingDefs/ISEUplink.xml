@@ -36,6 +36,10 @@
 		  <li Class="CompProperties_Flickable"/>
 		  <li Class="CompProperties_Breakdownable"/>
 		</comps>
+		<canBeUsedUnderRoof>false</canBeUsedUnderRoof>
+		<placeWorkers>
+			<li>PlaceWorker_NotUnderRoof</li>
+      	</placeWorkers>
 		<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
 		<designationCategory>Misc</designationCategory>
 		<rotatable>false</rotatable>
