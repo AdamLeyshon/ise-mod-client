@@ -38,6 +38,18 @@ namespace ise_core.rest.api.v1
                 clientBindId
             );
         }
+        
+        public static Task<ActivatePromiseReply> ActivatePromiseAsync(string clientBindId, string colonyId, string promiseId)
+        {
+            var request = new ActivatePromiseRequest { ColonyId = colonyId, ClientBindId = clientBindId, InventoryPromiseId = promiseId};
+            return Helpers.SendAndParseReplyAsync(
+                request,
+                ActivatePromiseReply.Parser,
+                $"{URLPrefix}inventory/activate",
+                Method.POST,
+                clientBindId
+            );
+        }
 
         #endregion
     }

@@ -311,7 +311,7 @@ namespace ise.buildings
             ProgressValue += LookupPowerSpeedMap(LastSpeed, true);
             // Don't remove these parentheses, the compiler is lying, it will stop the percentage
             // from calculating properly
-            ProgressPercent = (int)(Math.Floor(((double)ProgressValue / TotalValue) * 100));
+            ProgressPercent = (int)Math.Floor(((double)ProgressValue / TotalValue) * 100);
 
             Logging.WriteDebugMessage(IseCentral.Settings.DebugMaterialiser,
                 $"Materialiser Progress {ProgressValue} ({ProgressValue}/{TotalValue})");
@@ -334,7 +334,7 @@ namespace ise.buildings
 
         private int LookupPowerSpeedMap(ProcessSpeed speed, bool progress)
         {
-            switch (Speed)
+            switch (speed)
             {
                 case ProcessSpeed.Stop:
                     return progress ? 0 : StandbyPower;

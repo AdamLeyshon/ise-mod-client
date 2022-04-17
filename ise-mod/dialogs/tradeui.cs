@@ -47,7 +47,32 @@ namespace ise.dialogs
 
         #region Properties
 
-        public override Vector2 InitialSize => new Vector2(1500f, UI.screenHeight - 50f);
+        public override Vector2 InitialSize {
+            get
+            {
+                if (UI.screenWidth < 1200)
+                {
+                    _gridRowMargin = 12f;
+                    _labelStatsWidth = 100f;
+                    _uiTradeButtonWidth = 28f;
+                    _gridRowPriceWidth = 62f;
+                    _gridRowQuantityWidth = 62f;
+                    _gridRowQualityWidth = 78f;
+                    _gridRowStuffWidth = 120f;
+                    _gridRowNameWidth = 255f;
+                    return new Vector2(1000f, UI.screenHeight - 50f);
+                }
+                _gridRowMargin = 40f;
+                _labelStatsWidth = 150f;
+                _uiTradeButtonWidth = 30f;
+                _gridRowPriceWidth = 100f;
+                _gridRowQuantityWidth = 75f;
+                _gridRowQualityWidth = 100f;
+                _gridRowStuffWidth = 300f;
+                _gridRowNameWidth = 300f;
+                return new Vector2(1500f, UI.screenHeight - 50f);
+            }
+        }
 
         #endregion
 
@@ -97,9 +122,7 @@ namespace ise.dialogs
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 50f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _uiTradeButtonWidth = 30f;
+        private static float _uiTradeButtonWidth;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f, 200f)]
@@ -125,9 +148,7 @@ namespace ise.dialogs
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _labelStatsWidth = 150f;
+        private static float _labelStatsWidth;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f)]
@@ -146,45 +167,33 @@ namespace ise.dialogs
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _gridRowMargin = 40f;
+        private static float _gridRowMargin;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 10f, 300f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _gridRowQuantityWidth = 75f;
+        private static float _gridRowQuantityWidth;
 
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 300f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _gridRowPriceWidth = 100f;
+        private static float _gridRowPriceWidth;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 300f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _gridRowQualityWidth = 100f;
+        private static float _gridRowQualityWidth;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 1000f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _gridRowStuffWidth = 300;
+        private static float _gridRowStuffWidth;
 
 #if DEBUG
         [TweakValue("ISETradeUI", -100f, 1000f)]
 #endif
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        // ReSharper disable once ConvertToConstant.Local
-        private static float _gridRowNameWidth = 300;
+        private static float _gridRowNameWidth;
 
 #if DEBUG
         [TweakValue("ISETradeUI", 5f)]
@@ -357,13 +366,9 @@ namespace ise.dialogs
             DrawConfirmCancel(actionButtons);
 
             // Draw countdown
-            // Starting X position is the left most edge of the buttons, add padding for the start position
-            // The top right position is Y Max - Padding - Button Height
-            // The width is the (label size + padding) x 2
             DrawCountdown(new Rect(actionButtons.width + _uiControlPadding,
                 inRect.height - _uiControlVerticalSpacing - _uiActionButtonHeight,
-                (_uiControlPadding + _labelStatsWidth) * 2,
-                _uiActionButtonHeight));
+                _uiControlPadding + 325f, _uiActionButtonHeight));
 
             // Find top of action buttons, subtract spacing, then find distance to top of grid and subtract that
             var remaining = actionButtons.y - _uiControlVerticalSpacing * 2 - (targetArea.y + addY);
@@ -382,7 +387,7 @@ namespace ise.dialogs
             Text.Font = GameFont.Small;
             
             // Time remaining
-            width -= _labelStatsWidth;
+            width -= 125f;
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectLabel = new Rect(width, 0f, 125f, _uiActionButtonHeight);
             var secondsLeft = Math.Max(promise.InventoryPromiseExpires - Helpers.GetUTCNow(), 0);
@@ -397,8 +402,8 @@ namespace ise.dialogs
             // Countdown label
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.MiddleCenter;
-            width -= _labelStatsWidth - _uiControlPadding;
-            rectLabel = new Rect(width, 0f, 125f, _uiActionButtonHeight);
+            width -= 200f - _uiControlPadding;
+            rectLabel = new Rect(width, 0f, 200f, _uiActionButtonHeight);
             Widgets.Label(rectLabel, "Basket expires in:");
             
             GenUI.ResetLabelAlign();
@@ -871,18 +876,11 @@ namespace ise.dialogs
             Widgets.Label(rectStuff, "Material");
 
             // Name Label
-            var iconWidth =  showIcons ? 42f : 0f ;
-            width -= _gridRowNameWidth + iconWidth + _gridRowMargin;
+            var iconWidth = showIcons ? 30f + _gridRowMargin : 0f;
+            width -= _gridRowNameWidth + _gridRowMargin - iconWidth;
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectName = new Rect(width, 0f, _gridRowNameWidth, _uiControlHeight);
             Widgets.Label(rectName, "Item Name");
-
-            if (showIcons)
-            {
-                width -= 32f + _gridRowMargin;
-                var rectIcon = new Rect(width, 0f, 32f, _uiControlHeight);
-                Widgets.Label(rectName, "Icon");
-            }
             
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
@@ -1007,7 +1005,7 @@ namespace ise.dialogs
             Widgets.Label(rectStuff, rowData.TranslatedStuff);
 
             // Name Label
-            var iconWidth = showIcons ? 27f + _gridRowMargin : 0f;
+            var iconWidth = showIcons ? 30f + _gridRowMargin : 0f;
             width -= _gridRowNameWidth + _gridRowMargin - iconWidth;
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectName = new Rect(width, 0f, _gridRowNameWidth, tradeGridRow.height);

@@ -30,14 +30,21 @@ namespace Inventory {
             "AygLMhIudHJhZGFibGUuVHJhZGFibGUSGgoSSW52ZW50b3J5UHJvbWlzZUlk",
             "GAIgASgJEh8KF0ludmVudG9yeVByb21pc2VFeHBpcmVzGAMgASgDEh0KFUNv",
             "bGxlY3Rpb25DaGFyZ2VQZXJLRxgEIAEoBRIbChNEZWxpdmVyeUNoYXJnZVBl",
-            "cktHGAUgASgFEhYKDkFjY291bnRCYWxhbmNlGAYgASgFMlMKEEludmVudG9y",
-            "eVNlcnZpY2USPwoDR2V0EhsuaW52ZW50b3J5LkludmVudG9yeVJlcXVlc3Qa",
-            "GS5pbnZlbnRvcnkuSW52ZW50b3J5UmVwbHkiAGIGcHJvdG8z"));
+            "cktHGAUgASgFEhYKDkFjY291bnRCYWxhbmNlGAYgASgFIlwKFkFjdGl2YXRl",
+            "UHJvbWlzZVJlcXVlc3QSFAoMQ2xpZW50QmluZElkGAEgASgJEhAKCENvbG9u",
+            "eUlkGAIgASgJEhoKEkludmVudG9yeVByb21pc2VJZBgDIAEoCSJkChRBY3Rp",
+            "dmF0ZVByb21pc2VSZXBseRIPCgdzdWNjZXNzGAEgASgIEhoKEkludmVudG9y",
+            "eVByb21pc2VJZBgCIAEoCRIfChdJbnZlbnRvcnlQcm9taXNlRXhwaXJlcxgD",
+            "IAEoAzJTChBJbnZlbnRvcnlTZXJ2aWNlEj8KA0dldBIbLmludmVudG9yeS5J",
+            "bnZlbnRvcnlSZXF1ZXN0GhkuaW52ZW50b3J5LkludmVudG9yeVJlcGx5IgBi",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Tradable.TradableReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Inventory.InventoryRequest), global::Inventory.InventoryRequest.Parser, new[]{ "ClientBindId", "ColonyId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Inventory.InventoryReply), global::Inventory.InventoryReply.Parser, new[]{ "Items", "InventoryPromiseId", "InventoryPromiseExpires", "CollectionChargePerKG", "DeliveryChargePerKG", "AccountBalance" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Inventory.InventoryReply), global::Inventory.InventoryReply.Parser, new[]{ "Items", "InventoryPromiseId", "InventoryPromiseExpires", "CollectionChargePerKG", "DeliveryChargePerKG", "AccountBalance" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Inventory.ActivatePromiseRequest), global::Inventory.ActivatePromiseRequest.Parser, new[]{ "ClientBindId", "ColonyId", "InventoryPromiseId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Inventory.ActivatePromiseReply), global::Inventory.ActivatePromiseReply.Parser, new[]{ "Success", "InventoryPromiseId", "InventoryPromiseExpires" }, null, null, null, null)
           }));
     }
     #endregion
@@ -645,6 +652,532 @@ namespace Inventory {
           }
           case 48: {
             AccountBalance = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class ActivatePromiseRequest : pb::IMessage<ActivatePromiseRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ActivatePromiseRequest> _parser = new pb::MessageParser<ActivatePromiseRequest>(() => new ActivatePromiseRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<ActivatePromiseRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Inventory.InventoryReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ActivatePromiseRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ActivatePromiseRequest(ActivatePromiseRequest other) : this() {
+      clientBindId_ = other.clientBindId_;
+      colonyId_ = other.colonyId_;
+      inventoryPromiseId_ = other.inventoryPromiseId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ActivatePromiseRequest Clone() {
+      return new ActivatePromiseRequest(this);
+    }
+
+    /// <summary>Field number for the "ClientBindId" field.</summary>
+    public const int ClientBindIdFieldNumber = 1;
+    private string clientBindId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ClientBindId {
+      get { return clientBindId_; }
+      set {
+        clientBindId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ColonyId" field.</summary>
+    public const int ColonyIdFieldNumber = 2;
+    private string colonyId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ColonyId {
+      get { return colonyId_; }
+      set {
+        colonyId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "InventoryPromiseId" field.</summary>
+    public const int InventoryPromiseIdFieldNumber = 3;
+    private string inventoryPromiseId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string InventoryPromiseId {
+      get { return inventoryPromiseId_; }
+      set {
+        inventoryPromiseId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as ActivatePromiseRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(ActivatePromiseRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ClientBindId != other.ClientBindId) return false;
+      if (ColonyId != other.ColonyId) return false;
+      if (InventoryPromiseId != other.InventoryPromiseId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ClientBindId.Length != 0) hash ^= ClientBindId.GetHashCode();
+      if (ColonyId.Length != 0) hash ^= ColonyId.GetHashCode();
+      if (InventoryPromiseId.Length != 0) hash ^= InventoryPromiseId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (ClientBindId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ColonyId);
+      }
+      if (InventoryPromiseId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(InventoryPromiseId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (ClientBindId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ColonyId);
+      }
+      if (InventoryPromiseId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(InventoryPromiseId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (ClientBindId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientBindId);
+      }
+      if (ColonyId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ColonyId);
+      }
+      if (InventoryPromiseId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(InventoryPromiseId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(ActivatePromiseRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ClientBindId.Length != 0) {
+        ClientBindId = other.ClientBindId;
+      }
+      if (other.ColonyId.Length != 0) {
+        ColonyId = other.ColonyId;
+      }
+      if (other.InventoryPromiseId.Length != 0) {
+        InventoryPromiseId = other.InventoryPromiseId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            ClientBindId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ColonyId = input.ReadString();
+            break;
+          }
+          case 26: {
+            InventoryPromiseId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            ClientBindId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ColonyId = input.ReadString();
+            break;
+          }
+          case 26: {
+            InventoryPromiseId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class ActivatePromiseReply : pb::IMessage<ActivatePromiseReply>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ActivatePromiseReply> _parser = new pb::MessageParser<ActivatePromiseReply>(() => new ActivatePromiseReply());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<ActivatePromiseReply> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Inventory.InventoryReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ActivatePromiseReply() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ActivatePromiseReply(ActivatePromiseReply other) : this() {
+      success_ = other.success_;
+      inventoryPromiseId_ = other.inventoryPromiseId_;
+      inventoryPromiseExpires_ = other.inventoryPromiseExpires_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ActivatePromiseReply Clone() {
+      return new ActivatePromiseReply(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "InventoryPromiseId" field.</summary>
+    public const int InventoryPromiseIdFieldNumber = 2;
+    private string inventoryPromiseId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string InventoryPromiseId {
+      get { return inventoryPromiseId_; }
+      set {
+        inventoryPromiseId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "InventoryPromiseExpires" field.</summary>
+    public const int InventoryPromiseExpiresFieldNumber = 3;
+    private long inventoryPromiseExpires_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public long InventoryPromiseExpires {
+      get { return inventoryPromiseExpires_; }
+      set {
+        inventoryPromiseExpires_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as ActivatePromiseReply);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(ActivatePromiseReply other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if (InventoryPromiseId != other.InventoryPromiseId) return false;
+      if (InventoryPromiseExpires != other.InventoryPromiseExpires) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (InventoryPromiseId.Length != 0) hash ^= InventoryPromiseId.GetHashCode();
+      if (InventoryPromiseExpires != 0L) hash ^= InventoryPromiseExpires.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (InventoryPromiseId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(InventoryPromiseId);
+      }
+      if (InventoryPromiseExpires != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(InventoryPromiseExpires);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (InventoryPromiseId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(InventoryPromiseId);
+      }
+      if (InventoryPromiseExpires != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(InventoryPromiseExpires);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (InventoryPromiseId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(InventoryPromiseId);
+      }
+      if (InventoryPromiseExpires != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(InventoryPromiseExpires);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(ActivatePromiseReply other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.InventoryPromiseId.Length != 0) {
+        InventoryPromiseId = other.InventoryPromiseId;
+      }
+      if (other.InventoryPromiseExpires != 0L) {
+        InventoryPromiseExpires = other.InventoryPromiseExpires;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            InventoryPromiseId = input.ReadString();
+            break;
+          }
+          case 24: {
+            InventoryPromiseExpires = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            InventoryPromiseId = input.ReadString();
+            break;
+          }
+          case 24: {
+            InventoryPromiseExpires = input.ReadInt64();
             break;
           }
         }

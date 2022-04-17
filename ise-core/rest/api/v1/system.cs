@@ -33,10 +33,8 @@ namespace ise_core.rest.api.v1
                 case HttpStatusCode.OK:
                     var reply = HelloReply.Parser.ParseFrom(result.RawBytes);
                     return new HandshakeResponse(reply.ServerVersion, HandshakeResult.OK);
-
                 case HttpStatusCode.NotAcceptable:
                     return new HandshakeResponse("", HandshakeResult.ClientOutdated);
-
                 case HttpStatusCode.GatewayTimeout:
                 case HttpStatusCode.Gone:
                 case HttpStatusCode.ServiceUnavailable:

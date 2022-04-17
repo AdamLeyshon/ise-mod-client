@@ -16,7 +16,9 @@ using Inventory;
 using ise.components;
 using ise.dialogs;
 using ise_core.db;
+using ise_core.rest;
 using LiteDB;
+using RestSharp;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -49,6 +51,7 @@ namespace ise.lib.tasks
             Request,
             MarketCaching,
             ColonyCaching,
+            ActivatePromise,
             Done,
             Error
         }
@@ -61,6 +64,7 @@ namespace ise.lib.tasks
         private readonly ISEGameComponent _gc;
         private readonly Pawn _pawn;
         private List<Thing> _colonyThings;
+        private string _promiseID;
 
         private State _state;
         private Task _task;
@@ -96,7 +100,13 @@ namespace ise.lib.tasks
                     break;
                 case State.ColonyCaching:
                     Dialog.DialogMessage = "Getting colony inventory";
-                    if (_task != null && _task.IsCompleted) _state = State.Done;
+                    if (_task != null && _task.IsCompleted) StartActivatePromise();
+
+                    break;
+                case State.ActivatePromise:
+                    Dialog.DialogMessage = "Completing transaction on Server";
+                    if (_task != null && _task.IsCompleted)
+                        ProcessActivatePromiseReply(((Task<ActivatePromiseReply>)_task).Result);
 
                     break;
 
@@ -104,6 +114,7 @@ namespace ise.lib.tasks
                     Dialog.DialogMessage = "Market OK";
                     Done = true;
                     break;
+
                 case State.Error:
                     Dialog.CloseDialog();
                     break;
@@ -131,11 +142,11 @@ namespace ise.lib.tasks
             // TODO: Fix this, check with server if promise is valid, it might've been deleted
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
+                _promiseID = inventoryPromise.InventoryPromiseId;
                 // No need to download, promise is still valid.
                 GatherColonyInventory();
                 return;
             }
-
 
             _task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(_gc.ClientBind, _colonyId);
             _task.Start();
@@ -145,6 +156,7 @@ namespace ise.lib.tasks
         private void ProcessInventoryReply(InventoryReply reply)
         {
             Logging.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
+            _promiseID = reply.InventoryPromiseId;
             _task = new Task(delegate
             {
                 Logging.WriteDebugMessage($"Building cache of {reply.Items.Count} market items");
@@ -422,6 +434,29 @@ namespace ise.lib.tasks
             // Delete any items in the basket which we don't have anymore
             var marketCachedItems = marketCache.FindAll().Select(cc => cc.ItemCode);
             marketBasket.DeleteMany(x => !marketCachedItems.Contains(x.ItemCode));
+        }
+
+        private void StartActivatePromise()
+        {
+            Logging.WriteDebugMessage($"Activating Promise {_promiseID}");
+            _task = ise_core.rest.api.v1.Inventory.ActivatePromiseAsync(_gc.ClientBind, _colonyId, _promiseID);
+            _task.Start();
+            _state = State.ActivatePromise;
+        }
+
+        private void ProcessActivatePromiseReply(ActivatePromiseReply reply)
+        {
+            if (reply.Success)
+            {
+                var db = IseCentral.DataCache;
+                var inventoryPromise = db.GetCollection<DBInventoryPromise>(Tables.Promises).FindById(_colonyId);
+                inventoryPromise.InventoryPromiseExpires = reply.InventoryPromiseExpires;
+                var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
+                inventoryCache.Update(inventoryPromise);
+            }
+
+            // Go to next step
+            _state = State.Done;
         }
 
         #endregion
