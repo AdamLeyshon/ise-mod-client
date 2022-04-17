@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // // This file was created by TwistedSoul @ TheCodeCache.net
 // // You are free to inspect the mod but may not modify or redistribute without my express permission.

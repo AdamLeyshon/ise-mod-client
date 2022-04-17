@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // #region License
 // // This file was created by TwistedSoul @ TheCodeCache.net
