@@ -277,7 +277,7 @@ namespace ise.lib.tasks
 
                         var qualityCategory = unpackedThing.TryGetComp<CompQuality>()?.Quality;
                         var stuff = unpackedThing.Stuff?.defName;
-
+                        var stuffString = stuff.NullOrEmpty() ? "null" : stuff;
                         if (qualityCategory != null && (int)qualityCategory < 2)
                         {
                             Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
@@ -293,7 +293,7 @@ namespace ise.lib.tasks
                         Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Searching market for {unpackedThing.def.defName}, " +
                             $"Quality: {intQuality}, " +
-                            $"Stuff: {stuff} ");
+                            $"Stuff: {stuffString} ");
 
 
                         // Get all matching colony items
@@ -317,7 +317,6 @@ namespace ise.lib.tasks
 
                             continue;
                         }
-
 
                         // Calculate percentage of HP remaining
                         var itemHitPointsAsPercentage = 100;
@@ -349,11 +348,17 @@ namespace ise.lib.tasks
                             continue;
                         }
 
+                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                            $"Searching colony cache for " +
+                            $"cacheItem.ThingDef = {unpackedThing.def.defName}, " +
+                            $"cacheItem.Stuff == {stuffString}, " +
+                            $"cacheItem.Quality == {intQuality}, " +
+                            $"cacheItem.HitPoints == {itemHitPointsAsPercentage}");
+
                         var matchColonyCacheItem = colonyCache.FindOne(cacheItem =>
                             unpackedThing.def.defName == cacheItem.ThingDef &&
                             stuff == cacheItem.Stuff &&
-                            // Check if the item has quality, set to 0 if not.
-                            (qualityCategory == null ? 0 : (int)qualityCategory) == cacheItem.Quality &&
+                            intQuality == cacheItem.Quality &&
                             itemHitPointsAsPercentage == cacheItem.HitPoints
                         ) ?? new DBCachedTradable
                         {
@@ -372,7 +377,10 @@ namespace ise.lib.tasks
                             IndexedName = matchMarketCacheItem.IndexedName,
                             TranslatedStuff = matchMarketCacheItem.TranslatedStuff
                         };
+
                         matchColonyCacheItem.Quantity += unpackedThing.stackCount;
+                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                            $"New quantity is {matchColonyCacheItem.Quantity}");
                         colonyCache.Upsert(matchColonyCacheItem);
                     }
                 }
