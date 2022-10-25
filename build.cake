@@ -26,7 +26,7 @@ var previous_game_folder = Argument<string>("game_previous_version_path");
 var current_version_string = "1.4";
 var previous_version_string = "1.3";
 var current_assembly_version = "1.4.8330.27538";
-var previous_assembly_version = "1.3.7892.27157";
+var previous_assembly_version = "1.3.8194.1375";
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,12 +79,12 @@ Task("UpdateReferences")
 .Does(() => {
   var changed = ReplaceRegexInFiles(
   $"{mod_source_path}/ise-mod.csproj", 
-  @"<HintPath>.*(RimWorldWin64_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
+  @"<HintPath>.*(RimWorldLinux_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
   $"<HintPath>{latest_game_folder}/$1/$2</HintPath>"
   );
   ReplaceRegexInFiles(
   $"{mod_previous_version_path}/ise-mod-previous.csproj", 
-  @"<HintPath>.*(RimWorldWin64_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
+  @"<HintPath>.*(RimWorldLinux_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
   $"<HintPath>{previous_game_folder}/$1/$2</HintPath>"
   );
   ReplaceTextInFiles(
