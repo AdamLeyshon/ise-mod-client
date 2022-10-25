@@ -1,5 +1,5 @@
 #tool nuget:?package=Cake.CoreCLR&version=1.1.0
-#tool dotnet:?package=GitVersion.Tool&version=5.7.0
+#tool dotnet:?package=GitVersion.Tool&version=5.6.11
 #addin nuget:?package=SharpZipLib&version=1.3.1
 #addin nuget:?package=Cake.Compression&version=0.2.6
 #addin Cake.Incubator&version=6.0.0
@@ -16,12 +16,18 @@ var version = "1.0";
 var mod_base_path = "mod_package";
 var mod_path = $"{mod_base_path}/{modname}";
 var mod_common_path = $"{mod_path}/Common";
-var v12_path = "./ise-mod-12";
+var mod_previous_version_path = "./ise-mod-previous";
 var git_hash = "";
 var asm_version = "";
 var steam_folder = Argument<string>("steam_path");
-var v13_game_folder = Argument<string>("v13_path");
-var v12_game_folder = Argument<string>("v12_path");
+var latest_game_folder = Argument<string>("game_current_version_path");
+var previous_game_folder = Argument<string>("game_previous_version_path");
+
+var current_version_string = "1.4";
+var previous_version_string = "1.3";
+var current_assembly_version = "1.4.8330.27538";
+var previous_assembly_version = "1.3.7892.27157";
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -44,47 +50,47 @@ Teardown(ctx =>
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Task("CopySourceCodeV12")
+Task("CopySourceCodePreviousVersion")
 .Does(() => {
-  CreateDirectory(v12_path);
-  DeleteDirectory(v12_path, new DeleteDirectorySettings {
+  CreateDirectory(mod_previous_version_path);
+  DeleteDirectory(mod_previous_version_path, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
   });
 
-  CopyDirectory(mod_source_path, v12_path);
+  CopyDirectory(mod_source_path, mod_previous_version_path);
 
-  CreateDirectory(v12_path + "/bin");
-  CreateDirectory(v12_path + "/obj");
-  DeleteDirectory(v12_path + "/bin", new DeleteDirectorySettings {
+  CreateDirectory(mod_previous_version_path + "/bin");
+  CreateDirectory(mod_previous_version_path + "/obj");
+  DeleteDirectory(mod_previous_version_path + "/bin", new DeleteDirectorySettings {
     Recursive = true,
     Force = true
   });
-    DeleteDirectory(v12_path + "/obj", new DeleteDirectorySettings {
+    DeleteDirectory(mod_previous_version_path + "/obj", new DeleteDirectorySettings {
     Recursive = true,
     Force = true
   });
-  MoveFile(v12_path + "/ise-mod.csproj", v12_path + "/ise-mod-12.csproj");
-  CreateDirectory(v12_path+"/Assemblies");
+  MoveFile(mod_previous_version_path + "/ise-mod.csproj", mod_previous_version_path + "/ise-mod-previous.csproj");
+  CreateDirectory(mod_previous_version_path+"/Assemblies");
 });
 
 Task("UpdateReferences")
-.IsDependentOn("CopySourceCodeV12")
+.IsDependentOn("CopySourceCodePreviousVersion")
 .Does(() => {
   var changed = ReplaceRegexInFiles(
   $"{mod_source_path}/ise-mod.csproj", 
   @"<HintPath>.*(RimWorldWin64_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
-  $"<HintPath>{v13_game_folder}/$1/$2</HintPath>"
+  $"<HintPath>{latest_game_folder}/$1/$2</HintPath>"
   );
   ReplaceRegexInFiles(
-  $"{v12_path}/ise-mod-12.csproj", 
+  $"{mod_previous_version_path}/ise-mod-previous.csproj", 
   @"<HintPath>.*(RimWorldWin64_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
-  $"<HintPath>{v12_game_folder}/$1/$2</HintPath>"
+  $"<HintPath>{previous_game_folder}/$1/$2</HintPath>"
   );
   ReplaceTextInFiles(
-    $"{v12_path}/ise-mod-12.csproj", 
-    "Version=1.3.7892.27157,", 
-    "Version=1.2.7528.19679"
+    $"{mod_previous_version_path}/ise-mod-previous.csproj", 
+    $"Version={current_assembly_version},", 
+    $"Version={previous_assembly_version}"
   );
 });
 
@@ -100,8 +106,8 @@ Task("CopyDataFolders")
   CopyDirectory(mod_source_path + "/Defs", mod_common_path+"/Defs");
   CopyDirectory(mod_source_path + "/Languages", mod_common_path+"/Languages");
   CopyDirectory(mod_source_path + "/Textures", mod_common_path+"/Textures");
-  CreateDirectory(mod_path+"/1.3/Assemblies");
-  CreateDirectory(mod_path+"/1.2/Assemblies");
+  CreateDirectory(mod_path+$"/{current_version_string}/Assemblies");
+  CreateDirectory(mod_path+$"/{previous_version_string}/Assemblies");
 });
 
 Task("CopyDLLs")
@@ -115,28 +121,28 @@ Task("CopyDLLs")
   // CopyFile(mod_source_path +  $"/bin/{configuration}/Google.Protobuf.dll", mod_path+"/Common/2Google.Protobuf.dll");
   // CopyFile(mod_source_path +  $"/bin/{configuration}/MiniSentrySDK.dll", mod_path+"/Assemblies/2MiniSentrySDK.dll");
   
-  // Version 13
-  CopyFile(mod_source_path +  $"/bin/{configuration}/RestSharp.dll", mod_path+"/1.3/Assemblies/1RestSharp.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/LiteDB.dll", mod_path+"/1.3/Assemblies/1LiteDB.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/Google.Protobuf.dll", mod_path+"/1.3/Assemblies/2Google.Protobuf.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.dll", mod_path+"/1.3/Assemblies/98ise-core.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.dll", mod_path+"/1.3/Assemblies/99ise-mod.dll");
+  // Current Version
+  CopyFile(mod_source_path +  $"/bin/{configuration}/RestSharp.dll", mod_path+$"/{current_version_string}/Assemblies/1RestSharp.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/LiteDB.dll", mod_path+$"/{current_version_string}/Assemblies/1LiteDB.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/Google.Protobuf.dll", mod_path+$"/{current_version_string}/Assemblies/2Google.Protobuf.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.dll", mod_path+$"/{current_version_string}/Assemblies/98ise-core.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.dll", mod_path+$"/{current_version_string}/Assemblies/99ise-mod.dll");
   if(configuration == "Debug")
   {
-    CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.pdb", mod_path+"/1.3/Assemblies/98ise-core.pdb");
-    CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.pdb", mod_path+"/1.3/Assemblies/99ise-mod.pdb");
+    CopyFile(mod_source_path +  $"/bin/{configuration}/ise-core.pdb", mod_path+$"/{current_version_string}/Assemblies/98ise-core.pdb");
+    CopyFile(mod_source_path +  $"/bin/{configuration}/ise-mod.pdb", mod_path+$"/{current_version_string}/Assemblies/99ise-mod.pdb");
   };
 
-  // Version 12
-  CopyFile(mod_source_path +  $"/bin/{configuration}/RestSharp.dll", mod_path+"/1.2/Assemblies/1RestSharp.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/LiteDB.dll", mod_path+"/1.2/Assemblies/1LiteDB.dll");
-  CopyFile(mod_source_path +  $"/bin/{configuration}/Google.Protobuf.dll", mod_path+"/1.2/Assemblies/2Google.Protobuf.dll");
-  CopyFile(v12_path +  $"/bin/{configuration}/ise-core.dll", mod_path+"/1.2/Assemblies/98ise-core.dll");
-  CopyFile(v12_path +  $"/bin/{configuration}/ise-mod.dll", mod_path+"/1.2/Assemblies/99ise-mod.dll");
+  // Previous Version 
+  CopyFile(mod_source_path +  $"/bin/{configuration}/RestSharp.dll", mod_path+$"/{previous_version_string}/Assemblies/1RestSharp.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/LiteDB.dll", mod_path+$"/{previous_version_string}/Assemblies/1LiteDB.dll");
+  CopyFile(mod_source_path +  $"/bin/{configuration}/Google.Protobuf.dll", mod_path+$"/{previous_version_string}/Assemblies/2Google.Protobuf.dll");
+  CopyFile(mod_previous_version_path +  $"/bin/{configuration}/ise-core.dll", mod_path+$"/{previous_version_string}/Assemblies/98ise-core.dll");
+  CopyFile(mod_previous_version_path +  $"/bin/{configuration}/ise-mod.dll", mod_path+$"/{previous_version_string}/Assemblies/99ise-mod.dll");
   if(configuration == "Debug")
   {
-    CopyFile(v12_path +  $"/bin/{configuration}/ise-core.pdb", mod_path+"/1.2/Assemblies/98ise-core.pdb");
-    CopyFile(v12_path +  $"/bin/{configuration}/ise-mod.pdb", mod_path+"/1.2/Assemblies/99ise-mod.pdb");
+    CopyFile(mod_previous_version_path +  $"/bin/{configuration}/ise-core.pdb", mod_path+$"/{previous_version_string}/Assemblies/98ise-core.pdb");
+    CopyFile(mod_previous_version_path +  $"/bin/{configuration}/ise-mod.pdb", mod_path+$"/{previous_version_string}/Assemblies/99ise-mod.pdb");
   };
 });
 
@@ -219,25 +225,25 @@ Task("CopyToSteam")
 Task("CopyToLocal")
 .Does(() => {
 
-  // Version 13
-  var game_mod_path = $"{v13_game_folder}/mods/{modname}";
+  // Current Version
+  var game_mod_path = $"{latest_game_folder}/mods/{modname}";
 	CreateDirectory(game_mod_path);
 	DeleteDirectory(game_mod_path, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
-  game_mod_path = $"{v13_game_folder}/mods";
+  game_mod_path = $"{latest_game_folder}/mods";
   ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", game_mod_path);
   Information($"ZIP Unpacked in: {game_mod_path}");
 
-  // Version 12
-  game_mod_path = $"{v12_game_folder}/mods/{modname}";
+  // Previous Version
+  game_mod_path = $"{previous_game_folder}/mods/{modname}";
 	CreateDirectory(game_mod_path);
 	DeleteDirectory(game_mod_path, new DeleteDirectorySettings {
     Recursive = true,
     Force = true
 	});
-  game_mod_path = $"{v12_game_folder}/mods";
+  game_mod_path = $"{previous_game_folder}/mods";
   ZipUncompress($"{modname}-Build_{git_hash}_{configuration}.zip", game_mod_path);
   Information($"ZIP Unpacked in: {game_mod_path}");
 });

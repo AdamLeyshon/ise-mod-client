@@ -18,7 +18,7 @@
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
         <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <DefineConstants>DEBUG;TRACE;MARKET_V2</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
@@ -35,7 +35,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <DefineConstants>DEBUG;TRACE;NETLOCAL</DefineConstants>
+        <DefineConstants>DEBUG;TRACE;NETLOCAL;MARKET_V2</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <OutputPath>bin\Debug NETLOCAL\</OutputPath>
@@ -46,15 +46,15 @@
           <Private>True</Private>
         </Reference>
         <Reference Include="Assembly-CSharp, Culture=neutral, PublicKeyToken=null">
-            <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/Assembly-CSharp.dll</HintPath>
+            <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/Assembly-CSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass, Culture=neutral, PublicKeyToken=null">
-            <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/Assembly-CSharp-firstpass.dll</HintPath>
+            <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/Assembly-CSharp-firstpass.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="com.rlabrecque.steamworks.net, Culture=neutral, PublicKeyToken=null">
-          <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/com.rlabrecque.steamworks.net.dll</HintPath>
+          <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/com.rlabrecque.steamworks.net.dll</HintPath>
         </Reference>
         <Reference Include="Google.Protobuf, Version=3.12.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604">
           <HintPath>..\packages\Google.Protobuf.3.12.0\lib\net45\Google.Protobuf.dll</HintPath>
@@ -72,19 +72,19 @@
         <Reference Include="System.Runtime" />
         <Reference Include="System.Web" />
         <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/UnityEngine.dll</HintPath>
+            <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/UnityEngine.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/UnityEngine.CoreModule.dll</HintPath>
+            <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/UnityEngine.CoreModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/UnityEngine.IMGUIModule.dll</HintPath>
+            <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/UnityEngine.IMGUIModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>/mnt/nvme1/Games/RimWorld13/RimWorldWin64_Data\Managed/UnityEngine.TextRenderingModule.dll</HintPath>
+            <HintPath>/home/aleyshon/.steam/steam/steamapps/common/RimWorld/RimWorldLinux_Data\Managed/UnityEngine.TextRenderingModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>

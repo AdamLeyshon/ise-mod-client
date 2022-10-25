@@ -43,31 +43,23 @@ namespace Tradable {
 
   }
   #region Messages
-  public sealed partial class Tradable : pb::IMessage<Tradable>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class Tradable : pb::IMessage<Tradable> {
     private static readonly pb::MessageParser<Tradable> _parser = new pb::MessageParser<Tradable>(() => new Tradable());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<Tradable> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Tradable.TradableReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Tradable() {
       OnConstruction();
     }
@@ -75,7 +67,6 @@ namespace Tradable {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Tradable(Tradable other) : this() {
       thingDef_ = other.thingDef_;
       itemCode_ = other.itemCode_;
@@ -91,7 +82,6 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Tradable Clone() {
       return new Tradable(this);
     }
@@ -100,7 +90,6 @@ namespace Tradable {
     public const int ThingDefFieldNumber = 1;
     private string thingDef_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ThingDef {
       get { return thingDef_; }
       set {
@@ -112,7 +101,6 @@ namespace Tradable {
     public const int ItemCodeFieldNumber = 5;
     private string itemCode_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ItemCode {
       get { return itemCode_; }
       set {
@@ -124,7 +112,6 @@ namespace Tradable {
     public const int QualityFieldNumber = 10;
     private int quality_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Quality {
       get { return quality_; }
       set {
@@ -136,7 +123,6 @@ namespace Tradable {
     public const int QuantityFieldNumber = 15;
     private int quantity_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Quantity {
       get { return quantity_; }
       set {
@@ -148,7 +134,6 @@ namespace Tradable {
     public const int MinifiedFieldNumber = 20;
     private bool minified_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Minified {
       get { return minified_; }
       set {
@@ -160,7 +145,6 @@ namespace Tradable {
     public const int BaseValueFieldNumber = 25;
     private float baseValue_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float BaseValue {
       get { return baseValue_; }
       set {
@@ -172,7 +156,6 @@ namespace Tradable {
     public const int WeBuyAtFieldNumber = 30;
     private float weBuyAt_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float WeBuyAt {
       get { return weBuyAt_; }
       set {
@@ -184,7 +167,6 @@ namespace Tradable {
     public const int WeSellAtFieldNumber = 35;
     private float weSellAt_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float WeSellAt {
       get { return weSellAt_; }
       set {
@@ -196,7 +178,6 @@ namespace Tradable {
     public const int StuffFieldNumber = 40;
     private string stuff_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Stuff {
       get { return stuff_; }
       set {
@@ -208,7 +189,6 @@ namespace Tradable {
     public const int WeightFieldNumber = 45;
     private float weight_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float Weight {
       get { return weight_; }
       set {
@@ -217,13 +197,11 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as Tradable);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(Tradable other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -245,7 +223,6 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ThingDef.Length != 0) hash ^= ThingDef.GetHashCode();
@@ -265,17 +242,12 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (ThingDef.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(ThingDef);
@@ -319,61 +291,9 @@ namespace Tradable {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
 
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ThingDef.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(ThingDef);
-      }
-      if (ItemCode.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(ItemCode);
-      }
-      if (Quality != 0) {
-        output.WriteRawTag(80);
-        output.WriteInt32(Quality);
-      }
-      if (Quantity != 0) {
-        output.WriteRawTag(120);
-        output.WriteInt32(Quantity);
-      }
-      if (Minified != false) {
-        output.WriteRawTag(160, 1);
-        output.WriteBool(Minified);
-      }
-      if (BaseValue != 0F) {
-        output.WriteRawTag(205, 1);
-        output.WriteFloat(BaseValue);
-      }
-      if (WeBuyAt != 0F) {
-        output.WriteRawTag(245, 1);
-        output.WriteFloat(WeBuyAt);
-      }
-      if (WeSellAt != 0F) {
-        output.WriteRawTag(157, 2);
-        output.WriteFloat(WeSellAt);
-      }
-      if (Stuff.Length != 0) {
-        output.WriteRawTag(194, 2);
-        output.WriteString(Stuff);
-      }
-      if (Weight != 0F) {
-        output.WriteRawTag(237, 2);
-        output.WriteFloat(Weight);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ThingDef.Length != 0) {
@@ -413,7 +333,6 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(Tradable other) {
       if (other == null) {
         return;
@@ -452,11 +371,7 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -505,91 +420,27 @@ namespace Tradable {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            ThingDef = input.ReadString();
-            break;
-          }
-          case 42: {
-            ItemCode = input.ReadString();
-            break;
-          }
-          case 80: {
-            Quality = input.ReadInt32();
-            break;
-          }
-          case 120: {
-            Quantity = input.ReadInt32();
-            break;
-          }
-          case 160: {
-            Minified = input.ReadBool();
-            break;
-          }
-          case 205: {
-            BaseValue = input.ReadFloat();
-            break;
-          }
-          case 245: {
-            WeBuyAt = input.ReadFloat();
-            break;
-          }
-          case 285: {
-            WeSellAt = input.ReadFloat();
-            break;
-          }
-          case 322: {
-            Stuff = input.ReadString();
-            break;
-          }
-          case 365: {
-            Weight = input.ReadFloat();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class ColonyTradable : pb::IMessage<ColonyTradable>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class ColonyTradable : pb::IMessage<ColonyTradable> {
     private static readonly pb::MessageParser<ColonyTradable> _parser = new pb::MessageParser<ColonyTradable>(() => new ColonyTradable());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<ColonyTradable> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Tradable.TradableReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ColonyTradable() {
       OnConstruction();
     }
@@ -597,7 +448,6 @@ namespace Tradable {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ColonyTradable(ColonyTradable other) : this() {
       thingDef_ = other.thingDef_;
       quality_ = other.quality_;
@@ -609,7 +459,6 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ColonyTradable Clone() {
       return new ColonyTradable(this);
     }
@@ -618,7 +467,6 @@ namespace Tradable {
     public const int ThingDefFieldNumber = 1;
     private string thingDef_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ThingDef {
       get { return thingDef_; }
       set {
@@ -630,7 +478,6 @@ namespace Tradable {
     public const int QualityFieldNumber = 10;
     private int quality_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Quality {
       get { return quality_; }
       set {
@@ -642,7 +489,6 @@ namespace Tradable {
     public const int MinifiedFieldNumber = 20;
     private bool minified_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Minified {
       get { return minified_; }
       set {
@@ -654,7 +500,6 @@ namespace Tradable {
     public const int BaseValueFieldNumber = 25;
     private float baseValue_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float BaseValue {
       get { return baseValue_; }
       set {
@@ -666,7 +511,6 @@ namespace Tradable {
     public const int WeightFieldNumber = 30;
     private float weight_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float Weight {
       get { return weight_; }
       set {
@@ -678,7 +522,6 @@ namespace Tradable {
     public const int StuffFieldNumber = 35;
     private string stuff_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Stuff {
       get { return stuff_; }
       set {
@@ -687,13 +530,11 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as ColonyTradable);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(ColonyTradable other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -711,7 +552,6 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (ThingDef.Length != 0) hash ^= ThingDef.GetHashCode();
@@ -727,17 +567,12 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (ThingDef.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(ThingDef);
@@ -765,45 +600,9 @@ namespace Tradable {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
 
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ThingDef.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(ThingDef);
-      }
-      if (Quality != 0) {
-        output.WriteRawTag(80);
-        output.WriteInt32(Quality);
-      }
-      if (Minified != false) {
-        output.WriteRawTag(160, 1);
-        output.WriteBool(Minified);
-      }
-      if (BaseValue != 0F) {
-        output.WriteRawTag(205, 1);
-        output.WriteFloat(BaseValue);
-      }
-      if (Weight != 0F) {
-        output.WriteRawTag(245, 1);
-        output.WriteFloat(Weight);
-      }
-      if (Stuff.Length != 0) {
-        output.WriteRawTag(154, 2);
-        output.WriteString(Stuff);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (ThingDef.Length != 0) {
@@ -831,7 +630,6 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(ColonyTradable other) {
       if (other == null) {
         return;
@@ -858,11 +656,7 @@ namespace Tradable {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -895,47 +689,7 @@ namespace Tradable {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            ThingDef = input.ReadString();
-            break;
-          }
-          case 80: {
-            Quality = input.ReadInt32();
-            break;
-          }
-          case 160: {
-            Minified = input.ReadBool();
-            break;
-          }
-          case 205: {
-            BaseValue = input.ReadFloat();
-            break;
-          }
-          case 245: {
-            Weight = input.ReadFloat();
-            break;
-          }
-          case 282: {
-            Stuff = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 

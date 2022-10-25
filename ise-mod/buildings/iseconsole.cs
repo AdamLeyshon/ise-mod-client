@@ -81,7 +81,7 @@ namespace ise.buildings
                 // Don't process any more if we don't have a Colony ID yet
                 if (!_gc.ClientBindVerified || _gc.GetColonyId(Map).NullOrEmpty()) yield break;
                 foreach (var order in _gc.GetAccount(_gc.GetColonyId(Map)).GetActiveOrders
-                    .Where(x => x.Status == OrderStatusEnum.Placed))
+                             .Where(x => x.Status == OrderStatusEnum.Placed))
                 {
                     var dbOrder = dbOrders.FindById(order.OrderId);
                     if (dbOrder == null) continue;
@@ -121,7 +121,12 @@ namespace ise.buildings
         internal void ShopOnline(Pawn user)
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
+#if MARKET_V2
+            Logging.WriteDebugMessage("Using new market code, going direct to market UI after colony update");
+            var destination = new DialogTradeUI(user);
+#else
             var destination = new DialogMarketDownload(user);
+#endif
             Find.WindowStack.Add(gc.ClientBindVerified
                 ? new DialogBind(user, DialogBind.BindUIType.Colony, destination)
                 : new DialogBind(user, DialogBind.BindUIType.Client, destination));

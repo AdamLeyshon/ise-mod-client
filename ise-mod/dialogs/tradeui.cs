@@ -33,13 +33,22 @@ namespace ise.dialogs
 
         public DialogTradeUI(Pawn userPawn)
         {
-            var gc = Current.Game.GetComponent<ISEGameComponent>();
             forcePause = true;
             pawn = userPawn;
-            //absorbInputAroundWindow = true;
-            SetupData();
-            promise = IseCentral.DataCache.GetCollection<DBInventoryPromise>(Tables.Promises)
-                .FindById(gc.GetColonyId(userPawn.Map));
+        }
+
+        public void SetupData()
+        {
+            var gc = Current.Game.GetComponent<ISEGameComponent>();
+            var colonyId = gc.GetColonyId(pawn.Map);
+            cache = new ItemCache
+            {
+                Colony = GetCache(colonyId, CacheType.ColonyCache),
+                ColonyBasket = GetCache(colonyId, CacheType.ColonyBasket),
+                Market = GetCache(colonyId, CacheType.MarketCache),
+                MarketBasket = GetCache(colonyId, CacheType.MarketBasket),
+                CurrentItems = null
+            };
             BuildQualityTranslationCache();
         }
 
@@ -47,7 +56,8 @@ namespace ise.dialogs
 
         #region Properties
 
-        public override Vector2 InitialSize {
+        public override Vector2 InitialSize
+        {
             get
             {
                 if (UI.screenWidth < 1200)
@@ -62,6 +72,7 @@ namespace ise.dialogs
                     _gridRowNameWidth = 255f;
                     return new Vector2(1000f, UI.screenHeight - 50f);
                 }
+
                 _gridRowMargin = 40f;
                 _labelStatsWidth = 150f;
                 _uiTradeButtonWidth = 30f;
@@ -84,11 +95,8 @@ namespace ise.dialogs
             public float WeightBuy { get; set; }
             public float CostSell { get; set; }
             public float CostBuy { get; set; }
-
             public float CostSellShipping { get; set; }
-
             public float CostBuyShipping { get; set; }
-
             public float CostTotal { get; set; }
         }
 
@@ -225,37 +233,27 @@ namespace ise.dialogs
 
         private static readonly ThingCategoryDef DefaultCategory = ThingCategoryDef.Named("ResourcesRaw");
         private readonly Pawn pawn;
-        private readonly DBInventoryPromise promise;
+        private DBInventoryPromise promise;
         private bool basketItemsOnly;
         private ItemCache cache;
 
         private bool dataSourceDirty = true;
+        private bool filterCategoryDirty = true;
         private ThingCategoryDef filterCategory = DefaultCategory;
+
         private string filterText = "";
         private bool ownedItemsOnly;
+        private bool firstLoad = true;
         private List<string> qualityTranslationCache;
         private Vector2 scrollPosition = Vector2.zero;
         private BasketStats stats;
         private TradeView uiTradeMode = TradeView.Buy;
         private readonly bool showIcons = IseCentral.Settings.ShowTradeUIIcons;
+        private DialogMarketDownload downloadDialog = null;
 
         #endregion
 
         #region Methods
-
-        private void SetupData()
-        {
-            var gc = Current.Game.GetComponent<ISEGameComponent>();
-            var colonyId = gc.GetColonyId(pawn.Map);
-            cache = new ItemCache
-            {
-                Colony = GetCache(colonyId, CacheType.ColonyCache),
-                ColonyBasket = GetCache(colonyId, CacheType.ColonyBasket),
-                Market = GetCache(colonyId, CacheType.MarketCache),
-                MarketBasket = GetCache(colonyId, CacheType.MarketBasket),
-                CurrentItems = null
-            };
-        }
 
         private void BuildQualityTranslationCache()
         {
@@ -268,6 +266,12 @@ namespace ise.dialogs
         {
             UpdateDataSource();
 
+            // Wait until the dialog is shut and the data is reloaded before rendering again.
+            if (downloadDialog != null)
+            {
+                return;
+            }
+
             GUI.BeginGroup(inRect);
             inRect = inRect.AtZero();
             DrawOuterFrame(inRect);
@@ -277,8 +281,32 @@ namespace ise.dialogs
 
         private void UpdateDataSource()
         {
+            if (firstLoad)
+            {
+                SetupData();
+            }
+
             // Check if anything has changed
             if (!dataSourceDirty) return;
+
+            // Halt here until data has been reloaded.
+            if (downloadDialog != null && downloadDialog.IsOpen) return;
+
+            // If there's no dialog open and we need new data, do that now.
+            if (downloadDialog == null && filterCategoryDirty)
+            {
+                Logging.WriteDebugMessage("Category changed, fetching new data from server");
+                downloadDialog = new DialogMarketDownload(pawn, firstLoad, filterCategory);
+                firstLoad = false;
+                Find.WindowStack.Add(downloadDialog);
+                return;
+            }
+
+            // Fetch the current promise ID, don't try and read it in SetupData because in Market V2, 
+            // The data from the server hasn't been loaded yet!
+            var gc = Current.Game.GetComponent<ISEGameComponent>();
+            promise = IseCentral.DataCache.GetCollection<DBInventoryPromise>(Tables.Promises)
+                .FindById(gc.GetColonyId(pawn.Map));
 
             Logging.WriteDebugMessage("Updating data source");
 
@@ -337,8 +365,10 @@ namespace ise.dialogs
                 .ToList();
 
             dataSourceDirty = false;
+            filterCategoryDirty = false;
+            downloadDialog = null;
         }
-        
+
         private void DrawOuterFrame(Rect inRect)
         {
             var addY = _uiControlHeight + _uiControlVerticalSpacing;
@@ -385,7 +415,7 @@ namespace ise.dialogs
 
             GUI.BeginGroup(outerFrame);
             Text.Font = GameFont.Small;
-            
+
             // Time remaining
             width -= 125f;
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -397,15 +427,16 @@ namespace ise.dialogs
             {
                 GUI.color = Color.red;
             }
+
             Widgets.Label(rectLabel, $"{timeRemaining}");
-            
+
             // Countdown label
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.MiddleCenter;
             width -= 200f - _uiControlPadding;
             rectLabel = new Rect(width, 0f, 200f, _uiActionButtonHeight);
             Widgets.Label(rectLabel, "Basket expires in:");
-            
+
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
@@ -826,7 +857,7 @@ namespace ise.dialogs
             Text.Anchor = TextAnchor.MiddleCenter;
             var rectTradeButton = new Rect(width, 0f, _uiTradeButtonWidth, _uiControlHeight);
             Widgets.Label(rectTradeButton, "Max");
-            
+
             // Step UP
             width -= _uiTradeButtonPadding + _uiTradeButtonWidth;
             Text.Anchor = TextAnchor.MiddleCenter;
@@ -881,7 +912,7 @@ namespace ise.dialogs
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectName = new Rect(width, 0f, _gridRowNameWidth, _uiControlHeight);
             Widgets.Label(rectName, "Item Name");
-            
+
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
@@ -1010,17 +1041,18 @@ namespace ise.dialogs
             Text.Anchor = TextAnchor.MiddleLeft;
             var rectName = new Rect(width, 0f, _gridRowNameWidth, tradeGridRow.height);
             Widgets.Label(rectName, rowData.TranslatedName);
-            
+
             // Icons
             if (showIcons)
             {
                 width -= iconWidth;
                 var rectIcon = new Rect(width, 0f, 27f, tradeGridRow.height);
-                Widgets.DefIcon(rectIcon, 
-                    ThingDef.Named(rowData.ThingDef), 
-                    rowData.Stuff.NullOrEmpty()? null: ThingDef.Named(rowData.Stuff)
-                    );
+                Widgets.DefIcon(rectIcon,
+                    ThingDef.Named(rowData.ThingDef),
+                    rowData.Stuff.NullOrEmpty() ? null : ThingDef.Named(rowData.Stuff)
+                );
             }
+
             GenUI.ResetLabelAlign();
             GUI.EndGroup();
         }
@@ -1078,10 +1110,11 @@ namespace ise.dialogs
                 {
                     // We'll never deal with corpses so don't show them.
                     if (def.LabelCap.ToLower().ToString().Contains("corpse")) continue;
-                    
+
                     // Remove CE Ammo Categories
-                    if(def.modContentPack.PackageId == "ceteam.combatextended") {
-                        if(def.defName.StartsWith("Ammo") && def.defName.Length > 4) continue;
+                    if (def.modContentPack.PackageId == "ceteam.combatextended")
+                    {
+                        if (def.defName.StartsWith("Ammo") && def.defName.Length > 4) continue;
                     }
 
                     // When they select a new category, update the filter and refresh the query.
@@ -1095,6 +1128,7 @@ namespace ise.dialogs
                         {
                             filterCategory = def;
                             dataSourceDirty = true;
+                            filterCategoryDirty = true;
                         }
                     }
 
@@ -1114,6 +1148,7 @@ namespace ise.dialogs
             {
                 filterCategory = ThingCategoryDef.Named("Root");
                 dataSourceDirty = true;
+                filterCategoryDirty = true;
             }
 
             Find.WindowStack.Add(new Dialog_MessageBox(

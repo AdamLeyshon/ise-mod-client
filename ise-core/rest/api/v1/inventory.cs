@@ -19,17 +19,17 @@ namespace ise_core.rest.api.v1
     {
         #region Methods
 
-        public static InventoryReply GetInventory(string clientBindId, string colonyId)
+        public static InventoryReply GetInventory(string clientBindId, string colonyId, bool continuePromise = false)
         {
-            var task = GetInventoryAsync(clientBindId, colonyId);
+            var task = GetInventoryAsync(clientBindId, colonyId, continuePromise);
             task.Start();
             task.Wait();
             return task.Result;
         }
 
-        public static Task<InventoryReply> GetInventoryAsync(string clientBindId, string colonyId)
+        public static Task<InventoryReply> GetInventoryAsync(string clientBindId, string colonyId, bool continuePromise)
         {
-            var request = new InventoryRequest { ColonyId = colonyId, ClientBindId = clientBindId };
+            var request = new InventoryRequest { ColonyId = colonyId, ClientBindId = clientBindId, ContinueExistingPromise = continuePromise};
             return Helpers.SendAndParseReplyAsync(
                 request,
                 InventoryReply.Parser,
@@ -46,6 +46,18 @@ namespace ise_core.rest.api.v1
                 request,
                 ActivatePromiseReply.Parser,
                 $"{URLPrefix}inventory/activate",
+                Method.POST,
+                clientBindId
+            );
+        }
+        
+        public static Task<GeneratePromiseReply> GeneratePromiseAsync(string clientBindId, string colonyId)
+        {
+            var request = new GeneratePromiseRequest { ColonyId = colonyId, ClientBindId = clientBindId};
+            return Helpers.SendAndParseReplyAsync(
+                request,
+                GeneratePromiseReply.Parser,
+                $"{URLPrefix}inventory/promise",
                 Method.POST,
                 clientBindId
             );

@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-cli", "ise-cli\ise-cli.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-core-tests", "ise-core-tests\ise-core-tests.csproj", "{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-mod-12", "ise-mod-12\ise-mod-12.csproj", "{C9A01E61-7E48-40B8-A84A-F6EEB6121656}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ise-mod-previous", "ise-mod-previous\ise-mod-previous.csproj", "{C9A01E61-7E48-40B8-A84A-F6EEB6121656}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Debug NETLOCAL|Any CPU.ActiveCfg = Debug NETLOCAL|Any CPU
 		{80EEE0F7-3ABB-48DA-A1B7-CA16E240F882}.Debug NETLOCAL|Any CPU.Build.0 = Debug NETLOCAL|Any CPU
-		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Debug NETLOCAL|Any CPU.ActiveCfg = Debug NETLOCAL|Any CPU
 		{C9A01E61-7E48-40B8-A84A-F6EEB6121656}.Debug NETLOCAL|Any CPU.Build.0 = Debug NETLOCAL|Any CPU
 	EndGlobalSection

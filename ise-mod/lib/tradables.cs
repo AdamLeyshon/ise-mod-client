@@ -22,24 +22,28 @@ namespace ise.lib
     {
         #region Methods
 
-        internal static IEnumerable<ColonyTradable> GetAllTradables()
+        internal static IEnumerable<ColonyTradable> GetAllTradables(ThingCategoryDef categoryDef = null)
         {
             var thingsToRequestFromMarket = new List<ColonyTradable>();
             var stuffCategoryDefs = DefDatabase<StuffCategoryDef>.AllDefsListForReading;
-            var things = DefDatabase<ThingDef>.AllDefsListForReading;
 
+            var allThings = DefDatabase<ThingDef>.AllDefsListForReading;
+            
             var stuffCategories = stuffCategoryDefs.ToDictionary(
                 stuffCategory => stuffCategory,
                 stuffCategory => new List<ThingDef>()
             );
-
+            
             // Scan Defs for Things that can be used as stuff.
-            foreach (var thing in things)
+            foreach (var thing in allThings)
                 // If this can be used as Stuff and it has StuffCategories assigned
                 if (thing.IsStuff && thing.stuffProps.categories.Count > 0)
                     foreach (var category in thing.stuffProps.categories)
                         stuffCategories[category].Add(thing);
-
+            
+            // Decide if we need to scan all things or just a certain category.
+            var things = categoryDef != null ? categoryDef.DescendantThingDefs : allThings;
+            
             // Then scan for Defs that can be traded.
             foreach (var thing in things)
                 try

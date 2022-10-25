@@ -11,15 +11,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Inventory;
 using ise.components;
 using ise.dialogs;
 using ise_core.db;
-using ise_core.rest;
+using ise_core.extend;
 using LiteDB;
-using RestSharp;
 using RimWorld;
+using Tradable;
 using UnityEngine;
 using Verse;
 using static ise_core.rest.Helpers;
@@ -33,12 +34,15 @@ namespace ise.lib.tasks
     {
         #region ctor
 
-        public MarketDownloadDialogTask(IDialog dialog, Pawn userPawn) : base(dialog)
+        public MarketDownloadDialogTask(IDialog dialog, Pawn userPawn, bool firstLoad = true,
+            ThingCategoryDef thingCategoryDef = null) : base(dialog)
         {
             _pawn = userPawn;
             _state = State.Start;
             _gc = Current.Game.GetComponent<ISEGameComponent>();
             if (_pawn == null) throw new ArgumentNullException(nameof(userPawn));
+            _thingCategoryDef = thingCategoryDef;
+            _firstLoad = firstLoad;
         }
 
         #endregion
@@ -48,7 +52,9 @@ namespace ise.lib.tasks
         private enum State
         {
             Start,
-            Request,
+            RequestInventory,
+            UpdateTradables,
+            RequestingPromise,
             MarketCaching,
             ColonyCaching,
             ActivatePromise,
@@ -63,6 +69,8 @@ namespace ise.lib.tasks
         private string _colonyId;
         private readonly ISEGameComponent _gc;
         private readonly Pawn _pawn;
+        private readonly ThingCategoryDef _thingCategoryDef;
+        private readonly bool _firstLoad;
         private List<Thing> _colonyThings;
         private string _promiseID;
 
@@ -86,28 +94,40 @@ namespace ise.lib.tasks
                     // Don't read the Colony ID until we try and talk to the server
                     // It may have changed or just been created in the bind task
                     _colonyId = _gc.GetColonyId(_pawn.Map);
-                    if (_task == null) StartDownload();
+                    if (_task == null) MarketVersionLogic();
                     break;
-                case State.Request:
+
+                case State.UpdateTradables:
+                    Dialog.DialogMessage = "Uploading item list";
+                    if (_task != null && _task.IsCompleted)
+                        ProcessColonyTradablesReply(((Task<bool>)_task).Result);
+                    break;
+
+                // case State.RequestingPromise:
+                //     Dialog.DialogMessage = "Requesting Server Attention";
+                //     if (_task != null && _task.IsCompleted)
+                //         ProcessGeneratePromiseReply(((Task<GeneratePromiseReply>)_task).Result);
+                //     break;
+
+                case State.RequestInventory:
                     Dialog.DialogMessage = "Downloading Market Data";
                     if (_task != null && _task.IsCompleted) ProcessInventoryReply(((Task<InventoryReply>)_task).Result);
-
                     break;
+
                 case State.MarketCaching:
                     Dialog.DialogMessage = "Building Cache";
                     if (_task != null && _task.IsCompleted) GatherColonyInventory();
-
                     break;
+
                 case State.ColonyCaching:
                     Dialog.DialogMessage = "Getting colony inventory";
                     if (_task != null && _task.IsCompleted) StartActivatePromise();
-
                     break;
+
                 case State.ActivatePromise:
                     Dialog.DialogMessage = "Completing transaction on Server";
                     if (_task != null && _task.IsCompleted)
                         ProcessActivatePromiseReply(((Task<ActivatePromiseReply>)_task).Result);
-
                     break;
 
                 case State.Done:
@@ -134,6 +154,16 @@ namespace ise.lib.tasks
             _task = null;
         }
 
+        private void MarketVersionLogic()
+        {
+#if MARKET_V2
+            StartColonyUpdateTradables();
+#else
+                StartDownload();
+#endif
+        }
+
+
         private void StartDownload()
         {
             var db = IseCentral.DataCache;
@@ -143,15 +173,124 @@ namespace ise.lib.tasks
             if (inventoryPromise != null && inventoryPromise.InventoryPromiseExpires > GetUTCNow())
             {
                 _promiseID = inventoryPromise.InventoryPromiseId;
-                // No need to download, promise is still valid.
-                GatherColonyInventory();
-                return;
+
+                // Thing category def is only ever null in the V1 market code,
+                // In the V1 version we just need to get the colony inventory,
+                // In V2, we only need to do this on the first load 
+                if (_thingCategoryDef == null)
+                {
+                    GatherColonyInventory();
+                    return;
+                }
             }
 
-            _task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(_gc.ClientBind, _colonyId);
+            _task = ise_core.rest.api.v1.Inventory.GetInventoryAsync(_gc.ClientBind, _colonyId, !_firstLoad);
             _task.Start();
-            _state = State.Request;
+            _state = State.RequestInventory;
         }
+
+        private const int TradableBatchSize = 25_000;
+
+        private void StartColonyUpdateTradables()
+        {
+            Logging.WriteDebugMessage(
+                $"UpdateAsync Colony tradables {_colonyId} for category {_thingCategoryDef.defName}");
+
+            _task = new Task<bool>(() =>
+            {
+                var awaitTasks = new List<Task<bool>>();
+
+                var tradables = GetAllTradables(_thingCategoryDef).ToList();
+
+                if (!_firstLoad)
+                {
+                    // We also need to add any items that are in the basket
+                    // otherwise it will break when the cache is cleared
+                    tradables.AddRange(GetTradablesFromBasket());
+                }
+
+                var itemsSent = 0;
+                foreach (var batch in tradables.Batch(TradableBatchSize))
+                {
+                    var itemsToSend = batch.ToList();
+                    itemsSent += itemsToSend.Count;
+                    var finalPacket = itemsSent == tradables.Count;
+
+                    Logging.WriteDebugMessage(
+                        $"Sending {itemsToSend.Count} tradables, final packet: {finalPacket}");
+
+                    if (finalPacket)
+                    {
+                        if (awaitTasks.Count > 0)
+                        {
+                            Logging.WriteDebugMessage(
+                                $"Final packet waiting for {awaitTasks.Count} other requests to finish");
+                            while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
+                        }
+
+                        Logging.WriteDebugMessage("Sending final packet");
+                    }
+
+                    var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
+                        _gc.ClientBind,
+                        _colonyId,
+                        itemsToSend,
+                        finalPacket
+                    ));
+                    batchTask.Start();
+                    awaitTasks.Add(batchTask);
+                }
+
+                Logging.WriteDebugMessage("Waiting for final request to finish");
+                while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
+                return awaitTasks.All(t => t.Result);
+            });
+
+            _state = State.UpdateTradables;
+            _task.Start();
+        }
+
+        private void ProcessColonyTradablesReply(bool reply)
+        {
+            if (!reply)
+            {
+                _state = State.Error;
+                Logging.WriteErrorMessage("Server did not accept colony tradables");
+            }
+
+            Logging.WriteDebugMessage("Server accepted colony tradables");
+
+            // If we already have a promise, go straight to download.
+            StartDownload();
+        }
+
+        // private void ProcessGeneratePromiseReply(GeneratePromiseReply reply)
+        // {
+        //     Logging.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
+        //     _promiseID = reply.InventoryPromiseId;
+        //
+        //     var db = IseCentral.DataCache;
+        //     try
+        //     {
+        //         db.BeginTrans();
+        //         var inventoryCache = db.GetCollection<DBInventoryPromise>(Tables.Promises);
+        //         inventoryCache.DeleteMany(x => x.ColonyId == _colonyId);
+        //         inventoryCache.Insert(new DBInventoryPromise
+        //         {
+        //             ColonyId = _colonyId,
+        //             InventoryPromiseId = reply.InventoryPromiseId,
+        //             InventoryPromiseExpires = reply.InventoryPromiseExpires,
+        //         });
+        //         db.Commit();
+        //     }
+        //     catch (Exception)
+        //     {
+        //         db.Rollback();
+        //         throw;
+        //     }
+        //
+        //     StartDownload();
+        // }
 
         private void ProcessInventoryReply(InventoryReply reply)
         {
@@ -397,9 +536,32 @@ namespace ise.lib.tasks
             _state = State.ColonyCaching;
         }
 
+        private IEnumerable<ColonyTradable> GetTradablesFromBasket()
+        {
+            var marketBasket = GetCache(_colonyId, CacheType.MarketBasket);
+            var colonyBasket = GetCache(_colonyId, CacheType.ColonyBasket);
+
+            var tradables = marketBasket.FindAll().Select(item => CacheToTradable(item)).ToList();
+            tradables.AddRange(colonyBasket.FindAll().Select(item => CacheToTradable(item)));
+
+            return tradables;
+        }
+
+        private ColonyTradable CacheToTradable(DBCachedTradable item)
+        {
+            return new ColonyTradable
+            {
+                ThingDef = item.ThingDef,
+                Quality = item.Quantity,
+                Minified = item.Minified,
+                BaseValue = item.BaseValue,
+                Weight = item.Weight,
+                Stuff = item.Stuff
+            };
+        }
+
         private void RestoreBasket()
         {
-            var db = IseCentral.DataCache;
             var marketCache = GetCache(_colonyId, CacheType.MarketCache);
             var marketBasket = GetCache(_colonyId, CacheType.MarketBasket);
 
@@ -446,10 +608,18 @@ namespace ise.lib.tasks
 
         private void StartActivatePromise()
         {
-            Logging.WriteDebugMessage($"Activating Promise {_promiseID}");
-            _task = ise_core.rest.api.v1.Inventory.ActivatePromiseAsync(_gc.ClientBind, _colonyId, _promiseID);
-            _task.Start();
-            _state = State.ActivatePromise;
+            if (_thingCategoryDef == null || _firstLoad)
+            {
+                Logging.WriteDebugMessage($"Activating Promise {_promiseID}");
+                _task = ise_core.rest.api.v1.Inventory.ActivatePromiseAsync(_gc.ClientBind, _colonyId, _promiseID);
+                _task.Start();
+                _state = State.ActivatePromise;
+            }
+            else
+            {
+                // We only need to activate the promise once
+                _state = State.Done;
+            }
         }
 
         private void ProcessActivatePromiseReply(ActivatePromiseReply reply)

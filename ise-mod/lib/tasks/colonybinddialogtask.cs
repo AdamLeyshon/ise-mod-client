@@ -281,13 +281,17 @@ namespace ise.lib.tasks
                 _gc.ClientBind
             );
             _task.Start();
-            
         }
 
         private void ProcessColonyModsUpdateReply(ColonyModsSetReply reply)
         {
             Logging.WriteDebugMessage("Server accepted colony mods");
+#if MARKET_V2
+            Logging.WriteDebugMessage("Using new market code, skipping update of tradables");
+            _state = State.Done;
+#else
             StartColonyUpdateTradables();
+#endif
         }
 
         private void StartColonyUpdateTradables()
@@ -304,7 +308,7 @@ namespace ise.lib.tasks
                     var itemsToSend = batch.ToList();
                     itemsSent += itemsToSend.Count;
                     var finalPacket = itemsSent == tradables.Count;
-                    
+
                     Logging.WriteDebugMessage(
                         $"Sending {itemsToSend.Count} tradables, final packet: {finalPacket}");
 
@@ -312,21 +316,24 @@ namespace ise.lib.tasks
                     {
                         if (awaitTasks.Count > 0)
                         {
-                            Logging.WriteDebugMessage($"Final packet waiting for {awaitTasks.Count} other requests to finish");
+                            Logging.WriteDebugMessage(
+                                $"Final packet waiting for {awaitTasks.Count} other requests to finish");
                             while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                         }
+
                         Logging.WriteDebugMessage("Sending final packet");
                     }
-                    
+
                     var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
                         _gc.ClientBind,
                         _colonyId,
                         itemsToSend,
                         finalPacket
-                        ));
+                    ));
                     batchTask.Start();
                     awaitTasks.Add(batchTask);
                 }
+
                 Logging.WriteDebugMessage("Waiting for final request to finish");
                 while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                 return awaitTasks.All(t => t.Result);

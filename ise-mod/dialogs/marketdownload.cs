@@ -19,13 +19,17 @@ namespace ise.dialogs
     {
         #region ctor
 
-        public DialogMarketDownload(Pawn userPawn)
+        public DialogMarketDownload(Pawn userPawn, bool firstLoad = true, ThingCategoryDef thingCategoryDef = null)
         {
             Logging.WriteDebugMessage("Opening Market Download Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             Pawn = userPawn;
-            task = new MarketDownloadDialogTask(this, Pawn);
+            task = new MarketDownloadDialogTask(this, Pawn, firstLoad, thingCategoryDef);
+            if (thingCategoryDef != null)
+            {
+                newMarketFlow = true;
+            }
         }
 
         #endregion
@@ -35,6 +39,7 @@ namespace ise.dialogs
         public override Vector2 InitialSize =>
             new Vector2(300f, 300f);
 
+        private bool newMarketFlow = false; 
         #endregion
 
         #region Methods
@@ -51,8 +56,12 @@ namespace ise.dialogs
 
             if (!task.Done) return;
 
-            // Open market window
-            Find.WindowStack.Add(new DialogTradeUI(Pawn));
+            if (!newMarketFlow)
+            {
+                // Open market window
+                Find.WindowStack.Add(new DialogTradeUI(Pawn));
+            }
+
             CloseDialog();
         }
 
