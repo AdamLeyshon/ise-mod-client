@@ -31,7 +31,7 @@ namespace ise.lib.state.managers
             OrderId = orderId;
             _backingOrder = IseCentral.DataCache.GetCollection<DBOrder>(Tables.Orders).FindById(OrderId);
             Status = _backingOrder.Status;
-            Logging.WriteDebugMessage($"Order tracker initialised for {OrderId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Order tracker initialised for {OrderId}");
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace ise.lib.state.managers
             Status = _backingOrder.Status;
             var currentTick = Current.Game.tickManager.TicksGame;
             var ticksRemaining = _backingOrder.DeliveryTick - currentTick;
-            Logging.WriteDebugMessage($"Ticking Order {OrderId}, State: {Status}, Ticks remaining: {ticksRemaining}");
+            Logging.LoggerInstance.WriteDebugMessage($"Ticking Order {OrderId}, State: {Status}, Ticks remaining: {ticksRemaining}");
             try
             {
                 if (ticksRemaining >= TicksPerHalfDay || IsFinished) return;
@@ -97,7 +97,7 @@ namespace ise.lib.state.managers
             finally
             {
                 Busy = false;
-                Logging.WriteDebugMessage($"Order {OrderId} tick finished");
+                Logging.LoggerInstance.WriteDebugMessage($"Order {OrderId} tick finished");
             }
         }
 
@@ -119,13 +119,13 @@ namespace ise.lib.state.managers
             }
             catch (Exception e)
             {
-                Logging.WriteDebugMessage($"Unable to process the delivery, will retry, {e}");
+                Logging.LoggerInstance.WriteDebugMessage($"Unable to process the delivery, will retry, {e}");
             }
         }
 
         private void DeliverOrder()
         {
-            Logging.WriteDebugMessage($"Deliver Order {OrderId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Deliver Order {OrderId}");
             var colonyId = _backingOrder.ColonyId;
             IseCentral.DataCache.BeginTrans();
             try
@@ -138,7 +138,7 @@ namespace ise.lib.state.managers
                 var orderItems = orderItemCollection.Find(item => item.OrderId == OrderId);
                 var deliveryItems = storedItemCollection.Find(item => item.ColonyId == colonyId).ToList();
 
-                Logging.WriteDebugMessage($"Need to add {deliveryItems.Count} items");
+                Logging.LoggerInstance.WriteDebugMessage($"Need to add {deliveryItems.Count} items");
 
                 foreach (var orderItem in orderItems)
                 {
@@ -183,7 +183,7 @@ namespace ise.lib.state.managers
 
         internal static void PopulateOrderItems(string orderId, OrderManifestReply orderManifest)
         {
-            Logging.WriteDebugMessage($"Processing manifest for {orderId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Processing manifest for {orderId}");
             var db = IseCentral.DataCache;
 
             try
@@ -231,7 +231,7 @@ namespace ise.lib.state.managers
 
         private void SetOrderState(OrderStatusEnum state, int currentTick)
         {
-            Logging.WriteDebugMessage($"Marking order {OrderId} as {state}");
+            Logging.LoggerInstance.WriteDebugMessage($"Marking order {OrderId} as {state}");
             var colonyId = _backingOrder.ColonyId;
             var db = IseCentral.DataCache;
             var orderCollection = db.GetCollection<DBOrder>(Tables.Orders);
@@ -281,8 +281,8 @@ namespace ise.lib.state.managers
             catch (Exception e)
             {
                 db.Rollback();
-                Logging.WriteErrorMessage($"Failed to update order status for {OrderId}");
-                Logging.WriteErrorMessage($"{e}");
+                Logging.LoggerInstance.WriteErrorMessage($"Failed to update order status for {OrderId}");
+                Logging.LoggerInstance.WriteErrorMessage($"{e}");
                 throw;
             }
         }

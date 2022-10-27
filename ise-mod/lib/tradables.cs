@@ -58,9 +58,9 @@ namespace ise.lib
                 }
                 catch (Exception ex)
                 {
-                    Logging.WriteErrorMessage(
+                    Logging.LoggerInstance.WriteErrorMessage(
                         $"failed to process ThingDef {thing.defName} for trading, it won't be tradeable.");
-                    Logging.WriteErrorMessage(ex.Message);
+                    Logging.LoggerInstance.WriteErrorMessage(ex.Message);
                 }
 
             return thingsToRequestFromMarket;
@@ -175,7 +175,7 @@ namespace ise.lib
             var seenThings = new HashSet<int>();
             foreach (var beacon in Building_OrbitalTradeBeacon.AllPowered(map))
             {
-                Logging.WriteDebugMessage($"Found trade beacon @ {beacon.Position.ToString()}");
+                Logging.LoggerInstance.WriteDebugMessage($"Found trade beacon @ {beacon.Position.ToString()}");
                 foreach (var beaconCell in beacon.TradeableCells)
                 {
                     var thingList = beaconCell.GetThingList(map);

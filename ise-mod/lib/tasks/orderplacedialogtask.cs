@@ -104,7 +104,7 @@ namespace ise.lib.tasks
         private void LogTaskError()
         {
             _state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            Logging.LoggerInstance.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
             _task = null;
         }
 
@@ -241,22 +241,22 @@ namespace ise.lib.tasks
             string stuff = null)
         {
             // Sort the Things, start with smallest stacks first.
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+            Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                 $"Looking for {thingDef} x {quantity} to remove");
 
             if (quantity == 0)
             {
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                     $"Asked to remove {thingDef} x 0, This is an error");
                 return;
             }
 
             var things = GetItemsNearBeacons(map, thingDef).ToList();
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+            Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                 $"I found {thingDef} x {things.Count}");
             if (quality >= 2)
             {
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                     $"Filtering for quality: {quality}");
                 things = things.Where(x =>
                 {
@@ -264,52 +264,52 @@ namespace ise.lib.tasks
                     var possibleQuality = thing.TryGetComp<CompQuality>();
                     return possibleQuality != null && (int)possibleQuality.Quality == quality;
                 }).ToList();
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                     $"I found {thingDef} x {things.Count}");
             }
 
             if (stuff != null)
             {
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Filtering for stuff: {stuff}");
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Filtering for stuff: {stuff}");
 
                 things = things.Where(x =>
                 {
                     var thing = x.GetInnerIfMinified();
                     return thing.Stuff.defName == stuff;
                 }).ToList();
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                     $"I found {thingDef} x {things.Count}");
             }
 
             var thingsToRemove = things.ToList();
             thingsToRemove.SortBy(x => x.stackCount);
 
-            Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+            Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                 $"Found {thingsToRemove.Count} stacks to inspect");
 
             var toRemove = quantity;
             foreach (var stack in thingsToRemove)
             {
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Want HP: {hitPoints}");
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Want HP: {hitPoints}");
                 var hp = CalculateThingHitPoints(stack);
 
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Stack HP: {hp}");
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove, $"Stack HP: {hp}");
                 if (stack is MinifiedThing)
                 {
                     var innerThing = stack.GetInnerIfMinified();
                     hp = CalculateThingHitPoints(innerThing);
-                    Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                    Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                         $"Inner thing HP: {hp}");
                 }
 
                 if (hp != hitPoints)
                 {
-                    Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                    Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                         $"{hp} != {hitPoints}");
                     continue;
                 }
 
-                Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                     $"Trying to remove: {stack} x {quantity}");
 
                 var newStack = stack.stackCount > toRemove
@@ -320,7 +320,7 @@ namespace ise.lib.tasks
 
                 if (newStack is MinifiedThing && newStack.stackCount == 1)
                 {
-                    Logging.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
+                    Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugColonyItemRemove,
                         $"Destroying Minified thing {stack}");
                     stack.Destroy();
                 }
@@ -333,7 +333,7 @@ namespace ise.lib.tasks
             }
 
             if (toRemove > 0)
-                Logging.WriteErrorMessage(
+                Logging.LoggerInstance.WriteErrorMessage(
                     $"The colony doesn't have enough td:{thingDef} st:{stuff} q:{quality} to remove.");
         }
 

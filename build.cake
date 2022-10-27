@@ -82,15 +82,23 @@ Task("UpdateReferences")
   @"<HintPath>.*(RimWorldLinux_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
   $"<HintPath>{latest_game_folder}/$1/$2</HintPath>"
   );
+  // Set Hint Path
   ReplaceRegexInFiles(
   $"{mod_previous_version_path}/ise-mod-previous.csproj", 
   @"<HintPath>.*(RimWorldLinux_Data[\\|\/]Managed)[\\|\/](.*)<\/HintPath>", 
   $"<HintPath>{previous_game_folder}/$1/$2</HintPath>"
   );
+  // Set RW Assembly Version
   ReplaceTextInFiles(
     $"{mod_previous_version_path}/ise-mod-previous.csproj", 
     $"Version={current_assembly_version},", 
     $"Version={previous_assembly_version}"
+  );
+  // Set RW_PREVIOUS Flag
+    ReplaceTextInFiles(
+    $"{mod_previous_version_path}/ise-mod-previous.csproj", 
+    $"RW_CURRENT_BUILD", 
+    $"RW_PREVIOUS_BUILD"
   );
 });
 

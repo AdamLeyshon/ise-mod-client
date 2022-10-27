@@ -31,7 +31,7 @@ namespace ise.lib.state.managers
 
         internal Account(string colonyBindId, ISEGameComponent gc)
         {
-            Logging.WriteDebugMessage($"Starting Account manager for {colonyBindId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Starting Account manager for {colonyBindId}");
             _accountId = colonyBindId;
             _gameComponent = gc;
             _busy = false;
@@ -68,7 +68,7 @@ namespace ise.lib.state.managers
             orderCollection.EnsureIndex(order => order.Id);
 
             var ordersToProcess = new List<string>();
-            Logging.WriteDebugMessage("Deleting delivered orders from the future");
+            Logging.LoggerInstance.WriteDebugMessage("Deleting delivered orders from the future");
 
             if (orders == null) return;
 
@@ -133,13 +133,13 @@ namespace ise.lib.state.managers
                     _nextUpdate = currentTick + OrderUpdateTickRate;
 
                     // Update the server with our current tick, so that any orders can be rolled back as required.
-                    Logging.WriteDebugMessage("Synchronising colony data with server");
+                    Logging.LoggerInstance.WriteDebugMessage("Synchronising colony data with server");
                     UpdateColonyStatus(currentTick);
 
                     // Download list of orders from server
-                    Logging.WriteDebugMessage("Synchronising orders with server");
+                    Logging.LoggerInstance.WriteDebugMessage("Synchronising orders with server");
                     var orders = GetOrderList().Orders;
-                    Logging.WriteDebugMessage($"Got {orders.Count} orders to process from server");
+                    Logging.LoggerInstance.WriteDebugMessage($"Got {orders.Count} orders to process from server");
 
                     // Find orders in a valid state.
                     foreach (var statusReply in orders
@@ -157,7 +157,7 @@ namespace ise.lib.state.managers
                         };
                         dbOrder.Status = statusReply.Status;
                         dbOrder.DeliveryTick = statusReply.DeliveryTick;
-                        Logging.WriteDebugMessage($"Added/Updated Order {dbOrder.Id}");
+                        Logging.LoggerInstance.WriteDebugMessage($"Added/Updated Order {dbOrder.Id}");
                         dbOrders.Upsert(dbOrder);
                     }
 
@@ -165,7 +165,7 @@ namespace ise.lib.state.managers
                     ordersToProcess.AddRange(dbOrders
                         .Find(order => !order.ManifestAvailable && order.ColonyId == _accountId)
                         .Select(order => order.Id));
-                    Logging.WriteDebugMessage($"Need to get {ordersToProcess.Count} Manifests");
+                    Logging.LoggerInstance.WriteDebugMessage($"Need to get {ordersToProcess.Count} Manifests");
 
                     tasks.AddRange(ordersToProcess.Select(order =>
                         Task.Run(() => Order.PopulateOrderItems(order, GetOrderManifest(order)))));
@@ -213,12 +213,12 @@ namespace ise.lib.state.managers
             }
             catch (Exception e)
             {
-                Logging.WriteErrorMessage($"Failed to process orders for account {_accountId}");
-                Logging.WriteErrorMessage($"{e}");
+                Logging.LoggerInstance.WriteErrorMessage($"Failed to process orders for account {_accountId}");
+                Logging.LoggerInstance.WriteErrorMessage($"{e}");
             }
             finally
             {
-                Logging.WriteDebugMessage($"Finished Account Manager Update for {_accountId}");
+                Logging.LoggerInstance.WriteDebugMessage($"Finished Account Manager Update for {_accountId}");
                 _busy = false; // Set not busy in case we have a chance to recover.
             }
         }
@@ -248,30 +248,30 @@ namespace ise.lib.state.managers
 
         private OrderListReply GetOrderList()
         {
-            Logging.WriteDebugMessage($"Fetching order list for {_accountId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Fetching order list for {_accountId}");
             try
             {
                 return ise_core.rest.api.v1.Order.GetOrderList(_gameComponent.ClientBind, _accountId);
             }
             catch (Exception e)
             {
-                Logging.WriteErrorMessage($"Failed to download order list for {_accountId}");
-                Logging.WriteErrorMessage($"{e}");
+                Logging.LoggerInstance.WriteErrorMessage($"Failed to download order list for {_accountId}");
+                Logging.LoggerInstance.WriteErrorMessage($"{e}");
                 throw;
             }
         }
 
         private OrderManifestReply GetOrderManifest(string orderId)
         {
-            Logging.WriteDebugMessage($"Fetching manifest for {orderId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Fetching manifest for {orderId}");
             try
             {
                 return ise_core.rest.api.v1.Order.GetOrderManifest(_gameComponent.ClientBind, _accountId, orderId);
             }
             catch (Exception e)
             {
-                Logging.WriteErrorMessage($"Failed to download manifest for {orderId}");
-                Logging.WriteErrorMessage($"{e}");
+                Logging.LoggerInstance.WriteErrorMessage($"Failed to download manifest for {orderId}");
+                Logging.LoggerInstance.WriteErrorMessage($"{e}");
                 throw;
             }
         }

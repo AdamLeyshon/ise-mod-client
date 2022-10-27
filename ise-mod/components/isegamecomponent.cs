@@ -30,7 +30,7 @@ namespace ise.components
 
         public ISEGameComponent(Game game)
         {
-            Logging.WriteDebugMessage("Game Component installed");
+            Logging.LoggerInstance.WriteDebugMessage("Game Component installed");
         }
 
         #endregion
@@ -72,14 +72,14 @@ namespace ise.components
 
         public override void LoadedGame()
         {
-            Logging.WriteDebugMessage("Loaded game");
+            Logging.LoggerInstance.WriteDebugMessage("Loaded game");
             base.LoadedGame();
             LoadBinds();
         }
 
         public override void StartedNewGame()
         {
-            Logging.WriteDebugMessage("Start new game");
+            Logging.LoggerInstance.WriteDebugMessage("Start new game");
             base.StartedNewGame();
             LoadBinds();
         }
@@ -89,11 +89,11 @@ namespace ise.components
             ClientBind = LoadBind<DBClientBind>(IseCentral.User.UserId);
             if (ClientBind.NullOrEmpty())
             {
-                Logging.WriteDebugMessage($"No Client bind for: {IseCentral.User.UserId}");
+                Logging.LoggerInstance.WriteDebugMessage($"No Client bind for: {IseCentral.User.UserId}");
                 return;
             }
 
-            Logging.WriteDebugMessage($"Client bind {ClientBind}");
+            Logging.LoggerInstance.WriteDebugMessage($"Client bind {ClientBind}");
             // Do other stuff
 
             if (_firstRunComplete) return;
@@ -111,25 +111,25 @@ namespace ise.components
         {
             // Can only use ISE where you own the map and it's a settlement with a name
             var mapID = GetUniqueMapID(map);
-            Logging.WriteDebugMessage($"Map ID of caller is {mapID}");
+            Logging.LoggerInstance.WriteDebugMessage($"Map ID of caller is {mapID}");
             return GetColonyFaction().HasName && map.Parent.HasName && MapIsSettlementOfPlayer(map);
         }
 
         internal string GetColonyId(Map map)
         {
             var sf = new StackTrace().GetFrame(1);
-            // Logging.WriteDebugMessage(
+            // Logging.LoggerInstance.WriteDebugMessage(
             //     $"Colony bind lookup from {sf.GetMethod().DeclaringType?.Name}.{sf.GetMethod().Name}");
 
             var mapId = GetUniqueMapID(map);
             if (_colonyCache.TryGetValue(mapId, out var outputId)) return outputId;
             outputId = LoadBind<DBColonyBind>(mapId);
             if (outputId.NullOrEmpty())
-                // Logging.WriteDebugMessage($"No colony bind for: {ClientBind}");
+                // Logging.LoggerInstance.WriteDebugMessage($"No colony bind for: {ClientBind}");
                 return null;
 
             _colonyCache.Add(mapId, outputId);
-            // Logging.WriteDebugMessage($"Colony bind {outputId}");
+            // Logging.LoggerInstance.WriteDebugMessage($"Colony bind {outputId}");
             return outputId;
         }
 
@@ -152,9 +152,9 @@ namespace ise.components
 
             if (!IseCentral.HandshakeComplete) return;
 
-            Logging.WriteDebugMessage($"Ticking {_activeAccounts.Count} Account Managers");
+            Logging.LoggerInstance.WriteDebugMessage($"Ticking {_activeAccounts.Count} Account Managers");
             foreach (var activeAccountsKey in _activeAccounts.Keys)
-                Logging.WriteDebugMessage($"Account Manager: {activeAccountsKey}");
+                Logging.LoggerInstance.WriteDebugMessage($"Account Manager: {activeAccountsKey}");
 
             _nextUpdateTick = currentTick + UpdateTickInterval;
 

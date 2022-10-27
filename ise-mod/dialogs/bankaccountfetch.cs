@@ -22,7 +22,7 @@ namespace ise.dialogs
 
         public DialogBankAccountFetch(Pawn userPawn, CurrencyEnum currency)
         {
-            Logging.WriteDebugMessage("Preparing to get bank account data");
+            Logging.LoggerInstance.WriteDebugMessage("Preparing to get bank account data");
             _currency = currency;
             forcePause = true;
             absorbInputAroundWindow = true;

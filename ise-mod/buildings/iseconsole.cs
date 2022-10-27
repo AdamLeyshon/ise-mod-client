@@ -122,7 +122,7 @@ namespace ise.buildings
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
 #if MARKET_V2
-            Logging.WriteDebugMessage("Using new market code, going direct to market UI after colony update");
+            Logging.LoggerInstance.WriteDebugMessage("Using new market code, going direct to market UI after colony update");
             var destination = new DialogTradeUI(user);
 #else
             var destination = new DialogMarketDownload(user);

@@ -10,21 +10,34 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using Verse;
 
 namespace ise.lib
 {
-    internal static class Logging
+    internal class Logging
     {
         #region Fields
 
         private const string Prefix = "ISE @ ";
+        private static readonly Lazy<Logging> Instance = new Lazy<Logging>(() => new Logging());
+        private readonly StreamWriter _stream;
 
         #endregion
 
+        private Logging()
+        {
+            var logName = $"{GenFilePaths.ConfigFolderPath}/ISELog.txt";
+            var file = new FileStream(logName, FileMode.Create, FileAccess.ReadWrite);
+            _stream = new StreamWriter(file, Encoding.UTF8);
+        }
+
+        internal static Logging LoggerInstance => Instance.Value;
+
         #region Methods
 
-        private static void WriteLogMessage(string message, bool error, StackFrame sf)
+        private void WriteLogMessage(string message, bool error, StackFrame sf)
         {
             // Go back two frames to get actual caller
             if (sf == null) sf = new StackTrace().GetFrame(2);
@@ -33,25 +46,30 @@ namespace ise.lib
 
             if (error)
             {
+                _stream.WriteLine(text);
                 Log.Error(text);
             }
             else
             {
-                if (IseCentral.Settings.DebugMessages) Log.Message(text);
+                if (!IseCentral.Settings.DebugMessages) return;
+                _stream.WriteLine(text);
+                Log.Message(text);
             }
+
+            _stream.Flush();
         }
 
-        internal static void WriteErrorMessage(string message)
+        internal void WriteErrorMessage(string message)
         {
             WriteLogMessage(message, true, null);
         }
 
-        internal static void WriteDebugMessage(string message, StackFrame sf = null)
+        internal void WriteDebugMessage(string message, StackFrame sf = null)
         {
             WriteLogMessage(message, false, sf);
         }
 
-        internal static void WriteDebugMessage(bool condition, string message, StackFrame sf = null)
+        internal void WriteDebugMessage(bool condition, string message, StackFrame sf = null)
         {
             if (condition) WriteLogMessage(message, false, sf);
         }

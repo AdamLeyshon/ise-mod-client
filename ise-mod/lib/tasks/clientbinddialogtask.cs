@@ -112,7 +112,7 @@ namespace ise.lib.tasks
         private void LogTaskError(Task task)
         {
             _state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
+            Logging.LoggerInstance.WriteErrorMessage($"Unhandled exception in task {task.Exception}");
             task = null;
         }
 
@@ -142,7 +142,7 @@ namespace ise.lib.tasks
         {
             if (!reply.Valid)
             {
-                Logging.WriteErrorMessage($"Server refused bind request: {reply}");
+                Logging.LoggerInstance.WriteErrorMessage($"Server refused bind request: {reply}");
                 _state = State.Error;
             }
             else
@@ -174,7 +174,7 @@ namespace ise.lib.tasks
                     switch (reply.BindType)
                     {
                         case BindTypeEnum.AccountBind:
-                            Logging.WriteDebugMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
+                            Logging.LoggerInstance.WriteDebugMessage($"Account bind confirmed: new Client Id: {reply.ClientBindId}");
 
                             // Now confirm the Client Bind ID
                             _state = State.Confirm;
@@ -189,7 +189,7 @@ namespace ise.lib.tasks
                             _task.Start();
                             return;
                         case BindTypeEnum.ClientBind:
-                            Logging.WriteDebugMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
+                            Logging.LoggerInstance.WriteDebugMessage($"Client bind confirmed: saving client Id: {reply.ClientBindId}");
                             var gc = Current.Game.GetComponent<ISEGameComponent>();
                             gc.ClientBind = reply.ClientBindId;
                             SaveBind<DBClientBind>(IseCentral.User.UserId, reply.ClientBindId);
@@ -213,7 +213,7 @@ namespace ise.lib.tasks
 
             // Bind invalid, go back to start
             _bindId = "";
-            Logging.WriteDebugMessage("Bind expired or was invalid, Requesting new bind");
+            Logging.LoggerInstance.WriteDebugMessage("Bind expired or was invalid, Requesting new bind");
             _task = null;
             _state = State.Start;
         }
@@ -221,7 +221,7 @@ namespace ise.lib.tasks
         private void StartBindVerify()
         {
             var gc = Current.Game.GetComponent<ISEGameComponent>();
-            Logging.WriteDebugMessage($"Verifying Client Bind {gc.ClientBind}");
+            Logging.LoggerInstance.WriteDebugMessage($"Verifying Client Bind {gc.ClientBind}");
             var request = new ClientBindVerifyRequest
             {
                 SteamId = IseCentral.User.UserId,
@@ -242,7 +242,7 @@ namespace ise.lib.tasks
             var gc = Current.Game.GetComponent<ISEGameComponent>();
             if (!reply.Valid)
             {
-                Logging.WriteErrorMessage($"Server refused bind: {reply.Valid}");
+                Logging.LoggerInstance.WriteErrorMessage($"Server refused bind: {reply.Valid}");
 
                 // Delete the client bind stored
                 DeleteBind<DBClientBind>(IseCentral.User.UserId);
@@ -256,7 +256,7 @@ namespace ise.lib.tasks
             }
             else
             {
-                Logging.WriteDebugMessage($"Server accepted Bind {gc.ClientBind}");
+                Logging.LoggerInstance.WriteDebugMessage($"Server accepted Bind {gc.ClientBind}");
                 gc.ClientBindVerified = true;
                 _state = State.Done;
             }

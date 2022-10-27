@@ -146,10 +146,10 @@ namespace ise.lib.tasks
         private void LogTaskError()
         {
             _state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            Logging.LoggerInstance.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
             if (_task.Exception?.InnerExceptions != null)
                 foreach (var innerException in _task.Exception.InnerExceptions)
-                    Logging.WriteErrorMessage($"Inner exception in task {innerException}");
+                    Logging.LoggerInstance.WriteErrorMessage($"Inner exception in task {innerException}");
 
             _task = null;
         }
@@ -193,7 +193,7 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateTradables()
         {
-            Logging.WriteDebugMessage(
+            Logging.LoggerInstance.WriteDebugMessage(
                 $"UpdateAsync Colony tradables {_colonyId} for category {_thingCategoryDef.defName}");
 
             _task = new Task<bool>(() =>
@@ -216,19 +216,19 @@ namespace ise.lib.tasks
                     itemsSent += itemsToSend.Count;
                     var finalPacket = itemsSent == tradables.Count;
 
-                    Logging.WriteDebugMessage(
+                    Logging.LoggerInstance.WriteDebugMessage(
                         $"Sending {itemsToSend.Count} tradables, final packet: {finalPacket}");
 
                     if (finalPacket)
                     {
                         if (awaitTasks.Count > 0)
                         {
-                            Logging.WriteDebugMessage(
+                            Logging.LoggerInstance.WriteDebugMessage(
                                 $"Final packet waiting for {awaitTasks.Count} other requests to finish");
                             while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                         }
 
-                        Logging.WriteDebugMessage("Sending final packet");
+                        Logging.LoggerInstance.WriteDebugMessage("Sending final packet");
                     }
 
                     var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
@@ -241,7 +241,7 @@ namespace ise.lib.tasks
                     awaitTasks.Add(batchTask);
                 }
 
-                Logging.WriteDebugMessage("Waiting for final request to finish");
+                Logging.LoggerInstance.WriteDebugMessage("Waiting for final request to finish");
                 while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                 return awaitTasks.All(t => t.Result);
             });
@@ -255,10 +255,10 @@ namespace ise.lib.tasks
             if (!reply)
             {
                 _state = State.Error;
-                Logging.WriteErrorMessage("Server did not accept colony tradables");
+                Logging.LoggerInstance.WriteErrorMessage("Server did not accept colony tradables");
             }
 
-            Logging.WriteDebugMessage("Server accepted colony tradables");
+            Logging.LoggerInstance.WriteDebugMessage("Server accepted colony tradables");
 
             // If we already have a promise, go straight to download.
             StartDownload();
@@ -266,7 +266,7 @@ namespace ise.lib.tasks
 
         // private void ProcessGeneratePromiseReply(GeneratePromiseReply reply)
         // {
-        //     Logging.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
+        //     Logging.LoggerInstance.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
         //     _promiseID = reply.InventoryPromiseId;
         //
         //     var db = IseCentral.DataCache;
@@ -294,11 +294,11 @@ namespace ise.lib.tasks
 
         private void ProcessInventoryReply(InventoryReply reply)
         {
-            Logging.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Inventory Received, Promise {reply.InventoryPromiseId}");
             _promiseID = reply.InventoryPromiseId;
             _task = new Task(delegate
             {
-                Logging.WriteDebugMessage($"Building cache of {reply.Items.Count} market items");
+                Logging.LoggerInstance.WriteDebugMessage($"Building cache of {reply.Items.Count} market items");
 
                 // Open database (or create if doesn't exist)
                 var db = IseCentral.DataCache;
@@ -334,8 +334,8 @@ namespace ise.lib.tasks
                 }
 
                 var writeCount = GetCache(_colonyId, CacheType.MarketCache).Count();
-                Logging.WriteDebugMessage($"Received {reply.Items.Count}, Wrote {writeCount}");
-                Logging.WriteDebugMessage("Done caching market items");
+                Logging.LoggerInstance.WriteDebugMessage($"Received {reply.Items.Count}, Wrote {writeCount}");
+                Logging.LoggerInstance.WriteDebugMessage("Done caching market items");
             });
             _task.Start();
 
@@ -369,11 +369,11 @@ namespace ise.lib.tasks
                         TranslatedStuff = stuffDef != null ? (string)stuffDef.LabelCap : "",
                         Category = thingDef.FirstThingCategory.defName
                     };
-                Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} has no category, won't be tradable");
+                Logging.LoggerInstance.WriteDebugMessage($"thingDef {tradable.ThingDef} has no category, won't be tradable");
                 return null;
             }
 
-            Logging.WriteDebugMessage($"thingDef {tradable.ThingDef} " +
+            Logging.LoggerInstance.WriteDebugMessage($"thingDef {tradable.ThingDef} " +
                                       $"{(tradable.Stuff.NullOrEmpty() ? "or " + tradable.Stuff : "")} " +
                                       "has no label or couldn't be found, won't be tradable");
             return null;
@@ -383,10 +383,10 @@ namespace ise.lib.tasks
         {
             _task = new Task(delegate
             {
-                Logging.WriteDebugMessage("Building colony item cache");
+                Logging.LoggerInstance.WriteDebugMessage("Building colony item cache");
 
-                Logging.WriteDebugMessage("Getting list of all items in range of beacons");
-                Logging.WriteDebugMessage($"on map for {_pawn.Name}");
+                Logging.LoggerInstance.WriteDebugMessage("Getting list of all items in range of beacons");
+                Logging.LoggerInstance.WriteDebugMessage($"on map for {_pawn.Name}");
 
                 _colonyThings = AllColonyThingsForTrade(_pawn.Map);
 
@@ -397,7 +397,7 @@ namespace ise.lib.tasks
 
                 // Clear colony cache
 
-                Logging.WriteDebugMessage("Cleared colony cache");
+                Logging.LoggerInstance.WriteDebugMessage("Cleared colony cache");
 
                 colonyCache.DeleteAll();
                 colonyCache.EnsureIndex(cc => cc.ThingDef);
@@ -406,7 +406,7 @@ namespace ise.lib.tasks
                 // For each downloaded market item
                 foreach (var thingGroup in _colonyThings.GroupBy(ci => ci.def.defName))
                 {
-                    Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                    Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                         $"Working on group {thingGroup.Key}");
 
 
@@ -419,7 +419,7 @@ namespace ise.lib.tasks
                         var stuffString = stuff.NullOrEmpty() ? "null" : stuff;
                         if (qualityCategory != null && (int)qualityCategory < 2)
                         {
-                            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                            Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                                 $"Item {unpackedThing.ThingID} was less than Normal quality, Skipped");
 
                             continue;
@@ -429,7 +429,7 @@ namespace ise.lib.tasks
                         var intQuality = qualityCategory == null ? 0 : (int)qualityCategory;
 
 
-                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                        Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Searching market for {unpackedThing.def.defName}, " +
                             $"Quality: {intQuality}, " +
                             $"Stuff: {stuffString} ");
@@ -446,7 +446,7 @@ namespace ise.lib.tasks
                         if (matchMarketCacheItem == null)
                         {
                             if (unpackedThing.def.defName != ThingDefSilver)
-                                Logging.WriteDebugMessage(
+                                Logging.LoggerInstance.WriteDebugMessage(
                                     $"Did not find a Market entry for {unpackedThing.def.defName}, " +
                                     "This could be a problem.");
 
@@ -460,7 +460,7 @@ namespace ise.lib.tasks
                         // Calculate percentage of HP remaining
                         var itemHitPointsAsPercentage = 100;
 
-                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                        Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Item Stack HP {unpackedThing.HitPoints}/{unpackedThing.MaxHitPoints}, " +
                             $"Size: {unpackedThing.stackCount}");
 
@@ -470,14 +470,14 @@ namespace ise.lib.tasks
                             // Removing the casts/brackets causes incorrect percentage computation.
                             itemHitPointsAsPercentage = CalculateThingHitPoints(unpackedThing);
 
-                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                        Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Item Stack HP {itemHitPointsAsPercentage}%");
 
                         // Below this threshold, we don't  want the remaining items in this groups
                         // Break now to save iteration.
                         if (itemHitPointsAsPercentage < 15)
                         {
-                            Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                            Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                                 "Item has low HP, skipping.");
 
                             if (!(ci is MinifiedThing))
@@ -487,7 +487,7 @@ namespace ise.lib.tasks
                             continue;
                         }
 
-                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                        Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"Searching colony cache for " +
                             $"cacheItem.ThingDef = {unpackedThing.def.defName}, " +
                             $"cacheItem.Stuff == {stuffString}, " +
@@ -518,17 +518,17 @@ namespace ise.lib.tasks
                         };
 
                         matchColonyCacheItem.Quantity += unpackedThing.stackCount;
-                        Logging.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
+                        Logging.LoggerInstance.WriteDebugMessage(IseCentral.Settings.DebugTradeBeacons,
                             $"New quantity is {matchColonyCacheItem.Quantity}");
                         colonyCache.Upsert(matchColonyCacheItem);
                     }
                 }
 
-                Logging.WriteDebugMessage("Done caching colony items");
+                Logging.LoggerInstance.WriteDebugMessage("Done caching colony items");
 
-                Logging.WriteDebugMessage("Restoring basket");
+                Logging.LoggerInstance.WriteDebugMessage("Restoring basket");
                 RestoreBasket();
-                Logging.WriteDebugMessage("Done");
+                Logging.LoggerInstance.WriteDebugMessage("Done");
             });
             _task.Start();
 
@@ -610,7 +610,7 @@ namespace ise.lib.tasks
         {
             if (_thingCategoryDef == null || _firstLoad)
             {
-                Logging.WriteDebugMessage($"Activating Promise {_promiseID}");
+                Logging.LoggerInstance.WriteDebugMessage($"Activating Promise {_promiseID}");
                 _task = ise_core.rest.api.v1.Inventory.ActivatePromiseAsync(_gc.ClientBind, _colonyId, _promiseID);
                 _task.Start();
                 _state = State.ActivatePromise;

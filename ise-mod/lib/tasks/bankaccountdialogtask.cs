@@ -96,7 +96,7 @@ namespace ise.lib.tasks
         private void LogTaskError()
         {
             _state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            Logging.LoggerInstance.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
             _task = null;
         }
 

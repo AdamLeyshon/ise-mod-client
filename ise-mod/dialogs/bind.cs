@@ -22,7 +22,7 @@ namespace ise.dialogs
 
         internal DialogBind(Pawn userPawn, BindUIType bindTypeEnum, Window destination)
         {
-            Logging.WriteDebugMessage("Opening Bind Dialog");
+            Logging.LoggerInstance.WriteDebugMessage("Opening Bind Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             BindType = bindTypeEnum;

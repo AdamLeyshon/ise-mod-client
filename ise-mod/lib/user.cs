@@ -35,7 +35,7 @@ namespace ise.lib
         {
             var steamId = GetUserSteamId();
             var db = IseCentral.DataCache;
-            Logging.WriteDebugMessage("Trying to load user data");
+            Logging.LoggerInstance.WriteDebugMessage("Trying to load user data");
             var col = db.GetCollection<DBUser>(Tables.Users);
 
             var userData = steamId.NullOrEmpty()
@@ -44,14 +44,14 @@ namespace ise.lib
 
             if (userData == null)
             {
-                Logging.WriteDebugMessage("Creating new user data");
+                Logging.LoggerInstance.WriteDebugMessage("Creating new user data");
                 userData = steamId.NullOrEmpty()
                     ? new DBUser { UserId = Guid.NewGuid().ToString(), IsSteamUser = false }
                     : new DBUser { UserId = steamId, IsSteamUser = true };
                 col.Insert(userData);
             }
 
-            Logging.WriteDebugMessage($"Loaded User ID: {userData.UserId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Loaded User ID: {userData.UserId}");
             return userData;
         }
 
@@ -61,7 +61,7 @@ namespace ise.lib
             var col = db.GetCollection<T>(Tables.Bindings);
             var clientBindData = col.FindOne(data => data.ParentId == parentId);
             if (clientBindData == null) return string.Empty;
-            Logging.WriteDebugMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Loaded {typeof(T)} with ID: {clientBindData.BindId}");
             return clientBindData.BindId;
         }
 
@@ -70,7 +70,7 @@ namespace ise.lib
             var db = IseCentral.DataCache;
             var col = db.GetCollection<T>(Tables.Bindings);
             col.DeleteMany(data => data.BindId == targetBind);
-            Logging.WriteDebugMessage($"Deleted all binds referring to {typeof(T)} with ID: {targetBind}");
+            Logging.LoggerInstance.WriteDebugMessage($"Deleted all binds referring to {typeof(T)} with ID: {targetBind}");
         }
 
         internal static void SaveBind<T>(string parentId, string bindId) where T : IBaseBind, new()

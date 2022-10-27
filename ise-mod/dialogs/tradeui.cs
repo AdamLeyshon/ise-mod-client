@@ -295,7 +295,7 @@ namespace ise.dialogs
             // If there's no dialog open and we need new data, do that now.
             if (downloadDialog == null && filterCategoryDirty)
             {
-                Logging.WriteDebugMessage("Category changed, fetching new data from server");
+                Logging.LoggerInstance.WriteDebugMessage("Category changed, fetching new data from server");
                 downloadDialog = new DialogMarketDownload(pawn, firstLoad, filterCategory);
                 firstLoad = false;
                 Find.WindowStack.Add(downloadDialog);
@@ -308,7 +308,7 @@ namespace ise.dialogs
             promise = IseCentral.DataCache.GetCollection<DBInventoryPromise>(Tables.Promises)
                 .FindById(gc.GetColonyId(pawn.Map));
 
-            Logging.WriteDebugMessage("Updating data source");
+            Logging.LoggerInstance.WriteDebugMessage("Updating data source");
 
             ILiteCollection<DBCachedTradable> collection;
 

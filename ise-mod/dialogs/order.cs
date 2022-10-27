@@ -27,7 +27,7 @@ namespace ise.dialogs
 
         public DialogOrder(Pawn userPawn, int additionalFunds)
         {
-            Logging.WriteDebugMessage("Opening Place Order Dialog");
+            Logging.LoggerInstance.WriteDebugMessage("Opening Place Order Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             Pawn = userPawn;

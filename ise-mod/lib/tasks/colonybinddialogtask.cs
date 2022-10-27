@@ -84,7 +84,7 @@ namespace ise.lib.tasks
                     if (_task.Exception?.InnerException != null &&
                         _task.Exception.InnerException.Message.Contains("404"))
                     {
-                        Logging.WriteDebugMessage($"Colony ID {_colonyId} doesn't exist, re-registering.");
+                        Logging.LoggerInstance.WriteDebugMessage($"Colony ID {_colonyId} doesn't exist, re-registering.");
 
                         // Delete the bind and re-create
                         DeleteBind<DBColonyBind>(_colonyId);
@@ -152,7 +152,7 @@ namespace ise.lib.tasks
         private void LogTaskError()
         {
             _state = State.Error;
-            Logging.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
+            Logging.LoggerInstance.WriteErrorMessage($"Unhandled exception in task {_task.Exception}");
             _task = null;
         }
 
@@ -195,7 +195,7 @@ namespace ise.lib.tasks
 
         private void ProcessColonyCreateReply(ColonyData reply)
         {
-            Logging.WriteDebugMessage($"Got new Colony ID: {reply.ColonyId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Got new Colony ID: {reply.ColonyId}");
 
             SaveBind<DBColonyBind>(GameInfo.GetUniqueMapID(_pawn.Map), reply.ColonyId);
             _gc.FlushColonyIdCache();
@@ -225,14 +225,14 @@ namespace ise.lib.tasks
 
         private void ProcessGetColonyDataReply(ColonyData reply)
         {
-            Logging.WriteDebugMessage($"Colony ID confirmed: {reply.ColonyId}");
+            Logging.LoggerInstance.WriteDebugMessage($"Colony ID confirmed: {reply.ColonyId}");
             // Now update the colony data
             StartColonyUpdate();
         }
 
         private void StartColonyUpdate()
         {
-            Logging.WriteDebugMessage($"Updating Colony Details for {_gc.GetColonyId(_pawn.Map)}");
+            Logging.LoggerInstance.WriteDebugMessage($"Updating Colony Details for {_gc.GetColonyId(_pawn.Map)}");
             var request = new ColonyUpdateRequest
             {
                 ClientBindId = _gc.ClientBind,
@@ -258,14 +258,14 @@ namespace ise.lib.tasks
 
         private void ProcessUpdateColonyReply(ColonyData reply)
         {
-            Logging.WriteDebugMessage("Server accepted colony update");
+            Logging.LoggerInstance.WriteDebugMessage("Server accepted colony update");
             StartColonyUpdateMods();
         }
 
         private void StartColonyUpdateMods()
         {
             _state = State.UpdateMods;
-            Logging.WriteDebugMessage($"UpdateAsync Colony mods {_colonyId}");
+            Logging.LoggerInstance.WriteDebugMessage($"UpdateAsync Colony mods {_colonyId}");
             var request = new ColonyModsSetRequest
             {
                 ClientBindId = _gc.ClientBind,
@@ -285,9 +285,9 @@ namespace ise.lib.tasks
 
         private void ProcessColonyModsUpdateReply(ColonyModsSetReply reply)
         {
-            Logging.WriteDebugMessage("Server accepted colony mods");
+            Logging.LoggerInstance.WriteDebugMessage("Server accepted colony mods");
 #if MARKET_V2
-            Logging.WriteDebugMessage("Using new market code, skipping update of tradables");
+            Logging.LoggerInstance.WriteDebugMessage("Using new market code, skipping update of tradables");
             _state = State.Done;
 #else
             StartColonyUpdateTradables();
@@ -296,7 +296,7 @@ namespace ise.lib.tasks
 
         private void StartColonyUpdateTradables()
         {
-            Logging.WriteDebugMessage($"UpdateAsync Colony tradables {_colonyId}");
+            Logging.LoggerInstance.WriteDebugMessage($"UpdateAsync Colony tradables {_colonyId}");
 
             _task = new Task<bool>(() =>
             {
@@ -309,19 +309,19 @@ namespace ise.lib.tasks
                     itemsSent += itemsToSend.Count;
                     var finalPacket = itemsSent == tradables.Count;
 
-                    Logging.WriteDebugMessage(
+                    Logging.LoggerInstance.WriteDebugMessage(
                         $"Sending {itemsToSend.Count} tradables, final packet: {finalPacket}");
 
                     if (finalPacket)
                     {
                         if (awaitTasks.Count > 0)
                         {
-                            Logging.WriteDebugMessage(
+                            Logging.LoggerInstance.WriteDebugMessage(
                                 $"Final packet waiting for {awaitTasks.Count} other requests to finish");
                             while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                         }
 
-                        Logging.WriteDebugMessage("Sending final packet");
+                        Logging.LoggerInstance.WriteDebugMessage("Sending final packet");
                     }
 
                     var batchTask = new Task<bool>(() => ise_core.rest.api.v1.Colony.SetTradablesList(
@@ -334,7 +334,7 @@ namespace ise.lib.tasks
                     awaitTasks.Add(batchTask);
                 }
 
-                Logging.WriteDebugMessage("Waiting for final request to finish");
+                Logging.LoggerInstance.WriteDebugMessage("Waiting for final request to finish");
                 while (awaitTasks.Select(t => t.IsCompleted).Any(s => !s)) Thread.Sleep(10);
                 return awaitTasks.All(t => t.Result);
             });
@@ -347,10 +347,10 @@ namespace ise.lib.tasks
             if (!reply)
             {
                 _state = State.Error;
-                Logging.WriteErrorMessage("Server did not accept colony tradables");
+                Logging.LoggerInstance.WriteErrorMessage("Server did not accept colony tradables");
             }
 
-            Logging.WriteDebugMessage("Server accepted colony tradables");
+            Logging.LoggerInstance.WriteDebugMessage("Server accepted colony tradables");
             _state = State.Done;
         }
 

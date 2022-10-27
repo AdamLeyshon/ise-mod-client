@@ -21,7 +21,7 @@ namespace ise.dialogs
 
         public DialogMarketDownload(Pawn userPawn, bool firstLoad = true, ThingCategoryDef thingCategoryDef = null)
         {
-            Logging.WriteDebugMessage("Opening Market Download Dialog");
+            Logging.LoggerInstance.WriteDebugMessage("Opening Market Download Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             Pawn = userPawn;

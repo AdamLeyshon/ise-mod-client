@@ -26,14 +26,14 @@ namespace ise.settings
         /// </summary>
         public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref DebugMessages, "DebugMessages");
             Scribe_Values.Look(ref DebugTradeBeacons, "DebugTradeBeacons");
             Scribe_Values.Look(ref DebugMaterialiser, "DebugMaterialiser");
             Scribe_Values.Look(ref DebugColonyItemRemove, "DebugColonyItemRemove");
             Scribe_Values.Look(ref ShowTradeUIIcons, "ShowTradeUIIcons");
-            base.ExposeData();
-
-            if (Scribe.mode == LoadSaveMode.Saving) IseCentral.ReloadSettings();
+            if (Scribe.mode != LoadSaveMode.Saving) return;
+            IseCentral.ReloadSettings();
         }
     }
 
@@ -45,7 +45,6 @@ namespace ise.settings
         {
             settings = GetSettings<ISESettings>();
         }
-
 
         public override void DoSettingsWindowContents(Rect inRect)
         {

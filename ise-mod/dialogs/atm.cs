@@ -30,7 +30,7 @@ namespace ise.dialogs
         public Atm(Pawn userPawn, BankDataReply bankData, CurrencyEnum currency)
         {
             _currency = currency;
-            Logging.WriteDebugMessage("Opening ATM Dialog");
+            Logging.LoggerInstance.WriteDebugMessage("Opening ATM Dialog");
             forcePause = true;
             absorbInputAroundWindow = true;
             Pawn = userPawn;
@@ -156,7 +156,7 @@ namespace ise.dialogs
             }
             catch (Exception e)
             {
-                Logging.WriteErrorMessage($"{e}");
+                Logging.LoggerInstance.WriteErrorMessage($"{e}");
                 dialogText = "ISEWithdrawFailure".Translate();
             }
 

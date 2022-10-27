@@ -71,7 +71,7 @@ namespace ise
             LastHandshakeAttempt = DateTime.MinValue;
             HandshakeTask = null;
         }
-
+        
         private static void ApplyPatches()
         {
             var harmony = new Harmony("net.thecodecache.ise");
@@ -135,9 +135,9 @@ namespace ise
                     }
 
                     if (ISEState == ServerState.Unreachable || ISEState == ServerState.HandshakeNotPerformed)
-                        Logging.WriteDebugMessage("Server offline");
+                        Logging.LoggerInstance.WriteDebugMessage("Server offline");
                     else
-                        Logging.WriteDebugMessage($"Server online ({ISEState}), version {version}");
+                        Logging.LoggerInstance.WriteDebugMessage($"Server online ({ISEState}), version {version}");
 
                     LastHandshakeAttempt = DateTime.Now;
                 });
