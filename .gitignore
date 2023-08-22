@@ -10,7 +10,6 @@
 
 ise-mod-previous/
 *.dll
-proto/
 
 # User-specific files
 *.rsuser
